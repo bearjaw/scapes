@@ -10,6 +10,7 @@
 		485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB421CEAAA100E813F0 /* View+Extensions.swift */; };
 		485FBEB721CEAB1800E813F0 /* DarkAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */; };
 		486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEEB21E679820023A728 /* Collection+Extension.swift */; };
+		486EBEF121E686420023A728 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEF021E686420023A728 /* Repository.swift */; };
 		488544D821C92B2200532B37 /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544CD21C92B2200532B37 /* NetworkOperation.swift */; };
 		488544D921C92B2200532B37 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544CF21C92B2200532B37 /* AsyncOperation.swift */; };
 		488544DA21C92B2200532B37 /* NetworkHTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D021C92B2200532B37 /* NetworkHTTPMethod.swift */; };
@@ -28,7 +29,6 @@
 		488544F221C97EFA00532B37 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544F121C97EFA00532B37 /* Appearance.swift */; };
 		488544F421C98B3000532B37 /* AppAppearanceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544F321C98B3000532B37 /* AppAppearanceProtocol.swift */; };
 		488544FC21CAC84B00532B37 /* SongLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544FB21CAC84B00532B37 /* SongLinkModel.swift */; };
-		488544FF21CACA5900532B37 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544FE21CACA5900532B37 /* DatabaseManager.swift */; };
 		48A97BD321AD7DF9006E5985 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BD221AD7DF9006E5985 /* AppDelegate.swift */; };
 		48A97BD521AD7DF9006E5985 /* SongLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BD421AD7DF9006E5985 /* SongLinkViewController.swift */; };
 		48A97BDA21AD7DFA006E5985 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48A97BD921AD7DFA006E5985 /* Assets.xcassets */; };
@@ -49,6 +49,7 @@
 		486EBEED21E67A2D0023A728 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486EBEEE21E67D420023A728 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		486EBEEF21E67D420023A728 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		486EBEF021E686420023A728 /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		488544CD21C92B2200532B37 /* NetworkOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkOperation.swift; sourceTree = "<group>"; };
 		488544CF21C92B2200532B37 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		488544D021C92B2200532B37 /* NetworkHTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkHTTPMethod.swift; sourceTree = "<group>"; };
@@ -67,7 +68,6 @@
 		488544F121C97EFA00532B37 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		488544F321C98B3000532B37 /* AppAppearanceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearanceProtocol.swift; sourceTree = "<group>"; };
 		488544FB21CAC84B00532B37 /* SongLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkModel.swift; sourceTree = "<group>"; };
-		488544FE21CACA5900532B37 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		48A97BCF21AD7DF9006E5985 /* Scapes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scapes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A97BD221AD7DF9006E5985 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48A97BD421AD7DF9006E5985 /* SongLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkViewController.swift; sourceTree = "<group>"; };
@@ -164,7 +164,6 @@
 				48A97BE921AD8C39006E5985 /* PlaylistProvider.swift */,
 				488544E321C92C0100532B37 /* MusicAssetManager.swift */,
 				488544E521C92E7600532B37 /* MusicAssetManagerError.swift */,
-				488544FE21CACA5900532B37 /* DatabaseManager.swift */,
 			);
 			path = manager;
 			sourceTree = "<group>";
@@ -207,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				488544F921CAC82400532B37 /* models */,
+				486EBEF021E686420023A728 /* Repository.swift */,
 			);
 			path = repository;
 			sourceTree = "<group>";
@@ -443,8 +443,8 @@
 				488544DB21C92B2200532B37 /* NetworkSession.swift in Sources */,
 				488544FC21CAC84B00532B37 /* SongLinkModel.swift in Sources */,
 				488544E821C95B6700532B37 /* Bundle-Extensions.swift in Sources */,
+				486EBEF121E686420023A728 /* Repository.swift in Sources */,
 				48A97BD521AD7DF9006E5985 /* SongLinkViewController.swift in Sources */,
-				488544FF21CACA5900532B37 /* DatabaseManager.swift in Sources */,
 				488544F221C97EFA00532B37 /* Appearance.swift in Sources */,
 				488544DE21C92B2200532B37 /* Atomic.swift in Sources */,
 				48A97BEC21AD8F7B006E5985 /* SongLinkProvider.swift in Sources */,
@@ -602,7 +602,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4GLAV3883W;
 				INFOPLIST_FILE = Scapes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -621,7 +621,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4GLAV3883W;
 				INFOPLIST_FILE = Scapes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

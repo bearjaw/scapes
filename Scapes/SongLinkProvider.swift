@@ -105,13 +105,13 @@ class SongLinkProvider: NSObject {
             originalUrl: originalUrl,
             index: song.index
         )
-        DatabaseManager.saveSongLink(songLinkData)
+        Repository.saveSongLink(songLinkData)
     }
     
     private func checkForAvailableSongs(songs: [Song]) -> ([SongLinkViewData], [Song] ) {
         var cache: [SongLinkViewData] = []
         let songsToDownload = songs.filter({ song in
-            if let cachedSong = DatabaseManager.search(song: song) {
+            if let cachedSong = Repository.search(song: song) {
                 cache.append(cachedSong)
                 return false
             }

@@ -1,21 +1,21 @@
 //
-//  DatabaseManager.swift
+//  Repository.swift
 //  Scapes
 //
-//  Created by Max Baumbach on 19/12/2018.
-//  Copyright © 2018 Max Baumbach. All rights reserved.
+//  Created by Max Baumbach on 09/01/2019.
+//  Copyright © 2019 Max Baumbach. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import RealmSwift
 
-final class DatabaseManager: NSObject {
+final class Repository: NSObject {
     
     static func saveSongLink(_ songLinkDatabaseViewData: SongLinkDatabaseViewData) {
         DispatchQueue.global(qos: .userInitiated).async {
-                do {
-                    let realm = try Realm()
-                    try autoreleasepool {
+            do {
+                let realm = try Realm()
+                try autoreleasepool {
                     try realm.write {
                         let songLinkModel = SongLinkModel()
                         songLinkModel.name = "\(songLinkDatabaseViewData.song) - \(songLinkDatabaseViewData.artist)"
@@ -27,11 +27,11 @@ final class DatabaseManager: NSObject {
                         songLinkModel.originalUrl = songLinkDatabaseViewData.originalUrl
                         songLinkModel.index = songLinkDatabaseViewData.index
                         realm.add(songLinkModel)
-                        }
                     }
-                } catch {
-                    print("Item could not be saved")
                 }
+            } catch {
+                print("Item could not be saved")
+            }
         }
     }
     
@@ -76,4 +76,9 @@ extension SongLinkDatabaseViewData: Equatable {
     static func == (lhs: SongLinkDatabaseViewData, rhs: SongLinkDatabaseViewData) -> Bool {
         return (lhs.song == rhs.song && lhs.artist == rhs.artist && lhs.album == rhs.album)
     }
+}
+
+
+protocol CRUD {
+    
 }
