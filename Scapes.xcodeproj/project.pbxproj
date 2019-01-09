@@ -43,7 +43,6 @@
 		1DA033B75BE71FD4C241A150 /* Pods-Scapes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scapes.release.xcconfig"; path = "Target Support Files/Pods-Scapes/Pods-Scapes.release.xcconfig"; sourceTree = "<group>"; };
 		485FBEB421CEAAA100E813F0 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkAlertController.swift; sourceTree = "<group>"; };
-		486EBEE721E662FD0023A728 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		486EBEE821E6652F0023A728 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		486EBEEB21E679820023A728 /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
 		486EBEED21E67A2D0023A728 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -232,7 +231,6 @@
 			children = (
 				486EBEED21E67A2D0023A728 /* README.md */,
 				486EBEE821E6652F0023A728 /* .gitignore */,
-				486EBEE721E662FD0023A728 /* .travis.yml */,
 				48A97BD121AD7DF9006E5985 /* Scapes */,
 				48A97BD021AD7DF9006E5985 /* Products */,
 				FBC10A69C4EC7DC601624173 /* Pods */,
