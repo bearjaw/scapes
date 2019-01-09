@@ -26,7 +26,7 @@ final class PlaylistProvider: NSObject {
     }
     
     static func fetchSongs(for playlist: MPMediaItemCollection) -> [Song] {
-        precondition(playlist.items.isNonEmpty)
+        if playlist.items.isEmpty { return [] }
         var index = 0
         var songsViewData: [Song] = []
         for song in playlist.items {
