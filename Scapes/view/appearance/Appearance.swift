@@ -32,7 +32,7 @@ class AppearanceService {
         setupAppearance(for: style)
     }
     
-    private func setupAppearance(for style:AppearanceStyle) {
+    private func setupAppearance(for style: AppearanceStyle) {
         switch style {
             
         case .light:
@@ -58,11 +58,10 @@ class AppearanceService {
         self.appearance = appearance
     }
     
-    final func updateAppearanceStyle(_ style:AppearanceStyle) {
+    final func updateAppearanceStyle(_ style: AppearanceStyle) {
         self.style = style
     }
 }
-
 
 extension AppearanceService: AppAppearanceProtocol {
 

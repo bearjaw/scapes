@@ -80,7 +80,11 @@ class SongLinkView: UIView {
                 let verticalSpace: CGFloat = 10.0
                 let buttonHeight: CGFloat = 50.0
                 let yButton: CGFloat = self.bounds.size.height-2*verticalSpace-self.safeAreaInsets.bottom-buttonHeight
-                self.tableView.frame = (CGRect(x: 0.0, y: 0.0, width: self.bounds.size.width, height: yButton - 2*verticalSpace))
+                self.tableView.frame = (CGRect(x: 0.0,
+                                               y: 0.0,
+                                               width: self.bounds.size.width,
+                                               height: yButton - 2*verticalSpace
+                ))
             }
         }
     }
@@ -101,10 +105,17 @@ class SongLinkView: UIView {
             let verticalSpace: CGFloat = 10.0
             let buttonHeight: CGFloat = 50.0
             let yButton: CGFloat = self.bounds.size.height-2*verticalSpace-self.safeAreaInsets.bottom-buttonHeight
-            self.tableView.frame = (CGRect(x: 0.0, y: 0.0, width: self.bounds.size.width, height: yButton - 2*verticalSpace))
+            self.tableView.frame = (CGRect(x: 0.0,
+                                           y: 0.0,
+                                           width: self.bounds.size.width,
+                                           height: yButton - 2*verticalSpace
+            ))
         }
     
-        buttonGet.frame = CGRect(x: xButton, y: yButton, width: Double(bounds.size.width - 4*horizontalSpace), height: buttonHeight)
+        buttonGet.frame = CGRect(x: xButton,
+                                 y: yButton,
+                                 width: Double(bounds.size.width - 4*horizontalSpace),
+                                 height: buttonHeight)
     }
 }
 

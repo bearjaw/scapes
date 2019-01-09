@@ -115,7 +115,8 @@ class TitleDetailTableViewCell: UITableViewCell {
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let maxSize = (CGSize(width: size.width - 4*verticalSpaceMultiplier*verticalSpace, height: (size.height/spaceDivision) - 2*verticalSpace))
+        let maxSize = (CGSize(width: size.width - 4*verticalSpaceMultiplier*verticalSpace,
+                              height: (size.height/spaceDivision) - 2*verticalSpace))
         let sizeSong = labelSongTitle.sizeThatFits(maxSize)
         let sizeArtist = labelArtist.sizeThatFits(maxSize)
         let sizeAlbum = labelAlbum.sizeThatFits(CGSize(width: maxSize.width - sizeArtist.width, height: maxSize.height))

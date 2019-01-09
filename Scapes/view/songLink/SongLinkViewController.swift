@@ -136,7 +136,9 @@ extension SongLinkViewController {
 extension SongLinkViewController {
     func showAlert(alert: Alert) {
         let alertController = DarkAlertController(title: alert.title, message: alert.message, preferredStyle: .alert)
-        UIVisualEffectView.appearance(whenContainedInInstancesOf: [UIAlertController.classForCoder() as! UIAppearanceContainer.Type]).effect = UIBlurEffect(style: .dark)
+        UIVisualEffectView.appearance(
+            whenContainedInInstancesOf: [UIAlertController.classForCoder() as! UIAppearanceContainer.Type]
+            ).effect = UIBlurEffect(style: .dark)
         present(alertController, animated: true, completion: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 alertController.dismiss(animated: true, completion: nil)
