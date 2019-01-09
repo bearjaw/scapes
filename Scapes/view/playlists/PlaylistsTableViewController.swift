@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AMusicPlaylistsTableViewController: UITableViewController {
+class PlaylistsTableViewController: UITableViewController {
     
     override init(style: UITableView.Style) {
         super.init(style: style)
@@ -16,7 +16,6 @@ class AMusicPlaylistsTableViewController: UITableViewController {
         tableView.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         tableView.tableFooterView = UIView()
         title = "Select a playlist"
-        
     }
     
     required init?(coder aDecoder: NSCoder) {

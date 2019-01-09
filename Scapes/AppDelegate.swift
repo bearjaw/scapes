@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = AMusicPlaylistsTableViewController(style: .plain)
+        let viewController = PlaylistsTableViewController(style: .plain)
         
         let navigationVC = UINavigationController(rootViewController: viewController)
         navigationVC.navigationItem.largeTitleDisplayMode = .automatic

@@ -82,7 +82,8 @@ extension MusicAssetManager {
                                                        host: "itunes.apple.com",
                                                        path: "/search",
                                                        queryItems: [URLQueryItem(name: "term", value: term),
-                                                                    URLQueryItem(name: "entity", value: "musicTrack")]).url {
+                                                                    URLQueryItem(name: "entity",
+                                                                                 value: "musicTrack")]).url {
                         
                         url = compoundUrl
                     }
@@ -137,7 +138,6 @@ extension MusicAssetManager {
             switch method {
             case .POST:
                 req.httpBody = jsonEncoded(params: params)
-                break
             default:
                 break
             }
@@ -146,7 +146,6 @@ extension MusicAssetManager {
         }
     }
 }
-
 
 extension MusicAssetManager {
     typealias ServiceCallback = ( JSON?, MusicAssetManagerError? ) -> Void
@@ -158,8 +157,8 @@ extension MusicAssetManager {
 }
 
 fileprivate extension MusicAssetManager {
-    // MARK:- Common params and types
-    var baseURL : URL {
+    // MARK: - Common params and types
+    var baseURL: URL {
         guard let url = URL(string: "https://itunes.apple.com/") else { fatalError("Can't create base URL!") }
         return url
     }
@@ -173,18 +172,8 @@ fileprivate extension MusicAssetManager {
     }()
     
     static var userAgent: String = {
-        #if os(watchOS)
-        let osName = "watchOS"
-        let osVersion = ""
-        let deviceVersion = "Apple Watch"
-        #else
-        let osName = UIDevice.current.systemName
-        let osVersion = UIDevice.current.systemVersion
-        let deviceVersion = UIDevice.current.model
-        #endif
-        
-        let locale = Locale.current.identifier
-        return "\( Bundle.appName ) \( Bundle.appVersion ) (\( Bundle.appBuild )); \( deviceVersion ); \( osName ) \( osVersion ); \( locale )"
+        // Not implemented
+        return ""
     }()
     
     // MARK: - Execution
