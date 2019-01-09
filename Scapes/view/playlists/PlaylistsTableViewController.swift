@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AMusicPlaylistsTableViewController: UITableViewController {
+class PlaylistsTableViewController: UITableViewController {
     
     override init(style: UITableView.Style) {
         super.init(style: style)
