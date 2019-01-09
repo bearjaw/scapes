@@ -9,7 +9,9 @@
 import Foundation
 import RealmSwift
 
-final class Repository: NSObject {
+final class SongRepository: Repository {
+    
+    typealias RepositoryType = SongLinkDatabaseViewData
     
     static func saveSongLink(_ songLinkDatabaseViewData: SongLinkDatabaseViewData) {
         DispatchQueue.global(qos: .userInitiated).async {
@@ -35,24 +37,55 @@ final class Repository: NSObject {
         }
     }
     
-    static func search(song: Song) -> SongLinkViewData? {
+    func getAll() -> [SongLinkDatabaseViewData] {
         do {
             let realm = try Realm()
-            let predicate = NSPredicate(format: "artist = %@ AND album = %@ AND song = %@",
-                                        song.artist,
-                                        song.albumTitle,
-                                        song.title)
-            
+            let allSongLinkModels = realm.objects(SongLinkModel.self)
+           return allSongLinkModels.map { (model) -> SongLinkDatabaseViewData in
+                 let song = SongLinkDatabaseViewData(artist: model.artist,
+                                                     song: model.song,
+                                                     album: model.album,
+                                                     url: model.url,
+                                                     originalUrl: model.originalUrl,
+                                                     index: model.index
+            )
+                return song
+            }
+        } catch {
+            print("Could access all Songs")
+        }
+        return []
+    }
+    
+    func get(identifier: String) -> SongLinkDatabaseViewData? {
+        return nil
+    }
+    
+    func add(a: SongLinkDatabaseViewData) -> Bool {
+        return true
+    }
+    
+    func update(a: SongLinkDatabaseViewData) -> Bool {
+        return true
+    }
+    
+    func delete(a: SongLinkDatabaseViewData) -> Bool {
+        return true
+    }
+    
+    func search(predicate: NSPredicate) -> SongLinkDatabaseViewData? {
+        do {
+            let realm = try Realm()
             let cachedSong = realm.objects(SongLinkModel.self).filter(predicate)
             
             if cachedSong.count == 1 {
-                guard let model = cachedSong.first else { fatalError("Collection is empty.")}
-                let songLinkViewData = SongLinkViewData(url: model.url,
-                                                        success: true,
-                                                        title: model.song,
-                                                        artist: model.artist,
-                                                        album: song.albumTitle,
-                                                        index: model.index
+                guard let model = cachedSong.first else { fatalError("Collection is empty.") }
+                let songLinkViewData = SongLinkDatabaseViewData(artist: model.artist,
+                                                    song: model.song,
+                                                    album: model.album,
+                                                    url: model.url,
+                                                    originalUrl: model.originalUrl,
+                                                    index: model.index
                 )
                 return songLinkViewData
             }
@@ -78,7 +111,15 @@ extension SongLinkDatabaseViewData: Equatable {
     }
 }
 
-
-protocol CRUD {
+protocol Repository {
+    
+    associatedtype RepositoryType
+    
+    func getAll() -> [RepositoryType]
+    func get( identifier: String ) -> RepositoryType?
+    func add( a: RepositoryType ) -> Bool
+    func update( a: RepositoryType ) -> Bool
+    func delete( a: RepositoryType ) -> Bool
+    func search( predicate: NSPredicate ) -> RepositoryType?
     
 }

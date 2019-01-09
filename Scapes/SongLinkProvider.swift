@@ -79,7 +79,7 @@ class SongLinkProvider: NSObject {
     private func search(song: Song, searchBlock: @escaping SearchBlock) {
         let escapedString = "\(song.title)+\(song.artist)"
         service.call(path: MusicAssetManager.Path.search(term: escapedString), callback: { json, _ in
-            if let contents:[[String: Any]] = json?["results"] as? [[String : Any]] {
+            if let contents: [[String: Any]] = json?["results"] as? [[String: Any]] {
                 let content = contents.first
                 let trackViewUrl = content?["trackViewUrl"] as? String ?? ""
                 if trackViewUrl.count > 1 {
@@ -105,14 +105,26 @@ class SongLinkProvider: NSObject {
             originalUrl: originalUrl,
             index: song.index
         )
-        Repository.saveSongLink(songLinkData)
+        let songRepo = SongRepository()
+        _ = songRepo.add( a: songLinkData )
     }
     
     private func checkForAvailableSongs(songs: [Song]) -> ([SongLinkViewData], [Song] ) {
         var cache: [SongLinkViewData] = []
         let songsToDownload = songs.filter({ song in
-            if let cachedSong = Repository.search(song: song) {
-                cache.append(cachedSong)
+            let predicate = NSPredicate(format: "artist = %@ AND album = %@ AND song = %@",
+                                        song.artist,
+                                        song.albumTitle,
+                                        song.title)
+            let songRepo = SongRepository()
+            if let cachedSong = songRepo.search(predicate: predicate) {
+                let songViewData = SongLinkViewData(url: cachedSong.url,
+                                                    success: true,
+                                                    title: cachedSong.song,
+                                                    artist: cachedSong.artist,
+                                                    album: cachedSong.album,
+                                                    index: cachedSong.index)
+                cache.append(songViewData)
                 return false
             }
             return true
