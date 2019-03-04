@@ -8,18 +8,9 @@
 
 import Foundation
 
-struct SongLinkDatabaseViewData {
-    let artist: String
-    let song: String
-    let album: String
-    let url: String
-    let originalUrl: String
-    let index: Int
-}
-
-extension SongLinkDatabaseViewData: Equatable {
-    static func == (lhs: SongLinkDatabaseViewData, rhs: SongLinkDatabaseViewData) -> Bool {
-        return (lhs.song == rhs.song && lhs.artist == rhs.artist && lhs.album == rhs.album)
+extension SongLink: Equatable {
+    static func == (lhs: SongLink, rhs: SongLink) -> Bool {
+        return (lhs.title == rhs.title && lhs.artist == rhs.artist && lhs.album == rhs.album)
     }
 }
 

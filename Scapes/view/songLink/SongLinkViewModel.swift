@@ -10,6 +10,8 @@ import Foundation
 
 protocol SongLinkViewModelProtocol {
     var items: [SongLinkViewData] { get }
+    func subscribe(onInitial: () -> Void, onChange: () -> Void)
+    
 }
 
 final class SongLinkViewModel: SongLinkViewModelProtocol {
@@ -17,7 +19,13 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     private var playlist: Playlist?
     private var remainingSongs: [Song] = []
     
+    func subscribe(onInitial: () -> Void, onChange: () -> Void) {
+        
+    }
+    
     private lazy var service: SongLinkProvider = {
         return SongLinkProvider()
     }()
+    
+    
 }

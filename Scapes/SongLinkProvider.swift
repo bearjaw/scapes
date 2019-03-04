@@ -97,9 +97,10 @@ class SongLinkProvider: NSObject {
     }
     
     private func addToDatabase(song: Song, url: String, originalUrl: String) {
-        let songLinkData = SongLinkDatabaseViewData(
+        let songLinkData = SongLink(
+            id: UUID().uuidString,
             artist: song.artist,
-            song: song.title,
+            title: song.title,
             album: song.albumTitle,
             url: url,
             originalUrl: originalUrl,
@@ -120,7 +121,7 @@ class SongLinkProvider: NSObject {
             if let cachedSong = songRepo.search(predicate: predicate) {
                 let songViewData = SongLinkViewData(url: cachedSong.url,
                                                     success: true,
-                                                    title: cachedSong.song,
+                                                    title: cachedSong.title,
                                                     artist: cachedSong.artist,
                                                     album: cachedSong.album,
                                                     index: cachedSong.index)
