@@ -26,6 +26,7 @@ extension SongLinkDatabaseViewData: Equatable {
 protocol Repository {
     
     associatedtype RepositoryType
+    associatedtype Token
     
     func getAll() -> [RepositoryType]
     
@@ -38,4 +39,8 @@ protocol Repository {
     func delete(element: RepositoryType) -> Bool
     
     func search(predicate: NSPredicate) -> RepositoryType?
+    
+    func subscribe(onInitial: ([RepositoryType]) -> Void, onChange: ([RepositoryType]) -> Void) -> Token?
+    
+    func subscribe(entity: RepositoryType, onChange: (RepositoryType) -> Void) -> Token? 
 }
