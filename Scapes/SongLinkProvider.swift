@@ -146,3 +146,13 @@ struct SongLinkViewData: Equatable {
     let album: String
     let index: Int
 }
+
+struct SongLink {
+    let id: String
+    let artist: String
+    let title: String
+    let album: String
+    let url: String
+    let originalUrl: String
+    let index: Int
+}
