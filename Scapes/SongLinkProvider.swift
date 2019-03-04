@@ -106,7 +106,7 @@ class SongLinkProvider: NSObject {
             index: song.index
         )
         let songRepo = SongRepository()
-        _ = songRepo.add( a: songLinkData )
+        _ = songRepo.add(element: songLinkData)
     }
     
     private func checkForAvailableSongs(songs: [Song]) -> ([SongLinkViewData], [Song] ) {

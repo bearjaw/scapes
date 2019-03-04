@@ -48,7 +48,8 @@ class PlaylistsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let playlist = playlists[indexPath.row]
-        let songLinkVC = SongLinkViewController()
+        let viewModel = SongLinkViewModel()
+        let songLinkVC = SongLinkViewController(viewModel: viewModel)
         songLinkVC.updatePlaylist(playlist: playlist)
         navigationController?.pushViewController(songLinkVC, animated: true)
     }

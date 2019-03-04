@@ -7,3 +7,17 @@
 //
 
 import Foundation
+
+protocol SongLinkViewModelProtocol {
+    var items: [SongLinkViewData] { get }
+}
+
+final class SongLinkViewModel: SongLinkViewModelProtocol {
+    var items: [SongLinkViewData] = []
+    private var playlist: Playlist?
+    private var remainingSongs: [Song] = []
+    
+    private lazy var service: SongLinkProvider = {
+        return SongLinkProvider()
+    }()
+}

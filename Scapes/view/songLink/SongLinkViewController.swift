@@ -10,59 +10,66 @@ import UIKit
 
 class SongLinkViewController: UIViewController {
     
-    private let generateView = SongLinkView()
-    fileprivate var items: [SongLinkViewData] = []
-    private var playlist: Playlist?
-    private var remainingSongs: [Song] = []
-    
-    private lazy var service: SongLinkProvider = {
-        return SongLinkProvider()
+    private lazy var generateView: SongLinkView = {
+        let view = SongLinkView()
+        return view
     }()
+    
+    private var viewModel: SongLinkViewModelProtocol
     
     override func loadView() {
         view = generateView
     }
     
+    init(viewModel: SongLinkViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func updatePlaylist(playlist: Playlist) {
-        self.playlist = playlist
+//        self.playlist = playlist
         
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = playlist?.name
-        
-        guard let playlist = playlist else { return }
-        configureTableView()
-        
-        self.generateView.updateState(state: .loading)
-        service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
-            self?.items = cache
-            self?.remainingSongs = remainingSongs
-            if remainingSongs.isEmpty {
-                self?.generateView.updateState(state: .hide)
-            } else {
-                self?.generateView.updateState(state: .show)
-            }
-            self?.generateView.tableView.reloadData()
-        })
-        generateView.targetAction = { [weak self] in
-            self?.generateView.updateState(state: .loading)
-            guard let songs = self?.remainingSongs else { return }
-            self?.service.search(in: songs, result: { [weak self] result in
-                self?.items.append(contentsOf: result)
-                if result.count == songs.count {
-                    DispatchQueue.main.async {
-                        self?.generateView.updateState(state: .hide)
-                    }
-                } else {
-                    self?.generateView.updateState(state: .show)
-                }
-                self?.items.sort(by: { $0.index < $1.index })
-                self?.generateView.tableView.reloadData()
-            })
-        }
+//        self.title = playlist?.name
+//
+//        guard let playlist = playlist else { return }
+//        configureTableView()
+//
+//        self.generateView.updateState(state: .loading)
+//        service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
+//            self?.items = cache
+//            self?.remainingSongs = remainingSongs
+//            if remainingSongs.isEmpty {
+//                self?.generateView.updateState(state: .hide)
+//            } else {
+//                self?.generateView.updateState(state: .show)
+//            }
+//            self?.generateView.tableView.reloadData()
+//        })
+//        generateView.targetAction = { [weak self] in
+//            self?.generateView.updateState(state: .loading)
+//            guard let songs = self?.remainingSongs else { return }
+//            self?.service.search(in: songs, result: { [weak self] result in
+//                self?.items.append(contentsOf: result)
+//                if result.count == songs.count {
+//                    DispatchQueue.main.async {
+//                        self?.generateView.updateState(state: .hide)
+//                    }
+//                } else {
+//                    self?.generateView.updateState(state: .show)
+//                }
+//                self?.items.sort(by: { $0.index < $1.index })
+//                self?.generateView.tableView.reloadData()
+//            })
+//        }
         addExportButton()
     }
     
@@ -78,20 +85,20 @@ class SongLinkViewController: UIViewController {
 
 extension SongLinkViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return viewModel.items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "kPlaylistCell") as? TitleDetailTableViewCell
             else { fatalError("Cell initialisation failed") }
-        let item = items[indexPath.row]
+        let item = viewModel.items[indexPath.row]
         cell.update(songViewData: item)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let pasteBoard = UIPasteboard.general
-        let item = items[indexPath.row]
+        let item = viewModel.items[indexPath.row]
         pasteBoard.string = item.url
     }
 }
@@ -106,22 +113,22 @@ extension SongLinkViewController {
     }
     
     @objc func exportPlaylist() {
-        var exportString = "\(playlist?.name ?? "Playlist") \n"
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let items = self?.items else { return }
-            for item in items {
-                if item.url.lowercased().contains("Error".lowercased()) {
-                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-                } else {
-                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-                }
-            }
-            DispatchQueue.main.async {
-                let pasteBoard = UIPasteboard.general
-                pasteBoard.string = exportString
-                self?.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
-            }
-        }
+//        var exportString = "\(playlist?.name ?? "Playlist") \n"
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            guard let items = self.viewModel.items else { return }
+//            for item in items {
+//                if item.url.lowercased().contains("Error".lowercased()) {
+//                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
+//                } else {
+//                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+//                }
+//            }
+//            DispatchQueue.main.async {
+//                let pasteBoard = UIPasteboard.general
+//                pasteBoard.string = exportString
+//                self?.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
+//            }
+//        }
     }
     
     private func configureTableView() {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		480E91F6222D89C20094359B /* SongLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91F5222D89C20094359B /* SongLinkViewModel.swift */; };
+		480E91F9222D8F8E0094359B /* SongLinkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91F8222D8F8E0094359B /* SongLinkRepository.swift */; };
 		485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB421CEAAA100E813F0 /* View+Extensions.swift */; };
 		485FBEB721CEAB1800E813F0 /* DarkAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */; };
 		486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEEB21E679820023A728 /* Collection+Extension.swift */; };
@@ -45,6 +46,7 @@
 		477B0B042699D95AF51F6240 /* Pods-Scapes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scapes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Scapes/Pods-Scapes.release.xcconfig"; sourceTree = "<group>"; };
 		480E91F5222D89C20094359B /* SongLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkViewModel.swift; sourceTree = "<group>"; };
 		480E91F7222D8C000094359B /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		480E91F8222D8F8E0094359B /* SongLinkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkRepository.swift; sourceTree = "<group>"; };
 		485FBEB421CEAAA100E813F0 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkAlertController.swift; sourceTree = "<group>"; };
 		486EBEE821E6652F0023A728 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 			children = (
 				488544F921CAC82400532B37 /* models */,
 				486EBEF021E686420023A728 /* Repository.swift */,
+				480E91F8222D8F8E0094359B /* SongLinkRepository.swift */,
 			);
 			path = repository;
 			sourceTree = "<group>";
@@ -449,6 +452,7 @@
 				48A97BEA21AD8C39006E5985 /* PlaylistProvider.swift in Sources */,
 				488544EF21C96FAD00532B37 /* TitleDetailTableViewCell.swift in Sources */,
 				488544EC21C9693F00532B37 /* PlaylistsTableViewController.swift in Sources */,
+				480E91F9222D8F8E0094359B /* SongLinkRepository.swift in Sources */,
 				488544DB21C92B2200532B37 /* NetworkSession.swift in Sources */,
 				488544FC21CAC84B00532B37 /* RealmSongLink.swift in Sources */,
 				488544E821C95B6700532B37 /* Bundle-Extensions.swift in Sources */,
