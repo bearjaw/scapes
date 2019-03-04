@@ -41,18 +41,8 @@ final class SongRepository: Repository {
     func getAll() -> [SongLink] {
         do {
             let realm = try Realm()
-            let allSongLinkModels = realm.objects(RealmSongLink.self)
-            return allSongLinkModels.map { (model) -> SongLink in
-                let song = SongLink(id: model.id,
-                    artist: model.artist,
-                    title: model.song,
-                    album: model.album,
-                    url: model.url,
-                    originalUrl: model.originalUrl,
-                    index: model.index
-                )
-                return song
-            }
+            let results = realm.objects(RealmSongLink.self)
+            return results.map({ convert(element: $0) })
         } catch {
             print("Could access all Songs")
         }
@@ -63,16 +53,22 @@ final class SongRepository: Repository {
         return nil
     }
     
-    func add(element: SongLink) -> Bool {
-        return true
+    func add(element: SongLink) {
+        safeWrite {
+            realm.create(RealmSongLink.self, value: convert(element: element), update: true)
+        }
     }
     
-    func update(element: SongLink) -> Bool {
-        return true
+    func update(element: SongLink) {
+        safeWrite {
+            realm.create(RealmSongLink.self, value: convert(element: element), update: true)
+        }
     }
     
-    func delete(element: SongLink) -> Bool {
-        return true
+    func delete(element: SongLink) {
+        safeWrite {
+            realm.delete(convert(element: element))
+        }
     }
     
     func search(predicate: NSPredicate) -> SongLink? {
@@ -103,12 +99,14 @@ final class SongRepository: Repository {
         let results = realm.objects(RealmSongLink.self)
         return RepoToken(
             results.observe { [weak self] (changes: RealmCollectionChange) in
+                guard let self = self else { return }
                 switch changes {
-                case .initial:
-                    onInitial([])
-                case .update(_, let deletions, let insertions, let modifications):
+                case .initial(let collection):
+                    onInitial(collection.map({ self.convert(element: $0 )}))
+                case .update(let collection, let deletions, let insertions, let modifications):
                     print("")
-                    onChange([], (deletions: deletions, insertions: insertions, modifications: modifications))
+                    onChange(collection.map({ self.convert(element: $0 )}),
+                             (deletions: deletions, insertions: insertions, modifications: modifications))
                 case .error(let error):
                     fatalError("\(error)")
                 }
@@ -141,5 +139,39 @@ extension SongRepository {
             fatalError("Could not create database instance.")
         }
         return realm
+    }
+}
+
+extension SongRepository {
+    private func convert(element: RealmSongLink) -> SongLink {
+        return SongLink( id: element.id,
+                         artist: element.artist,
+                         title: element.title,
+                         album: element.album,
+                         url: element.url,
+                         originalUrl: element.originalUrl,
+                         index: element.index)
+    }
+    
+    private func convert(element: SongLink) -> RealmSongLink {
+        let model = RealmSongLink()
+        model.id = element.id
+        model.artist = element.artist
+        model.title = element.title
+        model.album = element.album
+        model.url = element.url
+        model.originalUrl = element.originalUrl
+        model.index = element.index
+        return model
+    }
+    
+    private func safeWrite(_ write:() -> Void) {
+        do {
+            try realm.write {
+                write()
+            }
+        } catch {
+            fatalError("Could not open write transaction")
+        }
     }
 }

@@ -25,11 +25,11 @@ protocol Repository {
     
     func get(identifier: String) -> RepositoryType?
     
-    func add(element: RepositoryType) -> Bool
+    func add(element: RepositoryType)
     
-    func update(element: RepositoryType) -> Bool
+    func update(element: RepositoryType)
     
-    func delete(element: RepositoryType) -> Bool
+    func delete(element: RepositoryType)
     
     func search(predicate: NSPredicate) -> RepositoryType?
     
