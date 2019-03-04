@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class SongLinkModel: Object {
+final class RealmSongLink: Object {
     @objc dynamic var beid = ""
     @objc dynamic var name: String = ""
     @objc dynamic var artist: String = ""
