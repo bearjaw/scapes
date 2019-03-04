@@ -22,3 +22,6 @@ Scapes creates song.link links. Song.link offers a link to the most common music
 - This app uses the small networking library Avenue  [MIT License](https://github.com/radianttap/Avenue/blob/v2/LICENSE)
 - This app uses RealmSwift [MIT License](https://github.com/realm/realm-cocoa/blob/master/LICENSE)
 - This app uses SwiftLint [MIT License](https://github.com/realm/SwiftLint/blob/master/LICENSE)
+
+## Screenshot
+![](app_screenshot.png)

@@ -14,12 +14,12 @@ final class SongRepository: Repository {
     typealias RepositoryType = SongLinkDatabaseViewData
     
     static func saveSongLink(_ songLinkDatabaseViewData: SongLinkDatabaseViewData) {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .utility).async {
             do {
                 let realm = try Realm()
                 try autoreleasepool {
                     try realm.write {
-                        let songLinkModel = SongLinkModel()
+                        let songLinkModel = RealmSongLink()
                         songLinkModel.name = "\(songLinkDatabaseViewData.song) - \(songLinkDatabaseViewData.artist)"
                         songLinkModel.beid = "\(UUID.init())"
                         songLinkModel.artist = songLinkDatabaseViewData.artist
@@ -40,7 +40,7 @@ final class SongRepository: Repository {
     func getAll() -> [SongLinkDatabaseViewData] {
         do {
             let realm = try Realm()
-            let allSongLinkModels = realm.objects(SongLinkModel.self)
+            let allSongLinkModels = realm.objects(RealmSongLink.self)
            return allSongLinkModels.map { (model) -> SongLinkDatabaseViewData in
                  let song = SongLinkDatabaseViewData(artist: model.artist,
                                                      song: model.song,
@@ -76,7 +76,7 @@ final class SongRepository: Repository {
     func search(predicate: NSPredicate) -> SongLinkDatabaseViewData? {
         do {
             let realm = try Realm()
-            let cachedSong = realm.objects(SongLinkModel.self).filter(predicate)
+            let cachedSong = realm.objects(RealmSongLink.self).filter(predicate)
             
             if cachedSong.count == 1 {
                 guard let model = cachedSong.first else { fatalError("Collection is empty.") }
