@@ -84,7 +84,8 @@ final class SongRepository: Repository {
                                                 album: model.album,
                                                 url: model.url,
                                                 originalUrl: model.originalUrl,
-                                                index: model.index
+                                                index: model.index,
+                                                notFound: model.notFound
                 )
                 return songLinkViewData
             }
@@ -150,7 +151,8 @@ extension SongRepository {
                          album: element.album,
                          url: element.url,
                          originalUrl: element.originalUrl,
-                         index: element.index)
+                         index: element.index,
+                         notFound: element.notFound)
     }
     
     private func convert(element: SongLink) -> RealmSongLink {
@@ -162,6 +164,7 @@ extension SongRepository {
         model.url = element.url
         model.originalUrl = element.originalUrl
         model.index = element.index
+        model.notFound = element.notFound
         return model
     }
     

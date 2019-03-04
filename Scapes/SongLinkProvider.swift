@@ -104,10 +104,11 @@ class SongLinkProvider: NSObject {
             album: song.albumTitle,
             url: url,
             originalUrl: originalUrl,
-            index: song.index
+            index: song.index,
+            notFound: false
         )
         let songRepo = SongRepository()
-        _ = songRepo.add(element: songLinkData)
+        songRepo.add(element: songLinkData)
     }
     
     private func checkForAvailableSongs(songs: [Song]) -> ([SongLinkViewData], [Song] ) {
@@ -156,4 +157,5 @@ struct SongLink {
     let url: String
     let originalUrl: String
     let index: Int
+    let notFound: Bool
 }
