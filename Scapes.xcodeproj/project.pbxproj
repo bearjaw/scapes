@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		480E91F6222D89C20094359B /* SongLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91F5222D89C20094359B /* SongLinkViewModel.swift */; };
 		485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB421CEAAA100E813F0 /* View+Extensions.swift */; };
 		485FBEB721CEAB1800E813F0 /* DarkAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */; };
 		486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEEB21E679820023A728 /* Collection+Extension.swift */; };
@@ -28,7 +29,7 @@
 		488544EF21C96FAD00532B37 /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544EE21C96FAD00532B37 /* TitleDetailTableViewCell.swift */; };
 		488544F221C97EFA00532B37 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544F121C97EFA00532B37 /* Appearance.swift */; };
 		488544F421C98B3000532B37 /* AppAppearanceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544F321C98B3000532B37 /* AppAppearanceProtocol.swift */; };
-		488544FC21CAC84B00532B37 /* SongLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544FB21CAC84B00532B37 /* SongLinkModel.swift */; };
+		488544FC21CAC84B00532B37 /* RealmSongLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544FB21CAC84B00532B37 /* RealmSongLink.swift */; };
 		48A97BD321AD7DF9006E5985 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BD221AD7DF9006E5985 /* AppDelegate.swift */; };
 		48A97BD521AD7DF9006E5985 /* SongLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BD421AD7DF9006E5985 /* SongLinkViewController.swift */; };
 		48A97BDA21AD7DFA006E5985 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48A97BD921AD7DFA006E5985 /* Assets.xcassets */; };
@@ -41,6 +42,8 @@
 
 /* Begin PBXFileReference section */
 		1DA033B75BE71FD4C241A150 /* Pods-Scapes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scapes.release.xcconfig"; path = "Target Support Files/Pods-Scapes/Pods-Scapes.release.xcconfig"; sourceTree = "<group>"; };
+		477B0B042699D95AF51F6240 /* Pods-Scapes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scapes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Scapes/Pods-Scapes.release.xcconfig"; sourceTree = "<group>"; };
+		480E91F5222D89C20094359B /* SongLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkViewModel.swift; sourceTree = "<group>"; };
 		485FBEB421CEAAA100E813F0 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkAlertController.swift; sourceTree = "<group>"; };
 		486EBEE821E6652F0023A728 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -67,7 +70,7 @@
 		488544EE21C96FAD00532B37 /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
 		488544F121C97EFA00532B37 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		488544F321C98B3000532B37 /* AppAppearanceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearanceProtocol.swift; sourceTree = "<group>"; };
-		488544FB21CAC84B00532B37 /* SongLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkModel.swift; sourceTree = "<group>"; };
+		488544FB21CAC84B00532B37 /* RealmSongLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmSongLink.swift; sourceTree = "<group>"; };
 		48A97BCF21AD7DF9006E5985 /* Scapes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scapes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A97BD221AD7DF9006E5985 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48A97BD421AD7DF9006E5985 /* SongLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +84,7 @@
 		6BB97D0F80F8EC7C898EED34 /* Pods-Scapes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scapes.debug.xcconfig"; path = "Target Support Files/Pods-Scapes/Pods-Scapes.debug.xcconfig"; sourceTree = "<group>"; };
 		77732D223ACC15192FA1E605 /* Pods_Scapes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scapes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79ACC2E529C3A01584E0194A /* Pods-Linker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Linker.release.xcconfig"; path = "Target Support Files/Pods-Linker/Pods-Linker.release.xcconfig"; sourceTree = "<group>"; };
+		A498001643C80D370BE2E748 /* Pods-Scapes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scapes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Scapes/Pods-Scapes.debug.xcconfig"; sourceTree = "<group>"; };
 		C91F28717B0B5FDB71535F5C /* Pods-Linker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Linker.debug.xcconfig"; path = "Target Support Files/Pods-Linker/Pods-Linker.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -171,8 +175,9 @@
 		488544E921C968E300532B37 /* songLink */ = {
 			isa = PBXGroup;
 			children = (
-				48A97BD421AD7DF9006E5985 /* SongLinkViewController.swift */,
 				48A97BE721AD7E73006E5985 /* SongLinkView.swift */,
+				48A97BD421AD7DF9006E5985 /* SongLinkViewController.swift */,
+				480E91F5222D89C20094359B /* SongLinkViewModel.swift */,
 			);
 			path = songLink;
 			sourceTree = "<group>";
@@ -222,7 +227,7 @@
 		488544FA21CAC83000532B37 /* songLink */ = {
 			isa = PBXGroup;
 			children = (
-				488544FB21CAC84B00532B37 /* SongLinkModel.swift */,
+				488544FB21CAC84B00532B37 /* RealmSongLink.swift */,
 			);
 			path = songLink;
 			sourceTree = "<group>";
@@ -292,6 +297,8 @@
 				79ACC2E529C3A01584E0194A /* Pods-Linker.release.xcconfig */,
 				6BB97D0F80F8EC7C898EED34 /* Pods-Scapes.debug.xcconfig */,
 				1DA033B75BE71FD4C241A150 /* Pods-Scapes.release.xcconfig */,
+				A498001643C80D370BE2E748 /* Pods-Scapes.debug.xcconfig */,
+				477B0B042699D95AF51F6240 /* Pods-Scapes.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -441,7 +448,7 @@
 				488544EF21C96FAD00532B37 /* TitleDetailTableViewCell.swift in Sources */,
 				488544EC21C9693F00532B37 /* PlaylistsTableViewController.swift in Sources */,
 				488544DB21C92B2200532B37 /* NetworkSession.swift in Sources */,
-				488544FC21CAC84B00532B37 /* SongLinkModel.swift in Sources */,
+				488544FC21CAC84B00532B37 /* RealmSongLink.swift in Sources */,
 				488544E821C95B6700532B37 /* Bundle-Extensions.swift in Sources */,
 				486EBEF121E686420023A728 /* Repository.swift in Sources */,
 				48A97BD521AD7DF9006E5985 /* SongLinkViewController.swift in Sources */,
@@ -459,6 +466,7 @@
 				485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */,
 				488544E121C92B2200532B37 /* ServerTrustPolicy.swift in Sources */,
 				488544DA21C92B2200532B37 /* NetworkHTTPMethod.swift in Sources */,
+				480E91F6222D89C20094359B /* SongLinkViewModel.swift in Sources */,
 				488544DC21C92B2200532B37 /* NetworkTask.swift in Sources */,
 				488544DF21C92B2200532B37 /* Network-Extensions.swift in Sources */,
 				486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */,
