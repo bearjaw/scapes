@@ -98,22 +98,24 @@ final class SongRepository: Repository {
         return nil
     }
     
-    func subscribe(onInitial: ([SongLink]) -> Void, onChange: ([SongLink]) -> Void) -> RepoToken? {
+    func subscribe(onInitial: @escaping ([SongLink]) -> Void,
+                   onChange: @escaping ([SongLink], Indecies) -> Void) -> RepoToken? {
         let results = realm.objects(RealmSongLink.self)
         return RepoToken(
             results.observe { [weak self] (changes: RealmCollectionChange) in
                 switch changes {
                 case .initial:
-                    print("")
+                    onInitial([])
                 case .update(_, let deletions, let insertions, let modifications):
                     print("")
+                    onChange([], (deletions: deletions, insertions: insertions, modifications: modifications))
                 case .error(let error):
                     fatalError("\(error)")
                 }
         })
     }
     
-    func subscribe(entity: SongLink, onChange: (SongLink) -> Void) -> RepoToken? {
+    func subscribe(entity: SongLink, onChange: @escaping (SongLink) -> Void) -> RepoToken? {
         guard let model = realm.object(ofType: RealmSongLink.self, forPrimaryKey: entity.id) else {
             fatalError("Could not fetch model. Id did not match any entities.")
         }
