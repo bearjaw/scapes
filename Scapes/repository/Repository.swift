@@ -16,6 +16,8 @@ extension SongLink: Equatable {
 
 protocol Repository {
     
+    typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
+    
     associatedtype RepositoryType
     associatedtype Token
     
@@ -31,7 +33,8 @@ protocol Repository {
     
     func search(predicate: NSPredicate) -> RepositoryType?
     
-    func subscribe(onInitial: ([RepositoryType]) -> Void, onChange: ([RepositoryType]) -> Void) -> Token?
+    func subscribe(onInitial: @escaping ([RepositoryType]) -> Void,
+                   onChange: @escaping ([RepositoryType], Indecies) -> Void) -> Token?
     
-    func subscribe(entity: RepositoryType, onChange: (RepositoryType) -> Void) -> Token? 
+    func subscribe(entity: RepositoryType, onChange: @escaping (RepositoryType) -> Void) -> Token?
 }
