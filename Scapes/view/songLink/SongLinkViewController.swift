@@ -52,6 +52,7 @@ class SongLinkViewController: UIViewController {
         viewModel.subscribe(onInitial: { [weak self] in
             guard let self = self else { return }
             self.viewSongLink.tableView.reloadData()
+            self.viewSongLink.updateState(state: .show)
             }, onChange: { [weak tableView = self.viewSongLink.tableView] changes in
                 guard let tableView = tableView else { return }
                 let (deletions, insertions, modifications) = changes
@@ -63,6 +64,7 @@ class SongLinkViewController: UIViewController {
                 tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
                                      with: .automatic)
                 tableView.endUpdates()
+                self.viewSongLink.updateState(state: .show)
             }, onEmpty: { [weak self] in
                 guard let self = self else { return }
                 self.viewSongLink.updateState(state: .show)

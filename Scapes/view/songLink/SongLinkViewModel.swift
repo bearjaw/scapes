@@ -37,6 +37,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         token = repo.subscribe(onInitial: { [unowned self] newValue in
             self.items = self.convert(newValue)
             if self.items.isEmpty { onEmpty() }
+            onInitial()
         }, onChange: { [unowned self] newValue, indecies  in
             self.items = self.convert(newValue)
             if self.items.isEmpty { onEmpty() }
