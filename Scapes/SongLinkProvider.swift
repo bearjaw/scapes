@@ -23,14 +23,14 @@ class SongLinkProvider: NSObject {
     }
     
     func search(in songs: [Song], result: @escaping Result) {
-        self.downloadSongLinks(songs: songs, result: result)
+        downloadSongLinks(songs: songs, result: result)
     }
     
     func provideCachedSongs(for playlist: Playlist, content: @escaping Content) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             if let data = self?.checkForAvailableSongs(songs: playlist.items) {
-                let cache = data.0
-                let remainingSongs = data.1
+                let cache = data.cache
+                let remainingSongs = data.downloads
                 DispatchQueue.main.async {
                     content(cache, remainingSongs)
                 }   
@@ -41,6 +41,8 @@ class SongLinkProvider: NSObject {
             }
         }
     }
+    
+    // MARK: - Private
     
     private func downloadSongLinks(songs: [Song], result: @escaping Result) {
         var results: [SongLinkViewData] = []
@@ -97,19 +99,21 @@ class SongLinkProvider: NSObject {
     }
     
     private func addToDatabase(song: Song, url: String, originalUrl: String) {
-        let songLinkData = SongLinkDatabaseViewData(
+        let songLinkData = SongLink(
+            id: UUID().uuidString,
             artist: song.artist,
-            song: song.title,
+            title: song.title,
             album: song.albumTitle,
             url: url,
             originalUrl: originalUrl,
-            index: song.index
+            index: song.index,
+            notFound: false
         )
         let songRepo = SongRepository()
-        _ = songRepo.add( a: songLinkData )
+        songRepo.add(element: songLinkData)
     }
     
-    private func checkForAvailableSongs(songs: [Song]) -> ([SongLinkViewData], [Song] ) {
+    private func checkForAvailableSongs(songs: [Song]) -> (cache: [SongLinkViewData], downloads: [Song] ) {
         var cache: [SongLinkViewData] = []
         let songsToDownload = songs.filter({ song in
             let predicate = NSPredicate(format: "artist = %@ AND album = %@ AND song = %@",
@@ -120,7 +124,7 @@ class SongLinkProvider: NSObject {
             if let cachedSong = songRepo.search(predicate: predicate) {
                 let songViewData = SongLinkViewData(url: cachedSong.url,
                                                     success: true,
-                                                    title: cachedSong.song,
+                                                    title: cachedSong.title,
                                                     artist: cachedSong.artist,
                                                     album: cachedSong.album,
                                                     index: cachedSong.index)
@@ -145,4 +149,15 @@ struct SongLinkViewData: Equatable {
     let artist: String
     let album: String
     let index: Int
+}
+
+struct SongLink {
+    let id: String
+    let artist: String
+    let title: String
+    let album: String
+    let url: String
+    let originalUrl: String
+    let index: Int
+    let notFound: Bool
 }
