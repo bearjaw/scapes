@@ -9,8 +9,12 @@
 import Foundation
 
 protocol SongLinkViewModelProtocol {
-    var items: [SongLinkViewData] { get }
-    func subscribe(onInitial: () -> Void, onChange: () -> Void)
+    typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
+    var data: [SongLinkViewData] { get }
+    
+    func fetchRemainingSongsIfNeeded()
+    
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void)
     
 }
 
