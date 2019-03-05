@@ -1,5 +1,5 @@
 # Scapes
-[![CI Status](https://travis-ci.org/bearjaw/scapes.svg?branch=master)](https://travis-ci.org/bearjaw/scapes.svg?branch=master)
+[![Build Status](https://travis-ci.org/bearjaw/scapes.svg?branch=master)](https://travis-ci.org/bearjaw/scapes)
 
 
 Small project that exports a personal playlist from iTunes / Apple Music as a song.link playlist.
