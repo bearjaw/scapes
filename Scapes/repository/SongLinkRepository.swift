@@ -106,7 +106,7 @@ final class SongRepository: Repository {
                     onInitial(collection.map({ self.convert(element: $0 )}))
                 case .update(let collection, let deletions, let insertions, let modifications):
                     print("")
-                    onChange(collection.map({ self.convert(element: $0 )}),
+                    onChange(collection.sorted(byKeyPath: "index").map({ self.convert(element: $0 )}),
                              (deletions: deletions, insertions: insertions, modifications: modifications))
                 case .error(let error):
                     fatalError("\(error)")
@@ -119,10 +119,10 @@ final class SongRepository: Repository {
             fatalError("Could not fetch model. Id did not match any entities.")
         }
         return RepoToken(
-            model.observe { change in
+            model.observe { [unowned self] change in
                 switch change {
-                case .change(let properties):
-                    print("canges")
+                case .change:
+                    onChange(self.convert(element: model))
                 case .error(let error):
                     print("An error occurred: \(error)")
                 case .deleted:
