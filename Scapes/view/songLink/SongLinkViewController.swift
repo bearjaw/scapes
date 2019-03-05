@@ -10,16 +10,14 @@ import UIKit
 
 class SongLinkViewController: UIViewController {
     
-    private lazy var generateView: SongLinkView = {
+    private lazy var viewSongLink: SongLinkView = {
         let view = SongLinkView()
         return view
     }()
     
     private var viewModel: SongLinkViewModelProtocol
     
-    override func loadView() {
-        view = generateView
-    }
+    // MARK: - Lifecycle begin
     
     init(viewModel: SongLinkViewModelProtocol) {
         self.viewModel = viewModel
@@ -30,75 +28,76 @@ class SongLinkViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updatePlaylist(playlist: Playlist) {
-//        self.playlist = playlist
-        
+    override func loadView() {
+        view = viewSongLink
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.title = playlist?.name
-//
-//        guard let playlist = playlist else { return }
-//        configureTableView()
-//
-//        self.generateView.updateState(state: .loading)
-//        service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
-//            self?.items = cache
-//            self?.remainingSongs = remainingSongs
-//            if remainingSongs.isEmpty {
-//                self?.generateView.updateState(state: .hide)
-//            } else {
-//                self?.generateView.updateState(state: .show)
-//            }
-//            self?.generateView.tableView.reloadData()
-//        })
-//        generateView.targetAction = { [weak self] in
-//            self?.generateView.updateState(state: .loading)
-//            guard let songs = self?.remainingSongs else { return }
-//            self?.service.search(in: songs, result: { [weak self] result in
-//                self?.items.append(contentsOf: result)
-//                if result.count == songs.count {
-//                    DispatchQueue.main.async {
-//                        self?.generateView.updateState(state: .hide)
-//                    }
-//                } else {
-//                    self?.generateView.updateState(state: .show)
-//                }
-//                self?.items.sort(by: { $0.index < $1.index })
-//                self?.generateView.tableView.reloadData()
-//            })
-//        }
+        configureTableView()
+        viewSongLink.targetAction = { [weak self] in
+            guard let self = self else { return }
+            self.viewModel.fetchRemainingSongsIfNeeded()
+            self.viewSongLink.updateState(state: .loading)
+        }
         addExportButton()
+        subscribeToDataChanges()
+    }
+    
+    // MARK: Lifecycle end
+    // MAKR: - setup view
+    
+    func subscribeToDataChanges() {
+        viewModel.subscribe(onInitial: { [weak self] in
+            guard let self = self else { return }
+            self.viewSongLink.tableView.reloadData()
+            }, onChange: { [weak tableView = self.viewSongLink.tableView] changes in
+                guard let tableView = tableView else { return }
+                let (deletions, insertions, modifications) = changes
+                tableView.beginUpdates()
+                tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
+                                     with: .automatic)
+                tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0)}),
+                                     with: .automatic)
+                tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
+                                     with: .automatic)
+                tableView.endUpdates()
+            }, onEmpty: { [weak self] in
+                guard let self = self else { return }
+                self.viewSongLink.updateState(state: .show)
+                
+        })
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(alongsideTransition: { _ in
-            self.generateView.setNeedsLayout()
+            self.viewSongLink.setNeedsLayout()
         }, completion: { _ in
-            self.generateView.tableView.reloadData()
+            self.viewSongLink.tableView.reloadData()
         })
     }
 }
 
-extension SongLinkViewController: UITableViewDelegate, UITableViewDataSource {
+extension SongLinkViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.items.count
+        return viewModel.data.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "kPlaylistCell") as? TitleDetailTableViewCell
             else { fatalError("Cell initialisation failed") }
-        let item = viewModel.items[indexPath.row]
+        let item = viewModel.data[indexPath.row]
         cell.update(songViewData: item)
         return cell
     }
-    
+}
+
+extension SongLinkViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let pasteBoard = UIPasteboard.general
-        let item = viewModel.items[indexPath.row]
+        let item = viewModel.data[indexPath.row]
         pasteBoard.string = item.url
     }
 }
@@ -113,30 +112,30 @@ extension SongLinkViewController {
     }
     
     @objc func exportPlaylist() {
-//        var exportString = "\(playlist?.name ?? "Playlist") \n"
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            guard let items = self.viewModel.items else { return }
-//            for item in items {
-//                if item.url.lowercased().contains("Error".lowercased()) {
-//                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-//                } else {
-//                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-//                }
-//            }
-//            DispatchQueue.main.async {
-//                let pasteBoard = UIPasteboard.general
-//                pasteBoard.string = exportString
-//                self?.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
-//            }
-//        }
+        //        var exportString = "\(playlist?.name ?? "Playlist") \n"
+        //        DispatchQueue.global(qos: .userInitiated).async {
+        //            guard let items = self.viewModel.items else { return }
+        //            for item in items {
+        //                if item.url.lowercased().contains("Error".lowercased()) {
+        //                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
+        //                } else {
+        //                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+        //                }
+        //            }
+        //            DispatchQueue.main.async {
+        //                let pasteBoard = UIPasteboard.general
+        //                pasteBoard.string = exportString
+        //                self?.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
+        //            }
+        //        }
     }
     
     private func configureTableView() {
-        generateView.tableView.delegate = self
-        generateView.tableView.dataSource = self
-        generateView.tableView.rowHeight = UITableView.automaticDimension
-        generateView.tableView.estimatedRowHeight = 60.0
-        generateView.tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: "kPlaylistCell")
+        viewSongLink.tableView.delegate = self
+        viewSongLink.tableView.dataSource = self
+        viewSongLink.tableView.rowHeight = UITableView.automaticDimension
+        viewSongLink.tableView.estimatedRowHeight = 60.0
+        viewSongLink.tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: "kPlaylistCell")
     }
 }
 
