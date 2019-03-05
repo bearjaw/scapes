@@ -177,6 +177,7 @@ fileprivate extension MusicAssetManager {
     }()
     
     // MARK: - Execution
+    
     func execute(_ urlRequest: URLRequest, path: Path, callback: @escaping ServiceCallback) {
         let op = NetworkOperation(urlRequest: urlRequest, urlSession: urlSession) { payload in
             
