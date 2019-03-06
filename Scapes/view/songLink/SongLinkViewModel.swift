@@ -67,7 +67,8 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     private func convert(_ value: [SongLink]) -> [SongLinkViewData] {
         if value.isEmpty {
             guard let playlist = playlist else { return [] }
-            return playlist.items.map({ convert(SongLink(artist: $0.artist, album: $0.albumTitle, title: $0.title ))})
+            return []
+//            return playlist.items.map({ convert(SongLink(artist: $0.artist, album: $0.albumTitle, title: $0.title ))})
         } else {
             return value.map({ convert($0) })
         }
