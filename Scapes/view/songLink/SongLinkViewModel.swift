@@ -36,7 +36,9 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     }()
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void) {
-        token = repo.subscribe(onInitial: { [unowned self] newValue in
+        let filter = self.filter()
+        
+        token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
             self.items = self.convert(newValue)
             if self.items.isEmpty { onEmpty() }
             self.checkIfCompleted()
@@ -47,6 +49,15 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
             self.checkIfCompleted()
             onChange(indecies)
         })
+    }
+    
+    func filter() -> NSCompoundPredicate? {
+        guard let playlist = playlist else { return nil }
+        let predicates = playlist.items.map({ NSPredicate(format: "artist == %@ AND album == %@ AND title == %@",
+                                               $0.artist,
+                                               $0.albumTitle,
+                                               $0.title) })
+        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
     func subscribe(onCompleted: @escaping () -> Void) {
