@@ -95,9 +95,12 @@ final class SongRepository: Repository {
         return nil
     }
     
-    func subscribe(onInitial: @escaping ([SongLink]) -> Void,
+    func subscribe(filter: NSPredicate? = nil, onInitial: @escaping ([SongLink]) -> Void,
                    onChange: @escaping ([SongLink], Indecies) -> Void) -> RepoToken? {
-        let results = realm.objects(RealmSongLink.self)
+        var results = realm.objects(RealmSongLink.self)
+        if let filter = filter {
+            results = results.filter(filter)
+        }
         return RepoToken(
             results.observe { [weak self] (changes: RealmCollectionChange) in
                 guard let self = self else { return }

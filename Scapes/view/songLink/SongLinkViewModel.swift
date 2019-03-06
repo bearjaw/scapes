@@ -36,17 +36,28 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     }()
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void) {
-        token = repo.subscribe(onInitial: { [unowned self] newValue in
+        let filter = self.filter()
+        
+        token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
             self.items = self.convert(newValue)
-            if self.items.isEmpty { onEmpty() }
+            if newValue.isEmpty { onEmpty() }
             self.checkIfCompleted()
             onInitial()
         }, onChange: { [unowned self] newValue, indecies  in
             self.items = self.convert(newValue)
-            if self.items.isEmpty { onEmpty() }
+            if newValue.isEmpty { onEmpty() }
             self.checkIfCompleted()
             onChange(indecies)
         })
+    }
+    
+    func filter() -> NSCompoundPredicate? {
+        guard let playlist = playlist else { return nil }
+        let predicates = playlist.items.map({ NSPredicate(format: "artist == %@ AND album == %@ AND title == %@",
+                                               $0.artist,
+                                               $0.albumTitle,
+                                               $0.title) })
+        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
     func subscribe(onCompleted: @escaping () -> Void) {
@@ -54,16 +65,28 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     }
     
     private func convert(_ value: [SongLink]) -> [SongLinkViewData] {
-        return value.map({ SongLinkViewData(url: $0.url,
-                                                     success: true,
-                                                     title: $0.title,
-                                                     artist: $0.artist,
-                                                     album: $0.album,
-                                                     index: $0.index)})
+        if value.isEmpty {
+            guard let playlist = playlist else { return [] }
+            return playlist.items.map({ convert(SongLink(artist: $0.artist, album: $0.albumTitle, title: $0.title ))})
+        } else {
+            return value.map({ convert($0) })
+        }
+        
+    }
+    
+    private func convert(_ value: SongLink) -> SongLinkViewData {
+        return SongLinkViewData(url: value.url,
+                         success: !value.notFound,
+                         title: value.title,
+                         artist: value.artist,
+                         album: value.album,
+                         index: value.index)
     }
     
     private func checkIfCompleted() {
-        if self.items.count == self.playlist!.items.count, let onCompleted = onCompleted {
+        if self.items.count == self.playlist!.items.count,
+            let onCompleted = onCompleted,
+            self.items.filter({ $0.url.isEmpty}).isEmpty {
             onCompleted()
         }
     }

@@ -12,7 +12,7 @@ Scapes creates song.link links. Song.link offers a link to the most common music
 
 ## 🚀 Roadmap
 
-- [ ] Basic app functionality
+- [x] Basic app functionality
 - [ ] Single song selection
 - [ ] Cache / DB deletion
 - [ ] Theme  

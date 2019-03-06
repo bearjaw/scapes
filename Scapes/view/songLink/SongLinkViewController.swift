@@ -69,8 +69,8 @@ class SongLinkViewController: UIViewController {
                 
         })
         
-        viewModel.subscribe {
-            self.viewSongLink.updateState(state: .hide)
+        viewModel.subscribe { [weak self] in
+            self?.viewSongLink.updateState(state: .hide)
         }
     }
     
