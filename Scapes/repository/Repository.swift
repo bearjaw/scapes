@@ -33,7 +33,7 @@ protocol Repository {
     
     func search(predicate: NSPredicate) -> RepositoryType?
     
-    func subscribe(onInitial: @escaping ([RepositoryType]) -> Void,
+    func subscribe(filter: NSPredicate?, onInitial: @escaping ([RepositoryType]) -> Void,
                    onChange: @escaping ([RepositoryType], Indecies) -> Void) -> Token?
     
     func subscribe(entity: RepositoryType, onChange: @escaping (RepositoryType) -> Void) -> Token?
