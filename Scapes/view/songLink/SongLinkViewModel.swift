@@ -10,7 +10,10 @@ import Foundation
 
 protocol SongLinkViewModelProtocol {
     typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
+    
     var data: [SongLinkViewData] { get }
+    
+    var title: String { get }
     
     func fetchRemainingSongsIfNeeded()
     
@@ -24,6 +27,12 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     var data: [SongLinkViewData] {
         return items
     }
+    
+    var title: String {
+        guard let playlist = playlist else { return "Playlist" }
+        return playlist.name
+    }
+    
     private var playlist: Playlist?
     private var remainingSongs: [Song] = []
     private let repo = SongRepository()
@@ -66,7 +75,6 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     
     private func convert(_ value: [SongLink]) -> [SongLinkViewData] {
         if value.isEmpty {
-            guard let playlist = playlist else { return [] }
             return []
 //            return playlist.items.map({ convert(SongLink(artist: $0.artist, album: $0.albumTitle, title: $0.title ))})
         } else {
