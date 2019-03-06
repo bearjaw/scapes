@@ -16,6 +16,7 @@ protocol SongLinkViewModelProtocol {
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void)
     
+    func subscribe(onCompleted: @escaping () -> Void)
 }
 
 final class SongLinkViewModel: SongLinkViewModelProtocol {
@@ -28,6 +29,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     private let repo = SongRepository()
     private var token: RepoToken?
     private var items: [SongLinkViewData] = []
+    private var onCompleted: (() -> Void)?
     
     private lazy var service: SongLinkProvider = {
         return SongLinkProvider()
@@ -37,21 +39,33 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         token = repo.subscribe(onInitial: { [unowned self] newValue in
             self.items = self.convert(newValue)
             if self.items.isEmpty { onEmpty() }
+            self.checkIfCompleted()
             onInitial()
         }, onChange: { [unowned self] newValue, indecies  in
             self.items = self.convert(newValue)
             if self.items.isEmpty { onEmpty() }
+            self.checkIfCompleted()
             onChange(indecies)
         })
     }
     
-    func convert(_ value: [SongLink]) -> [SongLinkViewData] {
+    func subscribe(onCompleted: @escaping () -> Void) {
+        self.onCompleted = onCompleted
+    }
+    
+    private func convert(_ value: [SongLink]) -> [SongLinkViewData] {
         return value.map({ SongLinkViewData(url: $0.url,
                                                      success: true,
                                                      title: $0.title,
                                                      artist: $0.artist,
                                                      album: $0.album,
                                                      index: $0.index)})
+    }
+    
+    private func checkIfCompleted() {
+        if self.items.count == self.playlist!.items.count, let onCompleted = onCompleted {
+            onCompleted()
+        }
     }
     
     func updatePlaylist(_ playlist: Playlist) {
