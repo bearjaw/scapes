@@ -170,7 +170,6 @@ struct SongLink {
         self.originalUrl = ""
         self.index = -1
         self.notFound = false
-        
     }
     
     init(id: String,
@@ -180,7 +179,7 @@ struct SongLink {
          url: String,
          originalUrl: String,
          index: Int,
-         notFound: Bool)  {
+         notFound: Bool) {
         self.id = id
         self.artist = artist
         self.title = title
@@ -190,6 +189,4 @@ struct SongLink {
         self.index = index
         self.notFound = notFound
     }
-    
 }
-
