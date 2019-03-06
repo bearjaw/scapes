@@ -40,12 +40,12 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         
         token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
             self.items = self.convert(newValue)
-            if self.items.isEmpty { onEmpty() }
+            if newValue.isEmpty { onEmpty() }
             self.checkIfCompleted()
             onInitial()
         }, onChange: { [unowned self] newValue, indecies  in
             self.items = self.convert(newValue)
-            if self.items.isEmpty { onEmpty() }
+            if newValue.isEmpty { onEmpty() }
             self.checkIfCompleted()
             onChange(indecies)
         })
@@ -65,16 +65,28 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     }
     
     private func convert(_ value: [SongLink]) -> [SongLinkViewData] {
-        return value.map({ SongLinkViewData(url: $0.url,
-                                                     success: true,
-                                                     title: $0.title,
-                                                     artist: $0.artist,
-                                                     album: $0.album,
-                                                     index: $0.index)})
+        if value.isEmpty {
+            guard let playlist = playlist else { return [] }
+            return playlist.items.map({ convert(SongLink(artist: $0.artist, album: $0.albumTitle, title: $0.title ))})
+        } else {
+            return value.map({ convert($0) })
+        }
+        
+    }
+    
+    private func convert(_ value: SongLink) -> SongLinkViewData {
+        return SongLinkViewData(url: value.url,
+                         success: !value.notFound,
+                         title: value.title,
+                         artist: value.artist,
+                         album: value.album,
+                         index: value.index)
     }
     
     private func checkIfCompleted() {
-        if self.items.count == self.playlist!.items.count, let onCompleted = onCompleted {
+        if self.items.count == self.playlist!.items.count,
+            let onCompleted = onCompleted,
+            self.items.filter({ $0.url.isEmpty}).isEmpty {
             onCompleted()
         }
     }
