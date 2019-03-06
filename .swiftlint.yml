@@ -33,6 +33,10 @@ file_length:
   warning: 500
   error: 800
 
+line_length:
+  warning: 180
+  error: 200
+
 large_tuple: # warn user when using 3 values in tuple, give error if there are 4
    - 3
    - 4
