@@ -160,4 +160,36 @@ struct SongLink {
     let originalUrl: String
     let index: Int
     let notFound: Bool
+    
+    init(artist: String, album: String, title: String) {
+        self.id = ""
+        self.artist = artist
+        self.title = title
+        self.album = album
+        self.url = ""
+        self.originalUrl = ""
+        self.index = -1
+        self.notFound = false
+        
+    }
+    
+    init(id: String,
+         artist: String,
+         title: String,
+         album: String,
+         url: String,
+         originalUrl: String,
+         index: Int,
+         notFound: Bool)  {
+        self.id = id
+        self.artist = artist
+        self.title = title
+        self.album = album
+        self.url = url
+        self.originalUrl = originalUrl
+        self.index = index
+        self.notFound = notFound
+    }
+    
 }
+
