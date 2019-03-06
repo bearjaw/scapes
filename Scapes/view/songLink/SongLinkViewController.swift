@@ -116,22 +116,21 @@ extension SongLinkViewController {
     }
     
     @objc func exportPlaylist() {
-        //        var exportString = "\(playlist?.name ?? "Playlist") \n"
-        //        DispatchQueue.global(qos: .userInitiated).async {
-        //            guard let items = self.viewModel.items else { return }
-        //            for item in items {
-        //                if item.url.lowercased().contains("Error".lowercased()) {
-        //                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-        //                } else {
-        //                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-        //                }
-        //            }
-        //            DispatchQueue.main.async {
-        //                let pasteBoard = UIPasteboard.general
-        //                pasteBoard.string = exportString
-        //                self?.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
-        //            }
-        //        }
+        var exportString = "\(viewModel.title) \n"
+        DispatchQueue.global(qos: .userInitiated).async {
+            for item in self.viewModel.data {
+                if item.url.lowercased().contains("Error".lowercased()) {
+                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
+                } else {
+                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+                }
+            }
+            DispatchQueue.main.async {
+                let pasteBoard = UIPasteboard.general
+                pasteBoard.string = exportString
+                self.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
+            }
+        }
     }
     
     private func configureTableView() {
@@ -146,8 +145,9 @@ extension SongLinkViewController {
 extension SongLinkViewController {
     func showAlert(alert: Alert) {
         let alertController = DarkAlertController(title: alert.title, message: alert.message, preferredStyle: .alert)
+        guard let coder = UIAlertController.classForCoder() as? UIAppearanceContainer.Type else { return }
         UIVisualEffectView.appearance(
-            whenContainedInInstancesOf: [UIAlertController.classForCoder() as! UIAppearanceContainer.Type]
+            whenContainedInInstancesOf: [coder]
             ).effect = UIBlurEffect(style: .dark)
         present(alertController, animated: true, completion: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
