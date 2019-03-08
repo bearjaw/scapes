@@ -146,7 +146,7 @@ struct SongLinkViewData: Equatable {
     let index: Int
 }
 
-struct SongLink {
+struct SongLink: Hashable {
     let id: String
     let artist: String
     let title: String
@@ -155,6 +155,7 @@ struct SongLink {
     let originalUrl: String
     let index: Int
     let notFound: Bool
+    let playcount: Int
     
     init(artist: String, album: String, title: String) {
         self.id = ""
@@ -165,6 +166,7 @@ struct SongLink {
         self.originalUrl = ""
         self.index = -1
         self.notFound = false
+        self.playcount = 0
     }
     
     init(id: String,
@@ -174,7 +176,8 @@ struct SongLink {
          url: String,
          originalUrl: String,
          index: Int,
-         notFound: Bool) {
+         notFound: Bool,
+         playcount: Int) {
         self.id = id
         self.artist = artist
         self.title = title
@@ -183,6 +186,9 @@ struct SongLink {
         self.originalUrl = originalUrl
         self.index = index
         self.notFound = notFound
+        self.playcount = playcount
+    }
+}
 
 extension SongLink: Equatable {
     static func == (lhs: SongLink, rhs: SongLink) -> Bool {
