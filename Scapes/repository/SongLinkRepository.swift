@@ -14,39 +14,10 @@ final class SongRepository: Repository {
     typealias RepositoryType = SongLink
     typealias Token = RepoToken
     
-    static func saveSongLink(_ songLink: SongLink) {
-        DispatchQueue.global(qos: .utility).async {
-            do {
-                let realm = try Realm()
-                try autoreleasepool {
-                    try realm.write {
-                        let songLinkModel = RealmSongLink()
-                        songLinkModel.title = "\(songLink.title) - \(songLink.artist)"
-                        songLinkModel.id = songLink.id
-                        songLinkModel.artist = songLink.artist
-                        songLinkModel.song = songLink.title
-                        songLinkModel.album = songLink.album
-                        songLinkModel.url = songLink.url
-                        songLinkModel.originalUrl = songLink.originalUrl
-                        songLinkModel.index = songLink.index
-                        realm.add(songLinkModel)
-                    }
-                }
-            } catch {
-                print("Item could not be saved")
-            }
-        }
-    }
-    
-    func getAll() -> [SongLink] {
-        do {
-            let realm = try Realm()
-            let results = realm.objects(RealmSongLink.self)
-            return results.map({ convert(element: $0) })
-        } catch {
-            print("Could access all Songs")
-        }
-        return []
+    func all(matching value: String?, _ args: Any...) -> [SongLink] {
+        guard let value = value else { return [] }
+        let items = realm.objects(RealmSongLink.self).filter(value, args)
+        return items.map { convert(element: $0) }
     }
     
     func get(identifier: String) -> SongLink? {
@@ -171,7 +142,7 @@ extension SongRepository {
         return model
     }
     
-    private func safeWrite(_ write:() -> Void) {
+    private func safeWrite(_ write: () -> Void) {
         do {
             try realm.write {
                 write()
