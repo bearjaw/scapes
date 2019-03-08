@@ -56,10 +56,3 @@ struct Playlist {
     let count: String
     let items: [SongLink]
 }
-
-struct Song: Equatable {
-    let artist: String
-    let title: String
-    let albumTitle: String
-    let index: Int
-}
