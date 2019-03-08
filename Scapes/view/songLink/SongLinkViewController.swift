@@ -66,6 +66,7 @@ class SongLinkViewController: UIViewController {
                 tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
                                      with: .automatic)
                 tableView.endUpdates()
+                self.viewSongLink.updateState(state: .show)
             }, onEmpty: { [weak self] in
                 guard let self = self else { return }
                 self.viewSongLink.updateState(state: .show)
@@ -110,6 +111,9 @@ extension SongLinkViewController: UITableViewDataSource {
 
 extension SongLinkViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let generator = UISelectionFeedbackGenerator()
+        generator.selectionChanged()
         let pasteBoard = UIPasteboard.general
         let item = viewModel.data[indexPath.row]
         pasteBoard.string = item.url
@@ -138,6 +142,8 @@ extension SongLinkViewController {
             DispatchQueue.main.async {
                 let pasteBoard = UIPasteboard.general
                 pasteBoard.string = exportString
+                let generator = UINotificationFeedbackGenerator()
+                generator.notificationOccurred(.success)
                 self.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
             }
         }
