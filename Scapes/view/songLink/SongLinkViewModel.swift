@@ -34,7 +34,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     }
     
     private var playlist: Playlist?
-    private var remainingSongs: [Song] = []
+    private var remainingSongs: [SongLink] = []
     private let repo = SongRepository()
     private var token: RepoToken?
     private var items: [SongLinkViewData] = []
@@ -64,7 +64,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         guard let playlist = playlist else { return nil }
         let predicates = playlist.items.map({ NSPredicate(format: "artist == %@ AND album == %@ AND title == %@",
                                                $0.artist,
-                                               $0.albumTitle,
+                                               $0.album,
                                                $0.title) })
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
@@ -114,7 +114,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         })
     }
     
-    private func downloadLinksIfNeeded(songs: [Song]) {
+    private func downloadLinksIfNeeded(songs: [SongLink]) {
         guard songs.isNonEmpty else { return }
         service.search(in: songs)
     }
