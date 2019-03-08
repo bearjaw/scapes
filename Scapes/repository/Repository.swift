@@ -17,7 +17,7 @@ protocol Repository {
     
     func all(matching predicate: NSPredicate?) -> [RepositoryType]
     
-    func get(identifier: String) -> RepositoryType?
+    func element(for identifier: String) -> RepositoryType?
     
     func add(element: RepositoryType)
     

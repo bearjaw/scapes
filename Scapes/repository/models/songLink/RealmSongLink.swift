@@ -10,9 +10,9 @@ import RealmSwift
 
 final class RealmSongLink: Object {
     @objc dynamic var id = ""
+    @objc dynamic var itemId = ""
     @objc dynamic var title: String = ""
     @objc dynamic var artist: String = ""
-    @objc dynamic var song: String = ""
     @objc dynamic var album: String = ""
     @objc dynamic var url: String = ""
     @objc dynamic var originalUrl: String = ""
@@ -20,8 +20,9 @@ final class RealmSongLink: Object {
     @objc dynamic var notFound: Bool = false
     @objc dynamic var downloaded: Bool = false
     @objc dynamic var playcount: Int = 0
+    @objc dynamic var playlistHash: String = ""
     
     override static func primaryKey() -> String? {
-        return "id"
+        return "itemId"
     }
 }

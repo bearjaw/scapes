@@ -28,7 +28,7 @@ final class PlaylistProvider: NSObject {
     static func fetchSongs(for playlist: MPMediaItemCollection) -> [SongLink] {
         if playlist.items.isEmpty { return [] }
         var index = 0
-        var songs: [SongLink] = []
+        var songs: [SongLink] = []        
         for song in playlist.items {
             if let title: String = song.value(forProperty: MPMediaItemPropertyTitle) as? String,
                 let artist: String = song.value(forProperty: MPMediaItemPropertyArtist) as? String,
@@ -43,7 +43,8 @@ final class PlaylistProvider: NSObject {
                                         index: index,
                                         notFound: false,
                                         playcount: playcount.intValue,
-                                        downloaded: false)
+                                        downloaded: false,
+                                        playlistHash: String(playlist.persistentID))
                 songs.append(songLink)
             }
             index += 1
@@ -52,8 +53,9 @@ final class PlaylistProvider: NSObject {
     }
 }
 
-struct Playlist {
+struct Playlist: Hashable {
     let name: String
     let count: String
     let items: [SongLink]
+    
 }

@@ -20,8 +20,11 @@ final class SongRepository: Repository {
         return items.map { convert(element: $0) }
     }
     
-    func get(identifier: String) -> SongLink? {
-        return nil
+    func element(for identifier: String) -> SongLink? {
+        guard let result = realm.object(ofType: RealmSongLink.self, forPrimaryKey: identifier) else {
+            return nil
+        }
+        return convert(element: result)
     }
     
     func add(element: SongLink) {
@@ -43,29 +46,9 @@ final class SongRepository: Repository {
     }
     
     func search(predicate: NSPredicate) -> SongLink? {
-        do {
-            let realm = try Realm()
-            let cachedSong = realm.objects(RealmSongLink.self).filter(predicate)
-            
-            if cachedSong.count == 1 {
-                guard let model = cachedSong.first else { fatalError("Collection is empty.") }
-                let songLinkViewData = SongLink(id: UUID().uuidString,
-                                                artist: model.artist,
-                                                title: model.song,
-                                                album: model.album,
-                                                url: model.url,
-                                                originalUrl: model.originalUrl,
-                                                index: model.index,
-                                                notFound: model.notFound,
-                                                playcount: model.playcount,
-                                                downloaded: model.downloaded
-                )
-                return songLinkViewData
-            }
-        } catch {
-            print("error occured")
-        }
-        return nil
+        let results = realm.objects(RealmSongLink.self).filter(predicate)
+        let songLinks: [SongLink] = results.map { convert(element: $0 )}
+        return songLinks.first
     }
     
     func subscribe(filter: NSPredicate? = nil, onInitial: @escaping ([SongLink]) -> Void,
@@ -130,12 +113,14 @@ extension SongRepository {
                          index: element.index,
                          notFound: element.notFound,
                          playcount: element.playcount,
-                         downloaded: element.downloaded)
+                         downloaded: element.downloaded,
+                         playlistHash: element.playlistHash)
     }
     
     private func convert(element: SongLink) -> RealmSongLink {
         let model = RealmSongLink()
         model.id = element.id
+        model.itemId = "\(element.album) \(element.artist) \(element.title)"
         model.artist = element.artist
         model.title = element.title
         model.album = element.album
@@ -145,6 +130,7 @@ extension SongRepository {
         model.notFound = element.notFound
         model.playcount = element.playcount
         model.downloaded = element.downloaded
+        model.playlistHash = element.playlistHash
         return model
     }
     

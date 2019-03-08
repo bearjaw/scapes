@@ -45,10 +45,9 @@ final class SongLinkViewModel {
     }
     
     private func filter() -> NSCompoundPredicate? {
-        let predicates = playlist.items.map({ NSPredicate(format: "artist == %@ AND album == %@ AND title == %@",
-                                               $0.artist,
-                                               $0.album,
-                                               $0.title) })
+        let predicates = playlist.items.map({ NSPredicate(format: "itemId == %@",
+                                                          $0.itemId) })
+        predicates.forEach { print($0.predicateFormat)}
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
@@ -62,11 +61,11 @@ final class SongLinkViewModel {
     
     private func convert(_ value: SongLink) -> SongLinkViewData {
         return SongLinkViewData(url: value.url,
-                         success: value.notFound,
-                         title: value.title,
-                         artist: value.artist,
-                         album: value.album,
-                         index: value.index)
+                                success: value.notFound,
+                                title: value.title,
+                                artist: value.artist,
+                                album: value.album,
+                                index: value.index)
     }
     
     private func allSongsDownloaded(songs: [SongLink]) {
@@ -93,19 +92,15 @@ extension SongLinkViewModel: SongLinkViewModelProtocol {
         let filter = self.filter()
         
         token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
-            DispatchQueue.main.async {
+            self.data = newValue
+            if newValue.isEmpty { onEmpty() }
+            onInitial()
+            self.allSongsDownloaded(songs: newValue)
+            }, onChange: { [unowned self] newValue, indecies  in
                 self.data = newValue
                 if newValue.isEmpty { onEmpty() }
-                onInitial()
+                onChange(indecies)
                 self.allSongsDownloaded(songs: newValue)
-            }
-            }, onChange: { [unowned self] newValue, indecies  in
-                DispatchQueue.main.async {
-                    self.data = newValue
-                    if newValue.isEmpty { onEmpty() }
-                    onChange(indecies)
-                    self.allSongsDownloaded(songs: newValue)
-                }
         })
     }
     
