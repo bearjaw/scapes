@@ -82,7 +82,7 @@ final class SongRepository: Repository {
                     onInitial(collection.sorted(byKeyPath: "index").map({ self.convert(element: $0 )}))
                 case .update(let collection, let deletions, let insertions, let modifications):
                     print("")
-                    onChange(collection.sorted(byKeyPath: "index").map({ self.convert(element: $0 )}),
+                    onChange(collection.map({ self.convert(element: $0 )}),
                              (deletions: deletions, insertions: insertions, modifications: modifications))
                 case .error(let error):
                     fatalError("\(error)")

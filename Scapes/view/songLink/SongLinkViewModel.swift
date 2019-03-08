@@ -72,6 +72,7 @@ final class SongLinkViewModel {
     private func allSongsDownloaded(songs: [SongLink]) {
         let completed = songs.filter { $0.downloaded == false }.isEmpty
         if completed && playlist.items.count == songs.count, let onCompleted = self.onCompleted {
+            self.data.sort { $0.index < $1.index }
             onCompleted()
         }
     }

@@ -73,7 +73,7 @@ class SongLinkViewController: UIViewController {
         
         viewModel.subscribe { [weak self] in
             guard let self = self else { return }
-            self.viewSongLink.tableView.reloadData()
+            self.viewSongLink.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
             self.viewSongLink.updateState(state: .hide)
         }
     }
