@@ -25,27 +25,36 @@ final class PlaylistProvider: NSObject {
         return mPlaylists
     }
     
-    static func fetchSongs(for playlist: MPMediaItemCollection) -> [Song] {
+    static func fetchSongs(for playlist: MPMediaItemCollection) -> [SongLink] {
         if playlist.items.isEmpty { return [] }
         var index = 0
-        var songsViewData: [Song] = []
+        var songs: [SongLink] = []
         for song in playlist.items {
             if let title: String = song.value(forProperty: MPMediaItemPropertyTitle) as? String,
                 let artist: String = song.value(forProperty: MPMediaItemPropertyArtist) as? String,
-                let albumTitle: String = song.value(forProperty: MPMediaItemPropertyAlbumTitle) as? String {
-                let mSong = Song(artist: artist, title: title, albumTitle: albumTitle, index: index)
-                songsViewData.append(mSong)
+                let album: String = song.value(forProperty: MPMediaItemPropertyAlbumTitle) as? String,
+                let playcount: NSNumber = song.value(forProperty: MPMediaItemPropertyPlayCount) as? NSNumber {
+                let songLink = SongLink(id: UUID().uuidString,
+                                        artist: artist,
+                                        title: title,
+                                        album: album,
+                                        url: "",
+                                        originalUrl: "",
+                                        index: index,
+                                        notFound: false,
+                                        playcount: playcount.intValue)
+                songs.append(songLink)
             }
             index += 1
         }
-        return songsViewData
+        return songs
     }
 }
 
 struct Playlist {
     let name: String
     let count: String
-    let items: [Song]
+    let items: [SongLink]
 }
 
 struct Song: Equatable {
