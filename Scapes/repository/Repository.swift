@@ -21,7 +21,7 @@ protocol Repository {
     associatedtype RepositoryType
     associatedtype Token
     
-    func getAll() -> [RepositoryType]
+    func all(matching value: String?, _ args: Any...) -> [RepositoryType]
     
     func get(identifier: String) -> RepositoryType?
     
