@@ -183,5 +183,9 @@ struct SongLink {
         self.originalUrl = originalUrl
         self.index = index
         self.notFound = notFound
+
+extension SongLink: Equatable {
+    static func == (lhs: SongLink, rhs: SongLink) -> Bool {
+        return (lhs.title == rhs.title && lhs.artist == rhs.artist && lhs.album == rhs.album)
     }
 }
