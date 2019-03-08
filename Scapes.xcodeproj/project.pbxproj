@@ -10,6 +10,7 @@
 		480E91F6222D89C20094359B /* SongLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91F5222D89C20094359B /* SongLinkViewModel.swift */; };
 		480E91F9222D8F8E0094359B /* SongLinkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91F8222D8F8E0094359B /* SongLinkRepository.swift */; };
 		480E9200222D9DF50094359B /* RepoToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91FF222D9DF50094359B /* RepoToken.swift */; };
+		483722642232DE8D00492E4B /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483722632232DE8D00492E4B /* PlaylistViewModel.swift */; };
 		485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB421CEAAA100E813F0 /* View+Extensions.swift */; };
 		485FBEB721CEAB1800E813F0 /* DarkAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */; };
 		486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEEB21E679820023A728 /* Collection+Extension.swift */; };
@@ -49,6 +50,7 @@
 		480E91F7222D8C000094359B /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		480E91F8222D8F8E0094359B /* SongLinkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkRepository.swift; sourceTree = "<group>"; };
 		480E91FF222D9DF50094359B /* RepoToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoToken.swift; sourceTree = "<group>"; };
+		483722632232DE8D00492E4B /* PlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewModel.swift; sourceTree = "<group>"; };
 		485FBEB421CEAAA100E813F0 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkAlertController.swift; sourceTree = "<group>"; };
 		486EBEE821E6652F0023A728 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -112,6 +114,13 @@
 				48A97BEB21AD8F7B006E5985 /* SongLinkProvider.swift */,
 			);
 			path = provider;
+			sourceTree = "<group>";
+		};
+		483722622232DD5800492E4B /* bridge */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = bridge;
 			sourceTree = "<group>";
 		};
 		485FBEB321CEAA8500E813F0 /* view */ = {
@@ -180,7 +189,6 @@
 		488544E221C92BE800532B37 /* manager */ = {
 			isa = PBXGroup;
 			children = (
-				48A97BE921AD8C39006E5985 /* PlaylistProvider.swift */,
 				488544E321C92C0100532B37 /* MusicAssetManager.swift */,
 				488544E521C92E7600532B37 /* MusicAssetManagerError.swift */,
 			);
@@ -201,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				488544EB21C9693F00532B37 /* PlaylistsTableViewController.swift */,
+				483722632232DE8D00492E4B /* PlaylistViewModel.swift */,
 			);
 			path = playlists;
 			sourceTree = "<group>";
@@ -273,6 +282,7 @@
 		48A97BD121AD7DF9006E5985 /* Scapes */ = {
 			isa = PBXGroup;
 			children = (
+				483722622232DD5800492E4B /* bridge */,
 				48A97BD221AD7DF9006E5985 /* AppDelegate.swift */,
 				48A97BD921AD7DFA006E5985 /* Assets.xcassets */,
 				48A97BDE21AD7DFA006E5985 /* Info.plist */,
@@ -474,6 +484,7 @@
 				488544DE21C92B2200532B37 /* Atomic.swift in Sources */,
 				48A97BEC21AD8F7B006E5985 /* SongLinkProvider.swift in Sources */,
 				48A97BD321AD7DF9006E5985 /* AppDelegate.swift in Sources */,
+				483722642232DE8D00492E4B /* PlaylistViewModel.swift in Sources */,
 				488544E421C92C0100532B37 /* MusicAssetManager.swift in Sources */,
 				488544F421C98B3000532B37 /* AppAppearanceProtocol.swift in Sources */,
 				48A97BE821AD7E73006E5985 /* SongLinkView.swift in Sources */,
@@ -629,7 +640,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YYL3H8SLE2;
 				INFOPLIST_FILE = Scapes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -648,7 +659,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YYL3H8SLE2;
 				INFOPLIST_FILE = Scapes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
