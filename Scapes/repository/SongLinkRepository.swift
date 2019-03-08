@@ -16,7 +16,7 @@ final class SongRepository: Repository {
     
     func all(matching predicate: NSPredicate?) -> [SongLink] {
         guard let predicate = predicate else { return [] }
-        let items = realm.objects(RealmSongLink.self).filter(predicate)
+        let items = realm.objects(RealmSongLink.self).filter(predicate).sorted(byKeyPath: "index")
         return items.map { convert(element: $0) }
     }
     
@@ -78,7 +78,7 @@ final class SongRepository: Repository {
                 guard let self = self else { return }
                 switch changes {
                 case .initial(let collection):
-                    onInitial(collection.map({ self.convert(element: $0 )}))
+                    onInitial(collection.sorted(byKeyPath: "index").map({ self.convert(element: $0 )}))
                 case .update(let collection, let deletions, let insertions, let modifications):
                     print("")
                     onChange(collection.sorted(byKeyPath: "index").map({ self.convert(element: $0 )}),
