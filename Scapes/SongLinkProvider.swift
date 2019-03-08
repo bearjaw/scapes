@@ -22,8 +22,8 @@ class SongLinkProvider: NSObject {
         super.init()
     }
     
-    func search(in songs: [Song], result: @escaping Result) {
-        downloadSongLinks(songs: songs, result: result)
+    func search(in songs: [Song]) {
+        downloadSongLinks(songs: songs)
     }
     
     func provideCachedSongs(for playlist: Playlist, content: @escaping Content) {
@@ -44,10 +44,10 @@ class SongLinkProvider: NSObject {
     
     // MARK: - Private
     
-    private func downloadSongLinks(songs: [Song], result: @escaping Result) {
+    private func downloadSongLinks(songs: [Song]) {
         var results: [SongLinkViewData] = []
         for song in songs {
-            self.search(song: song, searchBlock: { item, songData in
+            self.search(song: song, searchBlock: { [unowned self] item, songData in
                 if let url = item?.url, let originalUrl = item?.originalUrl {
                     results.append(SongLinkViewData(url: url,
                                                     success: true,
@@ -68,11 +68,6 @@ class SongLinkProvider: NSObject {
                     ))
                     let error = "Could not find the music track matching these criteria."
                     self.addToDatabase(song: songData, url: error, originalUrl: error)
-                }
-                DispatchQueue.main.async {
-                    if results.count == songs.count {
-                        result(results)
-                    }
                 }
             })
         }

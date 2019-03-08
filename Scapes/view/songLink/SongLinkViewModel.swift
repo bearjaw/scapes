@@ -116,9 +116,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     
     private func downloadLinksIfNeeded(songs: [Song]) {
         guard songs.isNonEmpty else { return }
-        service.search(in: songs) { _ in
-            // TODO: remove collection
-        }
+        service.search(in: songs)
     }
     
 }
