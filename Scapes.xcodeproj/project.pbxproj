@@ -105,6 +105,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		483722612232CB3200492E4B /* provider */ = {
+			isa = PBXGroup;
+			children = (
+				48A97BEB21AD8F7B006E5985 /* SongLinkProvider.swift */,
+			);
+			path = provider;
+			sourceTree = "<group>";
+		};
 		485FBEB321CEAA8500E813F0 /* view */ = {
 			isa = PBXGroup;
 			children = (
@@ -270,8 +278,8 @@
 				48A97BDB21AD7DFA006E5985 /* LaunchScreen.storyboard */,
 				488544CA21C92B2100532B37 /* libs */,
 				488544E221C92BE800532B37 /* manager */,
+				483722612232CB3200492E4B /* provider */,
 				488544F821CAC81400532B37 /* repository */,
-				48A97BEB21AD8F7B006E5985 /* SongLinkProvider.swift */,
 				486EBEEA21E6793E0023A728 /* util */,
 				48A97BE621AD7E5A006E5985 /* view */,
 			);
