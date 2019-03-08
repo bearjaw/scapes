@@ -14,9 +14,9 @@ final class SongRepository: Repository {
     typealias RepositoryType = SongLink
     typealias Token = RepoToken
     
-    func all(matching value: String?, _ args: Any...) -> [SongLink] {
-        guard let value = value else { return [] }
-        let items = realm.objects(RealmSongLink.self).filter(value, args)
+    func all(matching predicate: NSPredicate?) -> [SongLink] {
+        guard let predicate = predicate else { return [] }
+        let items = realm.objects(RealmSongLink.self).filter(predicate)
         return items.map { convert(element: $0) }
     }
     
@@ -56,7 +56,8 @@ final class SongRepository: Repository {
                                                 url: model.url,
                                                 originalUrl: model.originalUrl,
                                                 index: model.index,
-                                                notFound: model.notFound
+                                                notFound: model.notFound,
+                                                playcount: model.playcount
                 )
                 return songLinkViewData
             }
@@ -126,7 +127,8 @@ extension SongRepository {
                          url: element.url,
                          originalUrl: element.originalUrl,
                          index: element.index,
-                         notFound: element.notFound)
+                         notFound: element.notFound,
+                         playcount: element.playcount)
     }
     
     private func convert(element: SongLink) -> RealmSongLink {
