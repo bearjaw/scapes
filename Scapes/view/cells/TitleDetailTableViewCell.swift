@@ -90,14 +90,14 @@ class TitleDetailTableViewCell: UITableViewCell {
                                        width: sizeSong.width,
                                        height: sizeSong.height
         ))
-        originY = labelSongTitle.rightBottom().y
+        originY = labelSongTitle.rightBottom.y
         
         labelArtist.frame = (CGRect(x: originX + verticalSpaceMultiplier*verticalSpace,
                                        y: originY + horizontalSpace,
                                        width: sizeArtist.width,
                                        height: sizeArtist.height
         ))
-        originX = labelArtist.rightBottom().x
+        originX = labelArtist.rightBottom.x
         
         labelAlbum.frame = (CGRect(x: originX,
                                        y: originY + horizontalSpace,
@@ -105,7 +105,7 @@ class TitleDetailTableViewCell: UITableViewCell {
                                        height: sizeAlbum.height
         ))
         originX = 0.0
-        originY = labelAlbum.rightBottom().y
+        originY = labelAlbum.rightBottom.y
         
         labelLink.frame = (CGRect(x: originX + verticalSpaceMultiplier*verticalSpace,
                                        y: originY + horizontalSpaceMultiplier*horizontalSpace,

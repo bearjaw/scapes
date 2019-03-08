@@ -26,8 +26,7 @@ extension UIView {
 }
 
 extension UIView {
-    
-    func rightBottom() -> CGPoint {
-        return (CGPoint(x: frame.origin.x + bounds.size.width, y: frame.origin.y + bounds.size.height))
+    public var rightBottom: CGPoint {
+        return CGPoint(x: frame.origin.x + bounds.size.width, y: frame.origin.y + bounds.size.height)
     }
 }
