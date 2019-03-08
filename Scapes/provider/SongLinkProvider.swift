@@ -13,67 +13,64 @@ class SongLinkProvider: NSObject {
         return MusicAssetManager.shared
     }()
     
-    typealias SearchBlock = (_ songLinkReadyItem: SongLinkReadyItem?, _ song: Song) -> Void
+    typealias SearchBlock = (_ songLinkReadyItem: SongLinkReadyItem?) -> Void
     typealias Result = (_ songLinks: [SongLinkViewData]) -> Void
     
-    typealias Content = (_ cache: [SongLinkViewData], _ remainingSongs: [Song]) -> Void
+    typealias Content = (_ cache: [SongLinkViewData], _ remainingSongs: [SongLink]) -> Void
     
     override init() {
         super.init()
     }
     
-    func search(in songs: [Song]) {
+    func search(in songs: [SongLink]) {
         downloadSongLinks(songs: songs)
     }
     
     func provideCachedSongs(for playlist: Playlist, content: @escaping Content) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            if let data = self?.checkForAvailableSongs(songs: playlist.items) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let data = self.checkForAvailableSongs(songs: playlist.items)
                 let cache = data.cache
                 let remainingSongs = data.downloads
                 DispatchQueue.main.async {
                     content(cache, remainingSongs)
-                }   
-            } else {
-                DispatchQueue.main.async {
-                    content([], [])
-                }
             }
         }
     }
     
     // MARK: - Private
     
-    private func downloadSongLinks(songs: [Song]) {
-        var results: [SongLinkViewData] = []
+    private func downloadSongLinks(songs: [SongLink]) {
+        
         for song in songs {
-            self.search(song: song, searchBlock: { [unowned self] item, songData in
+            self.search(song: song, searchBlock: { [unowned self] item in
                 if let url = item?.url, let originalUrl = item?.originalUrl {
-                    results.append(SongLinkViewData(url: url,
-                                                    success: true,
-                                                    title: songData.title,
-                                                    artist: songData.artist,
-                                                    album: songData.albumTitle,
-                                                    index: songData.index
-                    ))
-                    self.addToDatabase(song: songData, url: url, originalUrl: originalUrl)
+                    let songLink = SongLink(id: song.id,
+                                            artist: song.artist,
+                                            title: song.title,
+                                            album: song.album, url: url,
+                                            originalUrl: originalUrl,
+                                            index: song.index,
+                                            notFound: song.notFound,
+                                            playcount: song.playcount)
+                    self.addToDatabase(song: songLink)
                 } else {
-                    results.append(SongLinkViewData(
-                        url: "Failed for \(song.title) \(song.artist)",
-                        success: false,
-                        title: songData.title,
-                        artist: songData.artist,
-                        album: songData.albumTitle,
-                        index: songData.index
-                    ))
                     let error = "Could not find the music track matching these criteria."
-                    self.addToDatabase(song: songData, url: error, originalUrl: error)
+                    let songLink = SongLink(id: song.id,
+                                            artist: song.artist,
+                                            title: song.title,
+                                            album: song.album,
+                                            url: error,
+                                            originalUrl: error,
+                                            index: song.index,
+                                            notFound: true,
+                                            playcount: song.playcount)
+                    self.addToDatabase(song: songLink)
                 }
             })
         }
     }
     
-    private func search(song: Song, searchBlock: @escaping SearchBlock) {
+    private func search(song: SongLink, searchBlock: @escaping SearchBlock) {
         let escapedString = "\(song.title)+\(song.artist)"
         service.call(path: MusicAssetManager.Path.search(term: escapedString), callback: { json, _ in
             if let contents: [[String: Any]] = json?["results"] as? [[String: Any]] {
@@ -83,52 +80,39 @@ class SongLinkProvider: NSObject {
                     let newTrack: String = "https://song.link/\(trackViewUrl)&app=music"
                     print(newTrack)
                     let item = SongLinkReadyItem(url: newTrack, originalUrl: trackViewUrl)
-                    searchBlock(item, song)
+                    searchBlock(item)
                 } else {
-                    searchBlock(nil, song)
+                    searchBlock(nil)
                 }
             } else {
-                searchBlock(nil, song)
+                searchBlock(nil)
             }
         })
     }
     
-    private func addToDatabase(song: Song, url: String, originalUrl: String) {
-        let songLinkData = SongLink(
-            id: UUID().uuidString,
-            artist: song.artist,
-            title: song.title,
-            album: song.albumTitle,
-            url: url,
-            originalUrl: originalUrl,
-            index: song.index,
-            notFound: false
-        )
+    private func addToDatabase(song: SongLink) {
         let songRepo = SongRepository()
-        songRepo.add(element: songLinkData)
+        songRepo.add(element: song)
     }
     
-    private func checkForAvailableSongs(songs: [Song]) -> (cache: [SongLinkViewData], downloads: [Song] ) {
-        var cache: [SongLinkViewData] = []
-        let songsToDownload = songs.filter({ song in
-            let predicate = NSPredicate(format: "artist = %@ AND album = %@ AND song = %@",
-                                        song.artist,
-                                        song.albumTitle,
-                                        song.title)
-            let songRepo = SongRepository()
-            if let cachedSong = songRepo.search(predicate: predicate) {
-                let songViewData = SongLinkViewData(url: cachedSong.url,
-                                                    success: true,
-                                                    title: cachedSong.title,
-                                                    artist: cachedSong.artist,
-                                                    album: cachedSong.album,
-                                                    index: cachedSong.index)
-                cache.append(songViewData)
-                return false
-            }
-            return true
-        })
-        return (cache, songsToDownload)
+    private func checkForAvailableSongs(songs: [SongLink]) -> (cache: [SongLinkViewData], downloads: [SongLink] ) {
+        let predicates = songs.map { NSPredicate(format: "artist = %@ AND album = %@ AND song = %@",
+                                                $0.artist,
+                                                $0.album,
+                                                $0.title) }
+        let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+        let songRepo = SongRepository()
+        let results = songRepo.all(matching: compundPredicate)
+        let cache = results.map { SongLinkViewData(url: $0.url,
+                                                  success: true,
+                                                  title: $0.title,
+                                                  artist: $0.artist,
+                                                  album: $0.album,
+                                                  index: $0.index) }
+        let songsSet: Set<SongLink> = Set(songs)
+        let songsToDownload: Set<SongLink> = songsSet.subtracting(Set(results))
+        
+        return (cache, Array(songsToDownload))
     }
 }
 
