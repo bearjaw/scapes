@@ -11,9 +11,9 @@ import Foundation
 protocol SongLinkViewModelProtocol {
     typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
     
-    var data: [SongLinkViewData] { get }
-    
     var title: String { get }
+    
+    var data: [SongLink] { get set }
     
     func fetchRemainingSongsIfNeeded()
     
@@ -24,7 +24,6 @@ protocol SongLinkViewModelProtocol {
 
 final class SongLinkViewModel {
     private var playlist: Playlist
-    private var remainingSongs: [SongLink] = []
     private var token: RepoToken?
     private var items: [SongLinkViewData] = []
     private var onCompleted: (() -> Void)?
@@ -38,7 +37,10 @@ final class SongLinkViewModel {
         return SongLinkProvider()
     }()
     
+    var data: [SongLink] = []
+    
     init(playlist: Playlist) {
+        data = []
         self.playlist = playlist
     }
     
@@ -54,23 +56,22 @@ final class SongLinkViewModel {
         if value.isEmpty {
             return []
         } else {
-            return value.map({ convert($0) })
+            return value.map { convert($0) }
         }
     }
     
     private func convert(_ value: SongLink) -> SongLinkViewData {
         return SongLinkViewData(url: value.url,
-                         success: !value.notFound,
+                         success: value.notFound,
                          title: value.title,
                          artist: value.artist,
                          album: value.album,
                          index: value.index)
     }
     
-    private func checkIfCompleted() {
-        if self.items.count == self.playlist.items.count,
-            let onCompleted = onCompleted,
-            self.items.filter({ $0.url.isEmpty}).isEmpty {
+    private func allSongsDownloaded(songs: [SongLink]) {
+        let completed = songs.filter { $0.downloaded == false }.isEmpty
+        if completed && playlist.items.count == songs.count, let onCompleted = self.onCompleted {
             onCompleted()
         }
     }
@@ -82,9 +83,6 @@ final class SongLinkViewModel {
 }
 
 extension SongLinkViewModel: SongLinkViewModelProtocol {
-    var data: [SongLinkViewData] {
-        return items
-    }
     
     var title: String {
         return playlist.name
@@ -94,23 +92,25 @@ extension SongLinkViewModel: SongLinkViewModelProtocol {
         let filter = self.filter()
         
         token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
-            self.items = self.convert(newValue)
-            if newValue.isEmpty { onEmpty() }
-            self.checkIfCompleted()
-            onInitial()
-            }, onChange: { [unowned self] newValue, indecies  in
-                self.items = self.convert(newValue)
+            DispatchQueue.main.async {
+                self.data = newValue
                 if newValue.isEmpty { onEmpty() }
-                self.checkIfCompleted()
-                onChange(indecies)
+                onInitial()
+                self.allSongsDownloaded(songs: newValue)
+            }
+            }, onChange: { [unowned self] newValue, indecies  in
+                DispatchQueue.main.async {
+                    self.data = newValue
+                    if newValue.isEmpty { onEmpty() }
+                    onChange(indecies)
+                    self.allSongsDownloaded(songs: newValue)
+                }
         })
     }
     
     func fetchRemainingSongsIfNeeded() {
-        service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
+        service.provideCachedSongs(for: playlist, content: { [weak self] _, remainingSongs in
             guard let self = self else { return }
-            self.items.append(contentsOf: cache)
-            self.remainingSongs = remainingSongs
             self.downloadLinksIfNeeded(songs: remainingSongs)
         })
     }

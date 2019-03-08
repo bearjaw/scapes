@@ -18,6 +18,7 @@ final class RealmSongLink: Object {
     @objc dynamic var originalUrl: String = ""
     @objc dynamic var index: Int = -1
     @objc dynamic var notFound: Bool = false
+    @objc dynamic var downloaded: Bool = false
     @objc dynamic var playcount: Int = 0
     
     override static func primaryKey() -> String? {

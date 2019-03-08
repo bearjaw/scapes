@@ -42,7 +42,8 @@ final class PlaylistProvider: NSObject {
                                         originalUrl: "",
                                         index: index,
                                         notFound: false,
-                                        playcount: playcount.intValue)
+                                        playcount: playcount.intValue,
+                                        downloaded: false)
                 songs.append(songLink)
             }
             index += 1
