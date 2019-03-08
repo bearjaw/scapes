@@ -22,22 +22,17 @@ protocol SongLinkViewModelProtocol {
     func subscribe(onCompleted: @escaping () -> Void)
 }
 
-final class SongLinkViewModel: SongLinkViewModelProtocol {
-    
-    var data: [SongLinkViewData] {
-        return items
-    }
-    
-    var title: String {
-        return playlist.name
-    }
-    
+final class SongLinkViewModel {
     private var playlist: Playlist
     private var remainingSongs: [SongLink] = []
-    private let repo = SongRepository()
     private var token: RepoToken?
     private var items: [SongLinkViewData] = []
     private var onCompleted: (() -> Void)?
+    
+    private lazy var repo: SongRepository = {
+        let repo = SongRepository()
+        return repo
+    }()
     
     private lazy var service: SongLinkProvider = {
         return SongLinkProvider()
@@ -45,22 +40,6 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     
     init(playlist: Playlist) {
         self.playlist = playlist
-    }
-    
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void) {
-        let filter = self.filter()
-        
-        token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
-            self.items = self.convert(newValue)
-            if newValue.isEmpty { onEmpty() }
-            self.checkIfCompleted()
-            onInitial()
-        }, onChange: { [unowned self] newValue, indecies  in
-            self.items = self.convert(newValue)
-            if newValue.isEmpty { onEmpty() }
-            self.checkIfCompleted()
-            onChange(indecies)
-        })
     }
     
     private func filter() -> NSCompoundPredicate? {
@@ -71,18 +50,12 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
-    func subscribe(onCompleted: @escaping () -> Void) {
-        self.onCompleted = onCompleted
-    }
-    
     private func convert(_ value: [SongLink]) -> [SongLinkViewData] {
         if value.isEmpty {
             return []
-//            return playlist.items.map({ convert(SongLink(artist: $0.artist, album: $0.albumTitle, title: $0.title ))})
         } else {
             return value.map({ convert($0) })
         }
-        
     }
     
     private func convert(_ value: SongLink) -> SongLinkViewData {
@@ -102,6 +75,37 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         }
     }
     
+    private func downloadLinksIfNeeded(songs: [SongLink]) {
+        guard songs.isNonEmpty else { return }
+        service.search(in: songs)
+    }
+}
+
+extension SongLinkViewModel: SongLinkViewModelProtocol {
+    var data: [SongLinkViewData] {
+        return items
+    }
+    
+    var title: String {
+        return playlist.name
+    }
+    
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void) {
+        let filter = self.filter()
+        
+        token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
+            self.items = self.convert(newValue)
+            if newValue.isEmpty { onEmpty() }
+            self.checkIfCompleted()
+            onInitial()
+            }, onChange: { [unowned self] newValue, indecies  in
+                self.items = self.convert(newValue)
+                if newValue.isEmpty { onEmpty() }
+                self.checkIfCompleted()
+                onChange(indecies)
+        })
+    }
+    
     func fetchRemainingSongsIfNeeded() {
         service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
             guard let self = self else { return }
@@ -111,9 +115,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         })
     }
     
-    private func downloadLinksIfNeeded(songs: [SongLink]) {
-        guard songs.isNonEmpty else { return }
-        service.search(in: songs)
+    func subscribe(onCompleted: @escaping () -> Void) {
+        self.onCompleted = onCompleted
     }
-    
 }
