@@ -23,6 +23,8 @@ protocol Repository {
     
     func update(element: RepositoryType)
     
+    func update(element identifier: String, value: Any?, for keyPath: String)
+    
     func delete(element: RepositoryType)
     
     func search(predicate: NSPredicate) -> RepositoryType?

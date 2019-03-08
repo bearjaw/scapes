@@ -107,6 +107,7 @@ class SongLinkProvider: NSObject {
         let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         let songRepo = SongRepository()
         let results = songRepo.all(matching: compundPredicate)
+        results.forEach { songRepo.update(element: $0.itemId, value: $0.playcount, for: "playcount")}
         let cache = results.map { SongLinkViewData(url: $0.url,
                                                   success: true,
                                                   title: $0.title,
