@@ -51,7 +51,8 @@ class SongLinkProvider: NSObject {
                                             originalUrl: originalUrl,
                                             index: song.index,
                                             notFound: song.notFound,
-                                            playcount: song.playcount)
+                                            playcount: song.playcount,
+                                            downloaded: true)
                     self.addToDatabase(song: songLink)
                 } else {
                     let error = "Could not find the music track matching these criteria."
@@ -63,7 +64,8 @@ class SongLinkProvider: NSObject {
                                             originalUrl: error,
                                             index: song.index,
                                             notFound: true,
-                                            playcount: song.playcount)
+                                            playcount: song.playcount,
+                                            downloaded: true)
                     self.addToDatabase(song: songLink)
                 }
             })
@@ -96,10 +98,11 @@ class SongLinkProvider: NSObject {
     }
     
     private func checkForAvailableSongs(songs: [SongLink]) -> (cache: [SongLinkViewData], downloads: [SongLink] ) {
-        let predicates = songs.map { NSPredicate(format: "artist = %@ AND album = %@ AND song = %@",
+        let predicates = songs.map { NSPredicate(format: "artist = %@ AND album = %@ AND song = %@ AND downloaded = true",
                                                 $0.artist,
                                                 $0.album,
-                                                $0.title) }
+                                                $0.title,
+                                                true) }
         let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         let songRepo = SongRepository()
         let results = songRepo.all(matching: compundPredicate)
@@ -140,6 +143,7 @@ struct SongLink: Hashable {
     let index: Int
     let notFound: Bool
     let playcount: Int
+    let downloaded: Bool
     
     init(artist: String, album: String, title: String) {
         self.id = ""
@@ -151,6 +155,7 @@ struct SongLink: Hashable {
         self.index = -1
         self.notFound = false
         self.playcount = 0
+        self.downloaded = false
     }
     
     init(id: String,
@@ -161,7 +166,8 @@ struct SongLink: Hashable {
          originalUrl: String,
          index: Int,
          notFound: Bool,
-         playcount: Int) {
+         playcount: Int,
+         downloaded: Bool) {
         self.id = id
         self.artist = artist
         self.title = title
@@ -171,6 +177,7 @@ struct SongLink: Hashable {
         self.index = index
         self.notFound = notFound
         self.playcount = playcount
+        self.downloaded = downloaded
     }
 }
 
