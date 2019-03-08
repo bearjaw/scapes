@@ -108,6 +108,7 @@
 		483722612232CB3200492E4B /* provider */ = {
 			isa = PBXGroup;
 			children = (
+				48A97BE921AD8C39006E5985 /* PlaylistProvider.swift */,
 				48A97BEB21AD8F7B006E5985 /* SongLinkProvider.swift */,
 			);
 			path = provider;
