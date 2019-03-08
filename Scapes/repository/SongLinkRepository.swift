@@ -14,39 +14,10 @@ final class SongRepository: Repository {
     typealias RepositoryType = SongLink
     typealias Token = RepoToken
     
-    static func saveSongLink(_ songLink: SongLink) {
-        DispatchQueue.global(qos: .utility).async {
-            do {
-                let realm = try Realm()
-                try autoreleasepool {
-                    try realm.write {
-                        let songLinkModel = RealmSongLink()
-                        songLinkModel.title = "\(songLink.title) - \(songLink.artist)"
-                        songLinkModel.id = songLink.id
-                        songLinkModel.artist = songLink.artist
-                        songLinkModel.song = songLink.title
-                        songLinkModel.album = songLink.album
-                        songLinkModel.url = songLink.url
-                        songLinkModel.originalUrl = songLink.originalUrl
-                        songLinkModel.index = songLink.index
-                        realm.add(songLinkModel)
-                    }
-                }
-            } catch {
-                print("Item could not be saved")
-            }
-        }
-    }
-    
-    func getAll() -> [SongLink] {
-        do {
-            let realm = try Realm()
-            let results = realm.objects(RealmSongLink.self)
-            return results.map({ convert(element: $0) })
-        } catch {
-            print("Could access all Songs")
-        }
-        return []
+    func all(matching predicate: NSPredicate?) -> [SongLink] {
+        guard let predicate = predicate else { return [] }
+        let items = realm.objects(RealmSongLink.self).filter(predicate)
+        return items.map { convert(element: $0) }
     }
     
     func get(identifier: String) -> SongLink? {
@@ -85,7 +56,8 @@ final class SongRepository: Repository {
                                                 url: model.url,
                                                 originalUrl: model.originalUrl,
                                                 index: model.index,
-                                                notFound: model.notFound
+                                                notFound: model.notFound,
+                                                playcount: model.playcount
                 )
                 return songLinkViewData
             }
@@ -155,7 +127,8 @@ extension SongRepository {
                          url: element.url,
                          originalUrl: element.originalUrl,
                          index: element.index,
-                         notFound: element.notFound)
+                         notFound: element.notFound,
+                         playcount: element.playcount)
     }
     
     private func convert(element: SongLink) -> RealmSongLink {
@@ -171,7 +144,7 @@ extension SongRepository {
         return model
     }
     
-    private func safeWrite(_ write:() -> Void) {
+    private func safeWrite(_ write: () -> Void) {
         do {
             try realm.write {
                 write()

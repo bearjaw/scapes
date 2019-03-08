@@ -43,6 +43,7 @@ class SongLinkViewController: UIViewController {
         }
         addExportButton()
         subscribeToDataChanges()
+        self.title = viewModel.title
     }
     
     // MARK: Lifecycle end

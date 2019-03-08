@@ -8,12 +8,6 @@
 
 import Foundation
 
-extension SongLink: Equatable {
-    static func == (lhs: SongLink, rhs: SongLink) -> Bool {
-        return (lhs.title == rhs.title && lhs.artist == rhs.artist && lhs.album == rhs.album)
-    }
-}
-
 protocol Repository {
     
     typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
@@ -21,7 +15,7 @@ protocol Repository {
     associatedtype RepositoryType
     associatedtype Token
     
-    func getAll() -> [RepositoryType]
+    func all(matching predicate: NSPredicate?) -> [RepositoryType]
     
     func get(identifier: String) -> RepositoryType?
     
