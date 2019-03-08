@@ -29,11 +29,10 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     }
     
     var title: String {
-        guard let playlist = playlist else { return "Playlist" }
         return playlist.name
     }
     
-    private var playlist: Playlist?
+    private var playlist: Playlist
     private var remainingSongs: [SongLink] = []
     private let repo = SongRepository()
     private var token: RepoToken?
@@ -43,6 +42,10 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     private lazy var service: SongLinkProvider = {
         return SongLinkProvider()
     }()
+    
+    init(playlist: Playlist) {
+        self.playlist = playlist
+    }
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void) {
         let filter = self.filter()
@@ -60,8 +63,7 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
         })
     }
     
-    func filter() -> NSCompoundPredicate? {
-        guard let playlist = playlist else { return nil }
+    private func filter() -> NSCompoundPredicate? {
         let predicates = playlist.items.map({ NSPredicate(format: "artist == %@ AND album == %@ AND title == %@",
                                                $0.artist,
                                                $0.album,
@@ -93,19 +95,14 @@ final class SongLinkViewModel: SongLinkViewModelProtocol {
     }
     
     private func checkIfCompleted() {
-        if self.items.count == self.playlist!.items.count,
+        if self.items.count == self.playlist.items.count,
             let onCompleted = onCompleted,
             self.items.filter({ $0.url.isEmpty}).isEmpty {
             onCompleted()
         }
     }
     
-    func updatePlaylist(_ playlist: Playlist) {
-        self.playlist = playlist
-    }
-    
     func fetchRemainingSongsIfNeeded() {
-        guard let playlist = playlist else { return }
         service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
             guard let self = self else { return }
             self.items.append(contentsOf: cache)
