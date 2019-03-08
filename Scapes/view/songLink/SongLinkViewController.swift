@@ -50,9 +50,11 @@ class SongLinkViewController: UIViewController {
     // MAKR: - setup view
     
     func subscribeToDataChanges() {
+        
         viewModel.subscribe(onInitial: { [weak self] in
             guard let self = self else { return }
             self.viewSongLink.tableView.reloadData()
+            self.viewSongLink.updateState(state: .show)
             }, onChange: { [weak tableView = self.viewSongLink.tableView] changes in
                 guard let tableView = tableView else { return }
                 let (deletions, insertions, modifications) = changes
@@ -67,11 +69,12 @@ class SongLinkViewController: UIViewController {
             }, onEmpty: { [weak self] in
                 guard let self = self else { return }
                 self.viewSongLink.updateState(state: .show)
-                
         })
         
         viewModel.subscribe { [weak self] in
-            self?.viewSongLink.updateState(state: .hide)
+            guard let self = self else { return }
+            self.viewSongLink.tableView.reloadData()
+            self.viewSongLink.updateState(state: .hide)
         }
     }
     
@@ -94,7 +97,13 @@ extension SongLinkViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "kPlaylistCell") as? TitleDetailTableViewCell
             else { fatalError("Cell initialisation failed") }
         let item = viewModel.data[indexPath.row]
-        cell.update(songViewData: item)
+        let viewData =  SongLinkViewData(url: item.url,
+                                         success: item.notFound,
+                                         title: item.title,
+                                         artist: item.artist,
+                                         album: item.album,
+                                         index: item.index)
+        cell.update(songViewData: viewData)
         return cell
     }
 }

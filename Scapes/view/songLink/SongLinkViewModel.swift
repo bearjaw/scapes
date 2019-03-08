@@ -13,7 +13,7 @@ protocol SongLinkViewModelProtocol {
     
     var title: String { get }
     
-    var data: [SongLinkViewData] { get set }
+    var data: [SongLink] { get set }
     
     func fetchRemainingSongsIfNeeded()
     
@@ -37,7 +37,7 @@ final class SongLinkViewModel {
         return SongLinkProvider()
     }()
     
-    var data: [SongLinkViewData] = []
+    var data: [SongLink] = []
     
     init(playlist: Playlist) {
         data = []
@@ -71,7 +71,7 @@ final class SongLinkViewModel {
     
     private func allSongsDownloaded(songs: [SongLink]) {
         let completed = songs.filter { $0.downloaded == false }.isEmpty
-        if completed, let onCompleted = self.onCompleted {
+        if completed && playlist.items.count == songs.count, let onCompleted = self.onCompleted {
             onCompleted()
         }
     }
@@ -92,15 +92,19 @@ extension SongLinkViewModel: SongLinkViewModelProtocol {
         let filter = self.filter()
         
         token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
-            self.allSongsDownloaded(songs: newValue)
-            self.data = self.convert(newValue)
-            if newValue.isEmpty { onEmpty() }
-            onInitial()
-            }, onChange: { [unowned self] newValue, indecies  in
-                self.data = self.convert(newValue)
-                self.allSongsDownloaded(songs: newValue)
+            DispatchQueue.main.async {
+                self.data = newValue
                 if newValue.isEmpty { onEmpty() }
-                onChange(indecies)
+                onInitial()
+                self.allSongsDownloaded(songs: newValue)
+            }
+            }, onChange: { [unowned self] newValue, indecies  in
+                DispatchQueue.main.async {
+                    self.data = newValue
+                    if newValue.isEmpty { onEmpty() }
+                    onChange(indecies)
+                    self.allSongsDownloaded(songs: newValue)
+                }
         })
     }
     
