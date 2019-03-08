@@ -27,3 +27,4 @@ Scapes creates song.link links. Song.link offers a link to the most common music
 
 ## Screenshot
 ![](app_screenshot.png)
+![](app_screenshot2.jpeg)
