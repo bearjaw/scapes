@@ -8,7 +8,9 @@
 
 import UIKit
 
-class TitleDetailTableViewCell: UITableViewCell {
+final class TitleDetailTableViewCell: UITableViewCell {
+    
+    static var reusueIdentifier: String { return "kTitleDetailTableViewCell"}
     
     private var labelSongTitle: UILabel = {
         let label = UILabel()
