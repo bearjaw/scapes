@@ -140,7 +140,7 @@ extension SongRepository {
                 write()
             }
         } catch {
-            fatalError("Could not open write transaction")
+            fatalError("Error: Could not open write transaction \(error)")
         }
     }
 }
