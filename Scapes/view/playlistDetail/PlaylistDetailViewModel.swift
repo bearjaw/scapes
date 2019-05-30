@@ -13,5 +13,16 @@ protocol PlaylistDetailViewModelProtocol {
 }
 
 final class PlaylistDetailViewModel {
+    
+    private var liveData: LiveData<String>
+    
+    init(playlistId: String) {
+        liveData = LiveData()
+    }
+}
 
+extension PlaylistDetailViewModel: PlaylistDetailViewModelProtocol {
+    var title: LiveData<String> {
+        return liveData
+    }
 }
