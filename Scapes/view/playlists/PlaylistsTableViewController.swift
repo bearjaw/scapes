@@ -17,9 +17,6 @@ class PlaylistsTableViewController: UITableViewController {
     init(viewModel: PlaylistViewModelProtocol) {
         self.viewModel = viewModel
         super.init(style: .plain)
-        tableView.backgroundColor = AppearanceService.shared.view()
-        tableView.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        tableView.tableFooterView = UIView()
         title = "Select a playlist"
     }
     
@@ -29,18 +26,28 @@ class PlaylistsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: "kPlaylistCellIdentifier")
+        configureTableView()
     }
     // MARK: Lifecycle end
-    // MARK: - Table view data source
+    // MARK: - View setup
+    
+    private func configureTableView() {
+        tableView.backgroundColor = AppearanceService.shared.view()
+        tableView.tintColor = .white
+        tableView.tableFooterView = UIView()
+        tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: TitleDetailTableViewCell.reusueIdentifier)
+    }
+}
 
+// MARK: - Table view data source
+extension PlaylistsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return viewModel.data.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "kPlaylistCellIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: TitleDetailTableViewCell.reusueIdentifier, for: indexPath)
         let playlist = viewModel.data[indexPath.row]
         cell.textLabel?.text = "\(playlist.name), Items:\(playlist.count)"
         cell.textLabel?.textColor = AppearanceService.shared.textBody()
