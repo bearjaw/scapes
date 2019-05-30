@@ -10,6 +10,8 @@ import UIKit
 
 extension UIView {
     
+    var border: CGFloat { return 16 }
+    
     class func allSubviews<T: UIView>(view: UIView) -> [T] {
         return view.subviews.flatMap { subView -> [T] in
             var result = allSubviews(view: subView) as [T]
