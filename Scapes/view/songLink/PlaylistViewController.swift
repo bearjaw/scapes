@@ -8,18 +8,18 @@
 
 import UIKit
 
-class SongLinkViewController: UIViewController {
+class PlaylistViewController: UIViewController {
     
     private lazy var viewSongLink: SongLinkView = {
         let view = SongLinkView()
         return view
     }()
     
-    private var viewModel: SongLinkViewModelProtocol
+    private var viewModel: PlaylistViewModelProtocol
     
     // MARK: - Lifecycle begin
     
-    init(viewModel: SongLinkViewModelProtocol) {
+    init(viewModel: PlaylistViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -89,7 +89,7 @@ class SongLinkViewController: UIViewController {
     }
 }
 
-extension SongLinkViewController: UITableViewDataSource {
+extension PlaylistViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.data.count
     }
@@ -109,7 +109,7 @@ extension SongLinkViewController: UITableViewDataSource {
     }
 }
 
-extension SongLinkViewController: UITableViewDelegate {
+extension PlaylistViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let generator = UISelectionFeedbackGenerator()
@@ -120,11 +120,11 @@ extension SongLinkViewController: UITableViewDelegate {
     }
 }
 
-extension SongLinkViewController {
+extension PlaylistViewController {
     fileprivate func addExportButton() {
         let bbi = UIBarButtonItem(barButtonSystemItem: .action,
                                   target: self,
-                                  action: #selector(SongLinkViewController.exportPlaylist)
+                                  action: #selector(PlaylistViewController.exportPlaylist)
         )
         navigationItem.rightBarButtonItem = bbi
     }
@@ -158,7 +158,7 @@ extension SongLinkViewController {
     }
 }
 
-extension SongLinkViewController {
+extension PlaylistViewController {
     func showAlert(alert: Alert) {
         let alertController = DarkAlertController(title: alert.title, message: alert.message, preferredStyle: .alert)
         guard let coder = UIAlertController.classForCoder() as? UIAppearanceContainer.Type else { return }

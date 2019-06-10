@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol SongLinkViewModelProtocol {
+protocol PlaylistViewModelProtocol {
     typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
     
     var title: String { get }
@@ -22,7 +22,7 @@ protocol SongLinkViewModelProtocol {
     func subscribe(onCompleted: @escaping () -> Void)
 }
 
-final class SongLinkViewModel {
+final class PlaylistViewModel {
     private var playlist: Playlist
     private var token: RepoToken?
     private var items: [SongLinkViewData] = []
@@ -82,7 +82,7 @@ final class SongLinkViewModel {
     }
 }
 
-extension SongLinkViewModel: SongLinkViewModelProtocol {
+extension PlaylistViewModel: PlaylistViewModelProtocol {
     
     var title: String {
         return playlist.name

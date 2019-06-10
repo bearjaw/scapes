@@ -10,11 +10,11 @@ import UIKit
 
 class PlaylistsTableViewController: UITableViewController {
     
-    private var viewModel: PlaylistViewModelProtocol
+    private var viewModel: PlaylistsViewModelProtocol
     
     // MARK: - Lifecycle begin
     
-    init(viewModel: PlaylistViewModelProtocol) {
+    init(viewModel: PlaylistsViewModelProtocol) {
         self.viewModel = viewModel
         super.init(style: .plain)
         title = "Select a playlist"
@@ -56,8 +56,8 @@ extension PlaylistsTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let playlist = self.viewModel.data[indexPath.row]
-        let viewModel = SongLinkViewModel(playlist: playlist)
-        let songLinkVC = SongLinkViewController(viewModel: viewModel)
+        let viewModel = PlaylistViewModel(playlist: playlist)
+        let songLinkVC = PlaylistViewController(viewModel: viewModel)
         navigationController?.pushViewController(songLinkVC, animated: true)
     }
 }

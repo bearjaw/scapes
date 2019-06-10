@@ -10,7 +10,7 @@ import UIKit
 import MediaPlayer
 
 final class PlaylistProvider: NSObject {
-
+    
     static func fetchPlaylist() -> [Playlist] {
         
         let myPlaylistQuery = MPMediaQuery.playlists()
@@ -26,7 +26,7 @@ final class PlaylistProvider: NSObject {
     }
     
     static func fetchSongs(for playlist: MPMediaItemCollection) -> [SongLink] {
-        if playlist.items.isEmpty { return [] }
+        guard playlist.items.isNonEmpty else { return [] }
         var index = 0
         var songs: [SongLink] = []        
         for song in playlist.items {
@@ -57,5 +57,4 @@ struct Playlist: Hashable {
     let name: String
     let count: String
     let items: [SongLink]
-    
 }

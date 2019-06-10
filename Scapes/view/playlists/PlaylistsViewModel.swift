@@ -8,11 +8,11 @@
 
 import Foundation
 
-protocol PlaylistViewModelProtocol {
+protocol PlaylistsViewModelProtocol {
     var data: [Playlist] { get }
 }
 
-final class PlaylistViewModel: PlaylistViewModelProtocol {
+final class PlaylistsViewModel: PlaylistsViewModelProtocol {
     var data: [Playlist] {
         return playlists
     }
