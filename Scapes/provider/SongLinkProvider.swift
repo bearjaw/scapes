@@ -54,7 +54,8 @@ class SongLinkProvider: NSObject {
                                             notFound: song.notFound,
                                             playcount: song.playcount,
                                             downloaded: true,
-                                            playlistHash: song.playlistHash)
+                                            playlistHash: song.playlistHash,
+                                            artwork: Data())
                     self.addToDatabase(song: songLink)
                 } else {
                     let error = "Could not find the music track matching these criteria."
@@ -68,7 +69,8 @@ class SongLinkProvider: NSObject {
                                             notFound: true,
                                             playcount: song.playcount,
                                             downloaded: true,
-                                            playlistHash: song.playlistHash)
+                                            playlistHash: song.playlistHash,
+                                            artwork: Data())
                     self.addToDatabase(song: songLink)
                 }
             })
@@ -146,6 +148,7 @@ struct SongLink: Hashable {
     let playcount: Int
     let downloaded: Bool
     let playlistHash: String
+    let artwork: Data?
     
     init(artist: String, album: String, title: String) {
         self.id = ""
@@ -159,6 +162,7 @@ struct SongLink: Hashable {
         self.playcount = 0
         self.downloaded = false
         self.playlistHash = ""
+        self.artwork = nil
     }
     
     init(id: String,
@@ -171,7 +175,8 @@ struct SongLink: Hashable {
          notFound: Bool,
          playcount: Int,
          downloaded: Bool,
-         playlistHash: String) {
+         playlistHash: String,
+         artwork: Data) {
         self.id = id
         self.artist = artist
         self.title = title
@@ -183,6 +188,7 @@ struct SongLink: Hashable {
         self.playcount = playcount
         self.downloaded = downloaded
         self.playlistHash = playlistHash
+        self.artwork = artwork
     }
     
     var itemId: String {

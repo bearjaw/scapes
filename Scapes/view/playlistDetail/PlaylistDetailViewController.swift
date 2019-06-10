@@ -28,14 +28,7 @@ final class PlaylistDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeTitleChanges()
     }
     
     // MARK: - View setup
-    
-    private func observeTitleChanges() {
-        viewModel.title.observe { [unowned self] newValue in
-            self.viewDetail.update(title: newValue, thumbnail: nil)
-        }
-    }
 }

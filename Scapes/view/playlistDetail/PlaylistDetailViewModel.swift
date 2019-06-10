@@ -8,21 +8,15 @@
 
 import UIKit
 
-protocol PlaylistDetailViewModelProtocol {
-    var title: LiveData<String> { get }
-}
+protocol PlaylistDetailViewModelProtocol {}
 
 final class PlaylistDetailViewModel {
     
-    private var liveData: LiveData<String>
+    private var playlist: Playlist
     
-    init(playlistId: String) {
-        liveData = LiveData()
+    init(playlist: Playlist) {
+        self.playlist = playlist
     }
 }
 
-extension PlaylistDetailViewModel: PlaylistDetailViewModelProtocol {
-    var title: LiveData<String> {
-        return liveData
-    }
-}
+extension PlaylistDetailViewModel: PlaylistDetailViewModelProtocol {}

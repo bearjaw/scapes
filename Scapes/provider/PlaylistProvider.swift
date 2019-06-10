@@ -33,7 +33,9 @@ final class PlaylistProvider: NSObject {
             if let title: String = song.value(forProperty: MPMediaItemPropertyTitle) as? String,
                 let artist: String = song.value(forProperty: MPMediaItemPropertyArtist) as? String,
                 let album: String = song.value(forProperty: MPMediaItemPropertyAlbumTitle) as? String,
-                let playcount: NSNumber = song.value(forProperty: MPMediaItemPropertyPlayCount) as? NSNumber {
+                let playcount: NSNumber = song.value(forProperty: MPMediaItemPropertyPlayCount) as? NSNumber,
+                let artwork: MPMediaItemArtwork = song.value(forProperty: MPMediaItemPropertyArtwork) as? MPMediaItemArtwork {
+                let data = artwork.image(at: CGSize(width: 200, height: 200))?.pngData() ?? Data()
                 let songLink = SongLink(id: UUID().uuidString,
                                         artist: artist,
                                         title: title,
@@ -44,7 +46,8 @@ final class PlaylistProvider: NSObject {
                                         notFound: false,
                                         playcount: playcount.intValue,
                                         downloaded: false,
-                                        playlistHash: String(playlist.persistentID))
+                                        playlistHash: String(playlist.persistentID),
+                                        artwork: data)
                 songs.append(songLink)
             }
             index += 1

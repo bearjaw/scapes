@@ -112,7 +112,8 @@ extension SongRepository {
                          notFound: element.notFound,
                          playcount: element.playcount,
                          downloaded: element.downloaded,
-                         playlistHash: element.playlistHash)
+                         playlistHash: element.playlistHash,
+                         artwork: Data())
     }
     
     private func convert(element: SongLink) -> RealmSongLink {
