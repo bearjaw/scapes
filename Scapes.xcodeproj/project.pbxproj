@@ -20,6 +20,7 @@
 		485FBEB721CEAB1800E813F0 /* DarkAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */; };
 		486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEEB21E679820023A728 /* Collection+Extension.swift */; };
 		486EBEF121E686420023A728 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEF021E686420023A728 /* Repository.swift */; };
+		487CEF5622C7AD3A00027816 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487CEF5522C7AD3A00027816 /* Playlist.swift */; };
 		488544D821C92B2200532B37 /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544CD21C92B2200532B37 /* NetworkOperation.swift */; };
 		488544D921C92B2200532B37 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544CF21C92B2200532B37 /* AsyncOperation.swift */; };
 		488544DA21C92B2200532B37 /* NetworkHTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D021C92B2200532B37 /* NetworkHTTPMethod.swift */; };
@@ -45,7 +46,7 @@
 		48A97BE821AD7E73006E5985 /* SongLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BE721AD7E73006E5985 /* SongLinkView.swift */; };
 		48A97BEA21AD8C39006E5985 /* PlaylistProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BE921AD8C39006E5985 /* PlaylistProvider.swift */; };
 		48A97BEC21AD8F7B006E5985 /* SongLinkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BEB21AD8F7B006E5985 /* SongLinkProvider.swift */; };
-		48F135E322AEB59B00C00506 /* PlaylistContainerIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F135E222AEB59B00C00506 /* PlaylistContainerIViewController.swift */; };
+		48F135E322AEB59B00C00506 /* PlaylistContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F135E222AEB59B00C00506 /* PlaylistContainerViewController.swift */; };
 		48F135E522AEB6A100C00506 /* PlaylistContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F135E422AEB6A100C00506 /* PlaylistContainerView.swift */; };
 		48F135E722AEB81500C00506 /* PlaylistContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F135E622AEB81500C00506 /* PlaylistContainerViewModel.swift */; };
 		49D5DBE743D9E626F3372158 /* Pods_Scapes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77732D223ACC15192FA1E605 /* Pods_Scapes.framework */; };
@@ -73,6 +74,7 @@
 		486EBEEF21E67D420023A728 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		486EBEF021E686420023A728 /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		486EBEF221E69E6D0023A728 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
+		487CEF5522C7AD3A00027816 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		488544CD21C92B2200532B37 /* NetworkOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkOperation.swift; sourceTree = "<group>"; };
 		488544CF21C92B2200532B37 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		488544D021C92B2200532B37 /* NetworkHTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkHTTPMethod.swift; sourceTree = "<group>"; };
@@ -100,7 +102,7 @@
 		48A97BE721AD7E73006E5985 /* SongLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkView.swift; sourceTree = "<group>"; };
 		48A97BE921AD8C39006E5985 /* PlaylistProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistProvider.swift; sourceTree = "<group>"; };
 		48A97BEB21AD8F7B006E5985 /* SongLinkProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkProvider.swift; sourceTree = "<group>"; };
-		48F135E222AEB59B00C00506 /* PlaylistContainerIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistContainerIViewController.swift; sourceTree = "<group>"; };
+		48F135E222AEB59B00C00506 /* PlaylistContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistContainerViewController.swift; sourceTree = "<group>"; };
 		48F135E422AEB6A100C00506 /* PlaylistContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistContainerView.swift; sourceTree = "<group>"; };
 		48F135E622AEB81500C00506 /* PlaylistContainerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistContainerViewModel.swift; sourceTree = "<group>"; };
 		4B4F33E72A4BE9E6AEE4AE49 /* Pods_Linker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Linker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,13 +132,6 @@
 				48A97BEB21AD8F7B006E5985 /* SongLinkProvider.swift */,
 			);
 			path = provider;
-			sourceTree = "<group>";
-		};
-		483722622232DD5800492E4B /* bridge */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = bridge;
 			sourceTree = "<group>";
 		};
 		483AB22B229FD6CD00FEE005 /* playlistDetail */ = {
@@ -273,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				488544FA21CAC83000532B37 /* songLink */,
+				487CEF5522C7AD3A00027816 /* Playlist.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -310,7 +306,6 @@
 		48A97BD121AD7DF9006E5985 /* Scapes */ = {
 			isa = PBXGroup;
 			children = (
-				483722622232DD5800492E4B /* bridge */,
 				48A97BD221AD7DF9006E5985 /* AppDelegate.swift */,
 				48A97BD921AD7DFA006E5985 /* Assets.xcassets */,
 				48A97BDE21AD7DFA006E5985 /* Info.plist */,
@@ -341,7 +336,7 @@
 		48F135E122AEB58100C00506 /* playlistContainer */ = {
 			isa = PBXGroup;
 			children = (
-				48F135E222AEB59B00C00506 /* PlaylistContainerIViewController.swift */,
+				48F135E222AEB59B00C00506 /* PlaylistContainerViewController.swift */,
 				48F135E422AEB6A100C00506 /* PlaylistContainerView.swift */,
 				48F135E622AEB81500C00506 /* PlaylistContainerViewModel.swift */,
 			);
@@ -523,6 +518,7 @@
 				48A97BD321AD7DF9006E5985 /* AppDelegate.swift in Sources */,
 				483AB231229FD72C00FEE005 /* PlaylistDetailView.swift in Sources */,
 				483722642232DE8D00492E4B /* PlaylistsViewModel.swift in Sources */,
+				487CEF5622C7AD3A00027816 /* Playlist.swift in Sources */,
 				488544E421C92C0100532B37 /* MusicAssetManager.swift in Sources */,
 				488544F421C98B3000532B37 /* AppAppearanceProtocol.swift in Sources */,
 				48F135E522AEB6A100C00506 /* PlaylistContainerView.swift in Sources */,
@@ -533,7 +529,7 @@
 				488544E021C92B2200532B37 /* NetworkError.swift in Sources */,
 				488544D821C92B2200532B37 /* NetworkOperation.swift in Sources */,
 				485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */,
-				48F135E322AEB59B00C00506 /* PlaylistContainerIViewController.swift in Sources */,
+				48F135E322AEB59B00C00506 /* PlaylistContainerViewController.swift in Sources */,
 				483AB233229FE3BB00FEE005 /* PlaylistDetailViewModel.swift in Sources */,
 				488544E121C92B2200532B37 /* ServerTrustPolicy.swift in Sources */,
 				488544DA21C92B2200532B37 /* NetworkHTTPMethod.swift in Sources */,
@@ -682,8 +678,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4GLAV3883W;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = YYL3H8SLE2;
 				INFOPLIST_FILE = Scapes/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -701,8 +699,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4GLAV3883W;
+				DEVELOPMENT_TEAM = YYL3H8SLE2;
 				INFOPLIST_FILE = Scapes/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
