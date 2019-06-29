@@ -8,19 +8,7 @@
 
 import MediaPlayer
 
-final class PlaylistProvider: NSObject {
-    
-    private static func loadPlaylists(result: (Result<[Playlist], Error>) -> Void) {
-        let query = MPMediaQuery.playlists()
-        guard let collections = query.collections else { result(.success([])); return }
-        let playlist = collections.map { collection -> Playlist in
-            let name = (collection.value(forProperty: MPMediaPlaylistPropertyName) as? String) ?? ""
-            let songs = fetchSongs(for: collection)
-            return Playlist(name: name, count: collection.count, items: songs)
-        }
-        result(.success(playlist))
-    }
-    
+final class PlaylistProvider {
     static func fetchPlaylists(onResult: @escaping (Result<[Playlist], Error>) -> Void) {
         MPMediaLibrary.requestAuthorization { status in
             switch status {
@@ -29,19 +17,23 @@ final class PlaylistProvider: NSObject {
             case .notDetermined:
                 onResult(.failure(PlaylistError.notDetermined))
             case .denied:
-                onResult(.failure(PlaylistError.denied)
+                onResult(.failure(PlaylistError.denied))
             case .restricted:
-                onResult(.failure(PlaylistError.restricted)
+                onResult(.failure(PlaylistError.restricted))
             @unknown default:
                 onResult(.failure(PlaylistError.unknown))
             }
         }
     }
-    
-    static func fetchSongs(for playlist: MPMediaItemCollection) -> [SongLink] {
+}
+
+// MARK: - Playlist Parsing
+
+private extension PlaylistProvider {
+    private static func fetchSongs(for playlist: MPMediaItemCollection) -> [SongLink] {
         guard playlist.items.isNonEmpty else { return [] }
         var index = 0
-        var songs: [SongLink] = []        
+        var songs: [SongLink] = []
         for song in playlist.items {
             if let title: String = song.value(forProperty: MPMediaItemPropertyTitle) as? String,
                 let artist: String = song.value(forProperty: MPMediaItemPropertyArtist) as? String,
@@ -67,7 +59,20 @@ final class PlaylistProvider: NSObject {
         }
         return songs
     }
+    
+    private static func loadPlaylists(result: (Result<[Playlist], Error>) -> Void) {
+        let query = MPMediaQuery.playlists()
+        guard let collections = query.collections else { result(.success([])); return }
+        let playlist = collections.map { collection -> Playlist in
+            let name = (collection.value(forProperty: MPMediaPlaylistPropertyName) as? String) ?? ""
+            let songs = fetchSongs(for: collection)
+            return Playlist(name: name, count: collection.count, items: songs)
+        }
+        result(.success(playlist))
+    }
 }
+
+// MARK: - Playlist Error
 
 protocol Loggable: Error {
     var reason: String { get }
