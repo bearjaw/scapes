@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class PlaylistContainerIViewController: UIViewController {
+final class PlaylistContainerViewController: UIViewController {
     
     private var viewModel: PlaylistContainerViewModelProtocol
     
@@ -33,7 +33,6 @@ final class PlaylistContainerIViewController: UIViewController {
         super.viewDidLoad()
         configureDetailView()
         configureListView()
-        // Do any additional setup after loading the view.
     }
     
     // MARK: - View setup
