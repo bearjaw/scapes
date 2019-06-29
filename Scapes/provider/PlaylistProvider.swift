@@ -6,23 +6,36 @@
 //  Copyright © 2018 Max Baumbach. All rights reserved.
 //
 
-import UIKit
 import MediaPlayer
 
 final class PlaylistProvider: NSObject {
     
-    static func fetchPlaylist() -> [Playlist] {
-        
-        let myPlaylistQuery = MPMediaQuery.playlists()
-        guard let playlists = myPlaylistQuery.collections else { return [] }
-        var mPlaylists: [Playlist] = []
-        for playlist in playlists {
-            let plTitle = playlist.value(forProperty: MPMediaPlaylistPropertyName) as? String ?? "Untitled Playlist"
-            let songs = fetchSongs(for: playlist)
-            let mPlaylist = Playlist(name: plTitle, count: "\(songs.count)", items: songs)
-            mPlaylists.append(mPlaylist)
+    private static func loadPlaylists(result: (Result<[Playlist], Error>) -> Void) {
+        let query = MPMediaQuery.playlists()
+        guard let collections = query.collections else { result(.success([])); return }
+        let playlist = collections.map { collection -> Playlist in
+            let name = (collection.value(forProperty: MPMediaPlaylistPropertyName) as? String) ?? ""
+            let songs = fetchSongs(for: collection)
+            return Playlist(name: name, count: collection.count, items: songs)
         }
-        return mPlaylists
+        result(.success(playlist))
+    }
+    
+    static func fetchPlaylists(onResult: @escaping (Result<[Playlist], Error>) -> Void) {
+        MPMediaLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                loadPlaylists(result: onResult)
+            case .notDetermined:
+                onResult(.failure(PlaylistError.notDetermined))
+            case .denied:
+                onResult(.failure(PlaylistError.denied)
+            case .restricted:
+                onResult(.failure(PlaylistError.restricted)
+            @unknown default:
+                onResult(.failure(PlaylistError.unknown))
+            }
+        }
     }
     
     static func fetchSongs(for playlist: MPMediaItemCollection) -> [SongLink] {
@@ -56,8 +69,26 @@ final class PlaylistProvider: NSObject {
     }
 }
 
-struct Playlist: Hashable {
-    let name: String
-    let count: String
-    let items: [SongLink]
+protocol Loggable: Error {
+    var reason: String { get }
+}
+
+enum PlaylistError: Loggable {
+    case notDetermined
+    case denied
+    case restricted
+    case unknown
+    
+    var reason: String {
+        switch self {
+        case .notDetermined:
+            return "Could not determine auth status"
+        case .denied:
+            return "Access to media library is denied"
+        case .restricted:
+            return "Access to media library is restricted"
+        case .unknown:
+            return "Unknown error occured."
+        }
+    }
 }
