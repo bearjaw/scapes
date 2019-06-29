@@ -20,6 +20,13 @@ final class PlaylistsViewModel: PlaylistsViewModelProtocol {
     private var playlists: [Playlist] = []
     
     init() {
-        playlists = PlaylistProvider.fetchPlaylist()
+        PlaylistProvider.fetchPlaylists(onResult: { [unowned self] result in
+            switch result {
+            case .success(let playlists):
+                self.playlists = playlists
+            case .failure:
+                break
+            }
+        })
     }
 }
