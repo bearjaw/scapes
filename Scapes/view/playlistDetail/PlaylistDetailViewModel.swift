@@ -8,15 +8,28 @@
 
 import UIKit
 
-protocol PlaylistDetailViewModelProtocol {}
+protocol PlaylistDetailViewModelProtocol {
+    func subscribe(onChange: @escaping (Playlist) -> Void)
+}
 
 final class PlaylistDetailViewModel {
     
     private var playlist: Playlist
+    private var onChange: ((Playlist) -> Void)?
     
     init(playlist: Playlist) {
         self.playlist = playlist
     }
+    
+    private func triggerCallback() {
+        guard let onChange = onChange else { return }
+        onChange(playlist)
+    }
 }
 
-extension PlaylistDetailViewModel: PlaylistDetailViewModelProtocol {}
+extension PlaylistDetailViewModel: PlaylistDetailViewModelProtocol {
+    func subscribe(onChange: @escaping (Playlist) -> Void) {
+        self.onChange = onChange
+        triggerCallback()
+    }
+}

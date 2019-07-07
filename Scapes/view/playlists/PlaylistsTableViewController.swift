@@ -33,7 +33,7 @@ final class PlaylistsTableViewController: UITableViewController {
     // MARK: - View setup
     
     private func configureTableView() {
-        tableView.backgroundColor = AppearanceService.shared.view()
+        tableView.backgroundColor = .secondary
         tableView.tintColor = .white
         tableView.delegate = self
         tableView.dataSource = self
@@ -64,7 +64,7 @@ extension PlaylistsTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: TitleDetailTableViewCell.reusueIdentifier, for: indexPath)
         let playlist = viewModel.item(at: indexPath)
         cell.textLabel?.text = "\(playlist.name), Items:\(playlist.count)"
-        cell.textLabel?.textColor = AppearanceService.shared.textBody()
+        cell.textLabel?.textColor = .text
         return cell
     }
     

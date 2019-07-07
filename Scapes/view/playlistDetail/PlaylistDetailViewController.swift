@@ -28,7 +28,14 @@ final class PlaylistDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureDetailView()
     }
     
     // MARK: - View setup
+    
+    private func configureDetailView() {
+        viewModel.subscribe { [unowned self] playlist in
+            self.viewDetail.update(title: playlist.name, thumbnail: nil)
+        }
+    }
 }

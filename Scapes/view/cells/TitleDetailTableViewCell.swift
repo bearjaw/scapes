@@ -14,21 +14,21 @@ final class TitleDetailTableViewCell: UITableViewCell {
     
     private var labelSongTitle: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textTitle()
+        label.textColor = .title
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         return label
     }()
     
     private var labelArtist: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textSubHeadline()
+        label.textColor = .subtitle
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return label
     }()
     
     private var labelAlbum: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textSubHeadline()
+        label.textColor = .subtitle
         label.numberOfLines = 0
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return label
@@ -36,7 +36,7 @@ final class TitleDetailTableViewCell: UITableViewCell {
     
     private var labelLink: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textLink()
+        label.textColor = .link
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.numberOfLines = 0
         return label
@@ -50,7 +50,7 @@ final class TitleDetailTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = AppearanceService.shared.view()
+        backgroundColor = .secondary
         addSubview(labelSongTitle)
         addSubview(labelArtist)
         addSubview(labelAlbum)

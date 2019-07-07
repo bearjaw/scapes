@@ -16,6 +16,7 @@
 		483AB233229FE3BB00FEE005 /* PlaylistDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483AB232229FE3BB00FEE005 /* PlaylistDetailViewModel.swift */; };
 		483AB235229FE55200FEE005 /* LiveData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483AB234229FE55200FEE005 /* LiveData.swift */; };
 		483AB237229FE67C00FEE005 /* NSObjectProtocol+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483AB236229FE67C00FEE005 /* NSObjectProtocol+Extensions.swift */; };
+		483B698122D263B3005B979A /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483B698022D263B3005B979A /* UIColor+Extension.swift */; };
 		485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB421CEAAA100E813F0 /* View+Extensions.swift */; };
 		485FBEB721CEAB1800E813F0 /* DarkAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */; };
 		486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEEB21E679820023A728 /* Collection+Extension.swift */; };
@@ -36,8 +37,6 @@
 		488544E821C95B6700532B37 /* Bundle-Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544E721C95B6700532B37 /* Bundle-Extensions.swift */; };
 		488544EC21C9693F00532B37 /* PlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544EB21C9693F00532B37 /* PlaylistsTableViewController.swift */; };
 		488544EF21C96FAD00532B37 /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544EE21C96FAD00532B37 /* TitleDetailTableViewCell.swift */; };
-		488544F221C97EFA00532B37 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544F121C97EFA00532B37 /* Appearance.swift */; };
-		488544F421C98B3000532B37 /* AppAppearanceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544F321C98B3000532B37 /* AppAppearanceProtocol.swift */; };
 		488544FC21CAC84B00532B37 /* RealmSongLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544FB21CAC84B00532B37 /* RealmSongLink.swift */; };
 		48A97BD321AD7DF9006E5985 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BD221AD7DF9006E5985 /* AppDelegate.swift */; };
 		48A97BD521AD7DF9006E5985 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A97BD421AD7DF9006E5985 /* PlaylistViewController.swift */; };
@@ -65,6 +64,7 @@
 		483AB232229FE3BB00FEE005 /* PlaylistDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewModel.swift; sourceTree = "<group>"; };
 		483AB234229FE55200FEE005 /* LiveData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveData.swift; sourceTree = "<group>"; };
 		483AB236229FE67C00FEE005 /* NSObjectProtocol+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Extensions.swift"; sourceTree = "<group>"; };
+		483B698022D263B3005B979A /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		485FBEB421CEAAA100E813F0 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		485FBEB621CEAB1800E813F0 /* DarkAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkAlertController.swift; sourceTree = "<group>"; };
 		486EBEE821E6652F0023A728 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -90,8 +90,6 @@
 		488544E721C95B6700532B37 /* Bundle-Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle-Extensions.swift"; sourceTree = "<group>"; };
 		488544EB21C9693F00532B37 /* PlaylistsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsTableViewController.swift; sourceTree = "<group>"; };
 		488544EE21C96FAD00532B37 /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
-		488544F121C97EFA00532B37 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
-		488544F321C98B3000532B37 /* AppAppearanceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearanceProtocol.swift; sourceTree = "<group>"; };
 		488544FB21CAC84B00532B37 /* RealmSongLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmSongLink.swift; sourceTree = "<group>"; };
 		48A97BCF21AD7DF9006E5985 /* Scapes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scapes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A97BD221AD7DF9006E5985 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -160,6 +158,7 @@
 				486EBEEB21E679820023A728 /* Collection+Extension.swift */,
 				480E91FF222D9DF50094359B /* RepoToken.swift */,
 				483AB234229FE55200FEE005 /* LiveData.swift */,
+				483B698022D263B3005B979A /* UIColor+Extension.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -245,15 +244,6 @@
 			path = cells;
 			sourceTree = "<group>";
 		};
-		488544F021C97EE200532B37 /* appearance */ = {
-			isa = PBXGroup;
-			children = (
-				488544F121C97EFA00532B37 /* Appearance.swift */,
-				488544F321C98B3000532B37 /* AppAppearanceProtocol.swift */,
-			);
-			path = appearance;
-			sourceTree = "<group>";
-		};
 		488544F821CAC81400532B37 /* repository */ = {
 			isa = PBXGroup;
 			children = (
@@ -324,7 +314,6 @@
 			isa = PBXGroup;
 			children = (
 				48F135E122AEB58100C00506 /* playlistContainer */,
-				488544F021C97EE200532B37 /* appearance */,
 				488544ED21C96F8700532B37 /* cells */,
 				488544E921C968E300532B37 /* playlist */,
 				483AB22B229FD6CD00FEE005 /* playlistDetail */,
@@ -511,8 +500,8 @@
 				488544FC21CAC84B00532B37 /* RealmSongLink.swift in Sources */,
 				488544E821C95B6700532B37 /* Bundle-Extensions.swift in Sources */,
 				486EBEF121E686420023A728 /* Repository.swift in Sources */,
+				483B698122D263B3005B979A /* UIColor+Extension.swift in Sources */,
 				48A97BD521AD7DF9006E5985 /* PlaylistViewController.swift in Sources */,
-				488544F221C97EFA00532B37 /* Appearance.swift in Sources */,
 				488544DE21C92B2200532B37 /* Atomic.swift in Sources */,
 				48A97BEC21AD8F7B006E5985 /* SongLinkProvider.swift in Sources */,
 				48A97BD321AD7DF9006E5985 /* AppDelegate.swift in Sources */,
@@ -520,7 +509,6 @@
 				483722642232DE8D00492E4B /* PlaylistsViewModel.swift in Sources */,
 				487CEF5622C7AD3A00027816 /* Playlist.swift in Sources */,
 				488544E421C92C0100532B37 /* MusicAssetManager.swift in Sources */,
-				488544F421C98B3000532B37 /* AppAppearanceProtocol.swift in Sources */,
 				48F135E522AEB6A100C00506 /* PlaylistContainerView.swift in Sources */,
 				48A97BE821AD7E73006E5985 /* SongLinkView.swift in Sources */,
 				480E9200222D9DF50094359B /* RepoToken.swift in Sources */,

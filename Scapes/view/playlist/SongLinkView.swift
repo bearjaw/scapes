@@ -17,8 +17,8 @@ class SongLinkView: UIView {
     
     private var buttonGet = UIButton()
     private var spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .gray)
-        spinner.color = AppearanceService.shared.textButton()
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.color = .text
        return spinner
     }()
     
@@ -26,15 +26,15 @@ class SongLinkView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = AppearanceService.shared.view()
-        tableView.backgroundColor = AppearanceService.shared.view()
-        tableView.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        backgroundColor = .secondary
+        tableView.backgroundColor = .secondary
+        tableView.tintColor = .text
         tableView.tableFooterView = UIView()
         addSubview(tableView)
         
         buttonGet.setTitle(buttonText, for: .normal)
-        buttonGet.backgroundColor = AppearanceService.shared.button()
-        buttonGet.titleLabel?.textColor = AppearanceService.shared.textButton()
+        buttonGet.backgroundColor = .button
+        buttonGet.titleLabel?.textColor = .text
         buttonGet.layer.cornerRadius = 8
         buttonGet.alpha = 0.0
         buttonGet.addTarget(self, action: #selector(fetchPlaylist), for: .touchUpInside)

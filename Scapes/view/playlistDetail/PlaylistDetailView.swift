@@ -19,6 +19,7 @@ final class PlaylistDetailView: UIView {
     private lazy var title: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
+        label.textColor = .title
         addSubview(label)
         return label
     }()
@@ -35,7 +36,7 @@ final class PlaylistDetailView: UIView {
     }
     
     private func layoutThumbnail() {
-        let dimension = (bounds.height-2*border)*0.9
+        let dimension = (bounds.height-2*border)*0.4
         let size = CGSize(width: dimension, height: dimension)
         let origin = CGPoint(x: border, y: border)
         thumbnail.frame = CGRect(origin: origin, size: size)
@@ -53,11 +54,15 @@ final class PlaylistDetailView: UIView {
         
     }
     
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return CGSize(width: size.width, height: 150)
+    }
     // MARK: - Update
     
     func update(title: String?, thumbnail: UIImage?) {
         self.title.text = title
         self.thumbnail.image = thumbnail
+        backgroundColor = .red
         setNeedsLayout()
     }
 }

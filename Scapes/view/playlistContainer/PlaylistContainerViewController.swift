@@ -54,6 +54,10 @@ final class PlaylistContainerViewController: UIViewController {
             self.containerView.addListView(view)
         }
     }
+    
+    private func configureNavigationBar() {
+        navigationItem.largeTitleDisplayMode = .never
+    }
 }
 extension UIViewController {
     func add(_ viewController: UIViewController, subview: (UIView) -> Void) {
