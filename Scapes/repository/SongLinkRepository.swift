@@ -33,7 +33,7 @@ final class SongRepository: Repository {
     
     func update(element: SongLink) {
         safeWrite {
-            realm.create(RealmSongLink.self, value: convert(element: element), update: .all)
+            realm.create(RealmSongLink.self, value: convert(element: element), update: .modified)
         }
     }
     
