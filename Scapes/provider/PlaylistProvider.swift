@@ -10,6 +10,10 @@ import MediaPlayer
 
 final class PlaylistProvider {
     static func fetchPlaylists(onResult: @escaping (Result<[Playlist], Error>) -> Void) {
+        guard MPMediaLibrary.authorizationStatus() != .authorized else {
+            loadPlaylists(result: onResult)
+            return
+        }
         MPMediaLibrary.requestAuthorization { status in
             switch status {
             case .authorized:
@@ -40,7 +44,7 @@ private extension PlaylistProvider {
                 let album: String = song.value(forProperty: MPMediaItemPropertyAlbumTitle) as? String,
                 let playcount: NSNumber = song.value(forProperty: MPMediaItemPropertyPlayCount) as? NSNumber,
                 let artwork: MPMediaItemArtwork = song.value(forProperty: MPMediaItemPropertyArtwork) as? MPMediaItemArtwork {
-                let data = artwork.image(at: CGSize(width: 200, height: 200))?.pngData() ?? Data()
+//                let data = Data( artwork.image(at: CGSize(width: 200, height: 200)))
                 let songLink = SongLink(id: UUID().uuidString,
                                         artist: artist,
                                         title: title,
@@ -52,7 +56,7 @@ private extension PlaylistProvider {
                                         playcount: playcount.intValue,
                                         downloaded: false,
                                         playlistHash: String(playlist.persistentID),
-                                        artwork: data)
+                                        artwork: nil)
                 songs.append(songLink)
             }
             index += 1
@@ -60,15 +64,19 @@ private extension PlaylistProvider {
         return songs
     }
     
-    private static func loadPlaylists(result: (Result<[Playlist], Error>) -> Void) {
-        let query = MPMediaQuery.playlists()
-        guard let collections = query.collections else { result(.success([])); return }
-        let playlist = collections.map { collection -> Playlist in
-            let name = (collection.value(forProperty: MPMediaPlaylistPropertyName) as? String) ?? ""
-            let songs = fetchSongs(for: collection)
-            return Playlist(name: name, count: collection.count, items: songs)
+    private static func loadPlaylists(result: @escaping (Result<[Playlist], Error>) -> Void) {
+        DispatchQueue.global(qos: .utility).async {
+            let query = MPMediaQuery.playlists()
+            guard let collections = query.collections else { result(.success([])); return }
+            let playlist = collections.map { collection -> Playlist in
+                let name = (collection.value(forProperty: MPMediaPlaylistPropertyName) as? String) ?? ""
+                let songs = fetchSongs(for: collection)
+                return Playlist(name: name, count: collection.count, items: songs)
+            }
+            DispatchQueue.main.async {
+                result(.success(playlist))
+            }
         }
-        result(.success(playlist))
     }
 }
 
