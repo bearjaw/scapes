@@ -7,7 +7,7 @@
 //
 import Foundation
 
-class SongLinkProvider: NSObject {
+final class SongLinkProvider: NSObject {
     
     private lazy var service: MusicAssetManager = {
         return MusicAssetManager.shared
@@ -70,7 +70,7 @@ class SongLinkProvider: NSObject {
                                             playcount: song.playcount,
                                             downloaded: true,
                                             playlistHash: song.playlistHash,
-                                            artwork: Data())
+                                            artwork: nil)
                     self.addToDatabase(song: songLink)
                 }
             })
@@ -176,7 +176,7 @@ struct SongLink: Hashable {
          playcount: Int,
          downloaded: Bool,
          playlistHash: String,
-         artwork: Data) {
+         artwork: Data?) {
         self.id = id
         self.artist = artist
         self.title = title
