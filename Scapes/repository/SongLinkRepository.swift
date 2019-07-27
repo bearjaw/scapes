@@ -116,6 +116,7 @@ extension SongRepository {
     
     private func convert(element: SongLink) -> RealmSongLink {
         let model = RealmSongLink()
+        model.identifier = "\(element.identifier)"
         model.artist = element.artist
         model.title = element.title
         model.album = element.album
