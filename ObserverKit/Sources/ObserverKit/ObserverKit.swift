@@ -72,5 +72,3 @@ public extension NSObjectProtocol where Self: NSObject {
 //            return observe(sourceKeyPath) { target[keyPath: targetKeyPath] = $0 }
     }
 }
-
-
