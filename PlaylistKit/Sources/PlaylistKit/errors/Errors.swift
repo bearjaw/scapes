@@ -27,3 +27,17 @@ public enum AccessError: Loggable {
         }
     }
 }
+
+public enum MusicKitError: Loggable {
+    case notFound(UInt64)
+    case unknown
+    
+    public var reason: String {
+        switch self {
+        case .notFound(let identifer):
+            return "Could not find item for identifier \(identifer)"
+        case .unknown:
+            return "Unknown error occured."
+        }
+    }
+}
