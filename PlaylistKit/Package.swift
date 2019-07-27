@@ -19,7 +19,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
          .package(url: "ErrorKit", from: "1.0.0"),
-         .package(path: "ObserverKit"),
+         .package(path: "ObserverKit")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -29,6 +29,6 @@ let package = Package(
             dependencies: ["ErrorKit"]),
         .testTarget(
             name: "PlaylistKitTests",
-            dependencies: ["PlaylistKit"]),
+            dependencies: ["PlaylistKit"])
     ]
 )
