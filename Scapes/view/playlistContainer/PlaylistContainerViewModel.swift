@@ -6,7 +6,7 @@
 //  Copyright © 2019 Max Baumbach. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 protocol PlaylistContainerViewModelProtocol {
     var playlist: LiveData<Playlist> { get }
