@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PlaylistKit
 
 protocol PlaylistsViewModelProtocol {
     
@@ -27,17 +28,18 @@ final class PlaylistsViewModel {
     private var onChange: Changes?
     
     private func fetchPlaylists() {
-        PlaylistProvider.fetchPlaylists(onResult: { [unowned self] result in
+        PlaylistKit.fetchPlaylist(source: .local) { [weak self] result in
             switch result {
-            case .success(let playlists):
-                self.playlists = playlists
-                guard let onInitial = self.onInitial else { return }
-                onInitial()
+            case .success(let items):
+                guard let self = self, let onInitial = self.onInitial else { return }
+                self.playlists = items.map { Playlist(name: $0.name ?? "Unknown", count: $0.itemCount, identifier: $0.localPlaylistIdentifier) }
+                DispatchQueue.main.async {
+                    onInitial()
+                }
             case .failure(let error):
-                guard let error = error as? Loggable else { return }
-                dump(error.reason)
+                dump(error)
             }
-        })
+        }
     }
     
     func item(at indexPath: IndexPath) -> Playlist {

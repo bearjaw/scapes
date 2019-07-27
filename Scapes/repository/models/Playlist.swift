@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct Playlist: Hashable {
+struct Playlist: Hashable, Codable {
     let name: String
     let count: Int
-    let items: [SongLink]
+    let identifier: UInt64
 }

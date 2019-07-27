@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import PlaylistKit
 
 protocol PlaylistViewModelProtocol {
-    typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
+    typealias Indicies = (deletions: [Int], insertions: [Int], modifications: [Int])
     
     var title: String { get }
     
@@ -17,7 +18,7 @@ protocol PlaylistViewModelProtocol {
     
     func fetchRemainingSongsIfNeeded()
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void)
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void)
     
     func subscribe(onCompleted: @escaping () -> Void)
 }
@@ -26,6 +27,7 @@ final class PlaylistViewModel {
     private var playlist: Playlist
     private var token: RepoToken?
     private var items: [SongLinkViewData] = []
+    private var songs: [CorePlaylistItem] = []
     private var onCompleted: (() -> Void)?
     
     private lazy var repo: SongRepository = {
@@ -42,11 +44,23 @@ final class PlaylistViewModel {
     init(playlist: Playlist) {
         data = []
         self.playlist = playlist
+        fetchSongs()
+    }
+    
+    private func fetchSongs() {
+        PlaylistKit.fetchSongs(forPlaylist: playlist.identifier) { result in
+            switch result {
+            case .success(let items):
+                self.songs = items
+            case .failure(let error):
+                dump(error)
+            }
+        }
     }
     
     private func filter() -> NSCompoundPredicate? {
-        let predicates = playlist.items.map({ NSPredicate(format: "itemId == %@",
-                                                          $0.itemId) })
+        let predicates = self.songs.map({ NSPredicate(format: "identifier == %@",
+                                                          "\($0.localPlaylistIdentifier)") })
         predicates.forEach { print($0.predicateFormat)}
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
@@ -70,7 +84,7 @@ final class PlaylistViewModel {
     
     private func allSongsDownloaded(songs: [SongLink]) {
         let completed = songs.filter { $0.downloaded == false }.isEmpty
-        if completed && playlist.items.count == songs.count, let onCompleted = self.onCompleted {
+        if completed && playlist.count == songs.count, let onCompleted = self.onCompleted {
             self.data.sort { $0.index < $1.index }
             onCompleted()
         }
@@ -88,9 +102,8 @@ extension PlaylistViewModel: PlaylistViewModelProtocol {
         return playlist.name
     }
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indecies) -> Void, onEmpty: @escaping () -> Void) {
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void) {
         let filter = self.filter()
-        
         token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
             self.data = newValue
             if newValue.isEmpty { onEmpty() }
