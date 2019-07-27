@@ -8,6 +8,9 @@
       location = "group:ErrorKit">
    </FileRef>
    <FileRef
+      location = "group:PlaylistKit">
+   </FileRef>
+   <FileRef
       location = "group:Scapes.xcodeproj">
    </FileRef>
    <FileRef
