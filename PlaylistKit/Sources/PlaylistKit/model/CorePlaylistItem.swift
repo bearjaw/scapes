@@ -7,15 +7,18 @@
 
 import Foundation
 
-public class CorePlaylistItem: Codable {
+final public class CorePlaylistItem: Codable {
     
-    public init(title: String, album: String?, artist: String, localPlaylistIdentifier: UInt64) {
+    public init(title: String, album: String?, artist: String, localPlaylistIdentifier: UInt64, index: Int, playCount: Int) {
         self.title = title
         self.album = album
         self.artist = artist
+        self.index = index
+        self.playCount = playCount
         self.localPlaylistIdentifier = localPlaylistIdentifier
     }
     
+    public let index: Int
     public var title: String
     public var album: String?
     public var artist: String
