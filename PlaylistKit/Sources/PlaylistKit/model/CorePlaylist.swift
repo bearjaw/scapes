@@ -9,11 +9,14 @@ import Foundation
 
 public struct CorePlaylist: Codable {
     
-    public init(name: String?, itemCount: Int) {
+    public init(name: String?, itemCount: Int, localPlaylistIdentifier: UInt64) {
         self.name = name
+        self.itemCount = itemCount
+        self.localPlaylistIdentifier = localPlaylistIdentifier
     }
-    var name: String?
-    var itemCount: Int = 0
-    let identifier: UUID = UUID()
-    var items: [String] = []
+    public var name: String?
+    public var artwork: Data?
+    public var itemCount: Int = 0
+    public let identifier: UUID = UUID()
+    public let localPlaylistIdentifier: UInt64
 }
