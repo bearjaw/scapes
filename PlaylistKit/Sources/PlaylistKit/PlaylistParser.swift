@@ -12,32 +12,43 @@ final class PlaylistParser {
     
     private var cache: [MPMediaItemCollection] = []
     
-    func parse(collections: [MPMediaItemCollection], includingSongs: Bool) -> [CorePlaylist] {
+    func parse(collections: [MPMediaItemCollection]) -> [CorePlaylist] {
         self.cache = collections
         var result: [CorePlaylist] = []
         for collection in collections {
             let name = (collection.value(forProperty: MPMediaPlaylistPropertyName) as? String)
             let count = collection.count
-            var playlist = CorePlaylist(name: name, itemCount: count)
-            if includingSongs {
-                playlist.items = parse(songs: collection.items)
-            }
+            let artwork = collection.representativeItem?.artwork?.image(at: CGSize(width: 100, height: 100))?.pngData()
+            var playlist = CorePlaylist(name: name, itemCount: count, localPlaylistIdentifier: collection.persistentID)
+            playlist.artwork = artwork
             result.append(playlist)
         }
         return result
     }
     
-    func parse(songs: [MPMediaItem]) -> [CorePlaylistItem] {
+    func parseSongs(forPlaylist playlist: MPMediaItemCollection) -> [CorePlaylistItem] {
+        let songs = parse(songs: playlist.items)
+        return songs
+    }
+    
+    // MARK: - MediaItem to CorePlaylistIem mapping
+    
+    private func parse(songs: [MPMediaItem]) -> [CorePlaylistItem] {
         var result: [CorePlaylistItem] = []
         for song in songs {
-            
             let title = song.title
             let artist = song.artist
             let album = song.albumTitle
             let playCount = song.playCount
-//            let artwork: MPMediaItemArtwork = song.value(forProperty: MPMediaItemPropertyArtwork) as? MPMediaItemArtwork
-            //                let data = Data( artwork.image(at: CGSize(width: 200, height: 200)))
-            let item = CorePlaylistItem(title: title ?? "Unknown", album: album, artist: artist ?? "Unknown")
+            let identifier = song.persistentID
+            let item = CorePlaylistItem(title: title ?? "Unknown",
+                                        album: album,
+                                        artist: artist ?? "Unknown",
+                                        localPlaylistIdentifier: identifier)
+            if let artwork = song.artwork {
+                let data = artwork.image(at: CGSize(width: 100, height: 100))?.pngData()
+                item.artwork = data
+            }
             item.playCount = playCount
             result.append(item)
         }
