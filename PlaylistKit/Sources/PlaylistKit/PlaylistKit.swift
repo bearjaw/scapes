@@ -2,7 +2,7 @@ import MediaPlayer
 
 final public class PlaylistKit {
     
-    static func fetchPlaylist(source: MusicSource, playlists: @escaping (Result<[CorePlaylist], Error>) -> Void) {
+    public static func fetchPlaylist(source: MusicSource, playlists: @escaping (Result<[CorePlaylist], Error>) -> Void) {
         PlaylistAccess.fetchPlaylists(source: source) { result in
             switch result {
             case .success(let items):
@@ -15,7 +15,7 @@ final public class PlaylistKit {
         }
     }
     
-    static func fetchSongs(forPlaylist identifier: UInt64, songs: (Result<[CorePlaylistItem], MusicKitError>) -> Void) {
+    public static func fetchSongs(forPlaylist identifier: UInt64, songs: (Result<[CorePlaylistItem], MusicKitError>) -> Void) {
         guard let playlist = PlaylistAccess.fetchPlaylist(forIdentifier: identifier) else {
             songs(.failure(.notFound(identifier)))
             return
@@ -24,4 +24,5 @@ final public class PlaylistKit {
         let result = parser.parseSongs(forPlaylist: playlist)
         songs(.success(result))
     }
+    
 }
