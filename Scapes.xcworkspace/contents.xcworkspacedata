@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:ErrorKit">
+   </FileRef>
+   <FileRef
       location = "group:Scapes.xcodeproj">
    </FileRef>
    <FileRef
