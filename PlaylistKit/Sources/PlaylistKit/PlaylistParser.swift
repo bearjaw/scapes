@@ -35,6 +35,7 @@ final class PlaylistParser {
     
     private func parse(songs: [MPMediaItem]) -> [CorePlaylistItem] {
         var result: [CorePlaylistItem] = []
+        var index = 0
         for song in songs {
             let title = song.title
             let artist = song.artist
@@ -44,13 +45,16 @@ final class PlaylistParser {
             let item = CorePlaylistItem(title: title ?? "Unknown",
                                         album: album,
                                         artist: artist ?? "Unknown",
-                                        localPlaylistIdentifier: identifier)
+                                        localPlaylistIdentifier: identifier,
+                                        index: index,
+                                        playCount: playCount)
             if let artwork = song.artwork {
                 let data = artwork.image(at: CGSize(width: 100, height: 100))?.pngData()
                 item.artwork = data
             }
             item.playCount = playCount
             result.append(item)
+            index += 1
         }
         return result
     }
