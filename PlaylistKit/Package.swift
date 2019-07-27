@@ -18,7 +18,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-         .package(url: "ErrorKit", from: "1.0.0"),
+         .package(path: "ErrorKit"),
          .package(path: "ObserverKit")
     ],
     targets: [
