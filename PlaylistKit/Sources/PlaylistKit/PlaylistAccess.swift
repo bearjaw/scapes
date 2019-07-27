@@ -46,8 +46,8 @@ final class PlaylistAccess {
     
     static func fetchPlaylist(forIdentifier identifier: UInt64) -> MPMediaItemCollection? {
         let predicate = MPMediaPropertyPredicate(value: identifier, forProperty: "persistentID")
-        let filter: Set<MPMediaPropertyPredicate> = Set(arrayLiteral: predicate)
-        let query = MPMediaQuery(filterPredicates: filter)
-        return query.collections?.first
+        let playlist = MPMediaQuery.playlists()
+        playlist.addFilterPredicate(predicate)
+        return playlist.collections?.first
     }
 }

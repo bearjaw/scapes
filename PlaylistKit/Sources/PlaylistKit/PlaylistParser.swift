@@ -42,7 +42,7 @@ final class PlaylistParser {
             let album = song.albumTitle
             let playCount = song.playCount
             let identifier = song.persistentID
-            let item = CorePlaylistItem(title: title ?? "Unknown",
+            var item = CorePlaylistItem(title: title ?? "Unknown",
                                         album: album,
                                         artist: artist ?? "Unknown",
                                         localPlaylistIdentifier: identifier,

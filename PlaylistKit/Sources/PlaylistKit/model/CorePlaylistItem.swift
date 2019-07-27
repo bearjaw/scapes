@@ -7,7 +7,7 @@
 
 import Foundation
 
-final public class CorePlaylistItem: Codable {
+public struct CorePlaylistItem: Codable {
     
     public init(title: String, album: String?, artist: String, localPlaylistIdentifier: UInt64, index: Int, playCount: Int) {
         self.title = title
