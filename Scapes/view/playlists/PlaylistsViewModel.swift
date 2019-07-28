@@ -32,7 +32,7 @@ final class PlaylistsViewModel {
             switch result {
             case .success(let items):
                 guard let self = self, let onInitial = self.onInitial else { return }
-                self.playlists = items.map { Playlist(name: $0.name ?? "Unknown", count: $0.itemCount, identifier: $0.localPlaylistIdentifier) }
+                self.playlists = items.map { Playlist(name: $0.name, count: $0.itemCount, identifier: $0.localPlaylistIdentifier) }
                 DispatchQueue.main.async {
                     onInitial()
                 }
