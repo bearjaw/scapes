@@ -19,7 +19,6 @@ public struct CoreSongLink: Codable, Hashable {
         self.index = index
     }
     
-    
     public let identifier: UInt64
     public let appleURL: String
     public let songLinkURL: String

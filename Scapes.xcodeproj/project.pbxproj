@@ -24,19 +24,6 @@
 		486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEEB21E679820023A728 /* Collection+Extension.swift */; };
 		486EBEF121E686420023A728 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EBEF021E686420023A728 /* Repository.swift */; };
 		487CEF5622C7AD3A00027816 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487CEF5522C7AD3A00027816 /* Playlist.swift */; };
-		488544D821C92B2200532B37 /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544CD21C92B2200532B37 /* NetworkOperation.swift */; };
-		488544D921C92B2200532B37 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544CF21C92B2200532B37 /* AsyncOperation.swift */; };
-		488544DA21C92B2200532B37 /* NetworkHTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D021C92B2200532B37 /* NetworkHTTPMethod.swift */; };
-		488544DB21C92B2200532B37 /* NetworkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D121C92B2200532B37 /* NetworkSession.swift */; };
-		488544DC21C92B2200532B37 /* NetworkTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D221C92B2200532B37 /* NetworkTask.swift */; };
-		488544DD21C92B2200532B37 /* NetworkPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D321C92B2200532B37 /* NetworkPayload.swift */; };
-		488544DE21C92B2200532B37 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D421C92B2200532B37 /* Atomic.swift */; };
-		488544DF21C92B2200532B37 /* Network-Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D521C92B2200532B37 /* Network-Extensions.swift */; };
-		488544E021C92B2200532B37 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D621C92B2200532B37 /* NetworkError.swift */; };
-		488544E121C92B2200532B37 /* ServerTrustPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544D721C92B2200532B37 /* ServerTrustPolicy.swift */; };
-		488544E421C92C0100532B37 /* MusicAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544E321C92C0100532B37 /* MusicAssetManager.swift */; };
-		488544E621C92E7600532B37 /* MusicAssetManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544E521C92E7600532B37 /* MusicAssetManagerError.swift */; };
-		488544E821C95B6700532B37 /* Bundle-Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544E721C95B6700532B37 /* Bundle-Extensions.swift */; };
 		488544EC21C9693F00532B37 /* PlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544EB21C9693F00532B37 /* PlaylistsTableViewController.swift */; };
 		488544EF21C96FAD00532B37 /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544EE21C96FAD00532B37 /* TitleDetailTableViewCell.swift */; };
 		488544FC21CAC84B00532B37 /* RealmSongLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488544FB21CAC84B00532B37 /* RealmSongLink.swift */; };
@@ -70,24 +57,9 @@
 		486EBEE821E6652F0023A728 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		486EBEEB21E679820023A728 /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
 		486EBEED21E67A2D0023A728 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		486EBEEE21E67D420023A728 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		486EBEEF21E67D420023A728 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		486EBEF021E686420023A728 /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		486EBEF221E69E6D0023A728 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
 		487CEF5522C7AD3A00027816 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
-		488544CD21C92B2200532B37 /* NetworkOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkOperation.swift; sourceTree = "<group>"; };
-		488544CF21C92B2200532B37 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
-		488544D021C92B2200532B37 /* NetworkHTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkHTTPMethod.swift; sourceTree = "<group>"; };
-		488544D121C92B2200532B37 /* NetworkSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSession.swift; sourceTree = "<group>"; };
-		488544D221C92B2200532B37 /* NetworkTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTask.swift; sourceTree = "<group>"; };
-		488544D321C92B2200532B37 /* NetworkPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkPayload.swift; sourceTree = "<group>"; };
-		488544D421C92B2200532B37 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
-		488544D521C92B2200532B37 /* Network-Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Network-Extensions.swift"; sourceTree = "<group>"; };
-		488544D621C92B2200532B37 /* NetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
-		488544D721C92B2200532B37 /* ServerTrustPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerTrustPolicy.swift; sourceTree = "<group>"; };
-		488544E321C92C0100532B37 /* MusicAssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAssetManager.swift; sourceTree = "<group>"; };
-		488544E521C92E7600532B37 /* MusicAssetManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAssetManagerError.swift; sourceTree = "<group>"; };
-		488544E721C95B6700532B37 /* Bundle-Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle-Extensions.swift"; sourceTree = "<group>"; };
 		488544EB21C9693F00532B37 /* PlaylistsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsTableViewController.swift; sourceTree = "<group>"; };
 		488544EE21C96FAD00532B37 /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
 		488544FB21CAC84B00532B37 /* RealmSongLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmSongLink.swift; sourceTree = "<group>"; };
@@ -167,54 +139,8 @@
 			isa = PBXGroup;
 			children = (
 				485FBEB321CEAA8500E813F0 /* view */,
-				488544CB21C92B2200532B37 /* Avenue */,
 			);
 			path = libs;
-			sourceTree = "<group>";
-		};
-		488544CB21C92B2200532B37 /* Avenue */ = {
-			isa = PBXGroup;
-			children = (
-				486EBEEF21E67D420023A728 /* LICENSE */,
-				486EBEEE21E67D420023A728 /* README.md */,
-				488544E721C95B6700532B37 /* Bundle-Extensions.swift */,
-				488544CC21C92B2200532B37 /* Sources */,
-			);
-			path = Avenue;
-			sourceTree = "<group>";
-		};
-		488544CC21C92B2200532B37 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				488544CD21C92B2200532B37 /* NetworkOperation.swift */,
-				488544CE21C92B2200532B37 /* Operation */,
-				488544D021C92B2200532B37 /* NetworkHTTPMethod.swift */,
-				488544D121C92B2200532B37 /* NetworkSession.swift */,
-				488544D221C92B2200532B37 /* NetworkTask.swift */,
-				488544D321C92B2200532B37 /* NetworkPayload.swift */,
-				488544D421C92B2200532B37 /* Atomic.swift */,
-				488544D521C92B2200532B37 /* Network-Extensions.swift */,
-				488544D621C92B2200532B37 /* NetworkError.swift */,
-				488544D721C92B2200532B37 /* ServerTrustPolicy.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		488544CE21C92B2200532B37 /* Operation */ = {
-			isa = PBXGroup;
-			children = (
-				488544CF21C92B2200532B37 /* AsyncOperation.swift */,
-			);
-			path = Operation;
-			sourceTree = "<group>";
-		};
-		488544E221C92BE800532B37 /* manager */ = {
-			isa = PBXGroup;
-			children = (
-				488544E321C92C0100532B37 /* MusicAssetManager.swift */,
-				488544E521C92E7600532B37 /* MusicAssetManagerError.swift */,
-			);
-			path = manager;
 			sourceTree = "<group>";
 		};
 		488544E921C968E300532B37 /* playlist */ = {
@@ -301,7 +227,6 @@
 				48A97BDE21AD7DFA006E5985 /* Info.plist */,
 				48A97BDB21AD7DFA006E5985 /* LaunchScreen.storyboard */,
 				488544CA21C92B2100532B37 /* libs */,
-				488544E221C92BE800532B37 /* manager */,
 				483722612232CB3200492E4B /* provider */,
 				488544F821CAC81400532B37 /* repository */,
 				486EBEEA21E6793E0023A728 /* util */,
@@ -499,37 +424,24 @@
 				488544EC21C9693F00532B37 /* PlaylistsTableViewController.swift in Sources */,
 				480E91F9222D8F8E0094359B /* SongLinkRepository.swift in Sources */,
 				483AB22F229FD71700FEE005 /* PlaylistDetailViewController.swift in Sources */,
-				488544DB21C92B2200532B37 /* NetworkSession.swift in Sources */,
 				488544FC21CAC84B00532B37 /* RealmSongLink.swift in Sources */,
-				488544E821C95B6700532B37 /* Bundle-Extensions.swift in Sources */,
 				486EBEF121E686420023A728 /* Repository.swift in Sources */,
 				483B698122D263B3005B979A /* UIColor+Extension.swift in Sources */,
 				48A97BD521AD7DF9006E5985 /* PlaylistViewController.swift in Sources */,
-				488544DE21C92B2200532B37 /* Atomic.swift in Sources */,
 				48A97BEC21AD8F7B006E5985 /* SongLinkProvider.swift in Sources */,
 				48A97BD321AD7DF9006E5985 /* AppDelegate.swift in Sources */,
 				483AB231229FD72C00FEE005 /* PlaylistDetailView.swift in Sources */,
 				483722642232DE8D00492E4B /* PlaylistsViewModel.swift in Sources */,
 				487CEF5622C7AD3A00027816 /* Playlist.swift in Sources */,
-				488544E421C92C0100532B37 /* MusicAssetManager.swift in Sources */,
 				48F135E522AEB6A100C00506 /* PlaylistContainerView.swift in Sources */,
 				48A97BE821AD7E73006E5985 /* SongLinkView.swift in Sources */,
 				480E9200222D9DF50094359B /* RepoToken.swift in Sources */,
-				488544E621C92E7600532B37 /* MusicAssetManagerError.swift in Sources */,
-				488544D921C92B2200532B37 /* AsyncOperation.swift in Sources */,
-				488544E021C92B2200532B37 /* NetworkError.swift in Sources */,
-				488544D821C92B2200532B37 /* NetworkOperation.swift in Sources */,
 				485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */,
 				48F135E322AEB59B00C00506 /* PlaylistContainerViewController.swift in Sources */,
 				483AB233229FE3BB00FEE005 /* PlaylistDetailViewModel.swift in Sources */,
-				488544E121C92B2200532B37 /* ServerTrustPolicy.swift in Sources */,
-				488544DA21C92B2200532B37 /* NetworkHTTPMethod.swift in Sources */,
 				480E91F6222D89C20094359B /* PlaylistViewModel.swift in Sources */,
 				483AB237229FE67C00FEE005 /* NSObjectProtocol+Extensions.swift in Sources */,
-				488544DC21C92B2200532B37 /* NetworkTask.swift in Sources */,
-				488544DF21C92B2200532B37 /* Network-Extensions.swift in Sources */,
 				486EBEEC21E679820023A728 /* Collection+Extension.swift in Sources */,
-				488544DD21C92B2200532B37 /* NetworkPayload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

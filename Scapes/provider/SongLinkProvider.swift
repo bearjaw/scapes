@@ -7,17 +7,16 @@
 //
 import Foundation
 import PlaylistKit
+import SongLinkKit
 
 final class SongLinkProvider: NSObject {
-    
-    private lazy var service: MusicAssetManager = {
-        return MusicAssetManager.shared
-    }()
     
     typealias SearchBlock = (_ songLinkReadyItem: SongLinkReadyItem?) -> Void
     typealias Result = (_ songLinks: [SongLinkViewData]) -> Void
     
     typealias Content = (_ cache: [SongLinkViewData], _ remainingSongs: [SongLink]) -> Void
+    
+    private lazy var service: SongLinkKit = { SongLinkKit() }()
     
     override init() {
         super.init()
@@ -33,7 +32,7 @@ final class SongLinkProvider: NSObject {
             PlaylistKit.fetchSongs(forPlaylist: playlist.identifier) { result in
                 switch result {
                 case .success(let songs):
-                    let songLinks = songs.map { SongLink(artist: $0.artist, album: $0.album ?? "Unknown", title: $0.title, identifier: $0.localPlaylistIdentifier) }
+                    let songLinks = songs.map { SongLink(artist: $0.artist, album: $0.album, title: $0.title, identifier: $0.localPlaylistIdentifier) }
                     let data = self.checkForAvailableSongs(songs: songLinks)
                     let cache = data.cache
                     let remainingSongs = data.downloads
@@ -51,57 +50,22 @@ final class SongLinkProvider: NSObject {
     // MARK: - Private
     
     private func downloadSongLinks(songs: [SongLink]) {
-        for song in songs {
-            self.search(song: song, searchBlock: { [unowned self] item in
-                if let url = item?.url, let originalUrl = item?.originalUrl {
-                    let songLink = SongLink(identifier: song.identifier,
-                                            artist: song.artist,
-                                            title: song.title,
-                                            album: song.album,
-                                            url: url,
-                                            originalUrl: originalUrl,
-                                            index: song.index,
-                                            notFound: song.notFound,
-                                            playcount: song.playcount,
-                                            downloaded: true,
-                                            artwork: Data())
-                    self.addToDatabase(song: songLink)
-                } else {
-                    let error = "Could not find the music track matching these criteria."
-                    let songLink = SongLink(identifier: song.identifier,
-                                            artist: song.artist,
-                                            title: song.title,
-                                            album: song.album,
-                                            url: error,
-                                            originalUrl: error,
-                                            index: song.index,
-                                            notFound: true,
-                                            playcount: song.playcount,
-                                            downloaded: true,
-                                            artwork: nil)
-                    self.addToDatabase(song: songLink)
-                }
-            })
-        }
-    }
-    
-    private func search(song: SongLink, searchBlock: @escaping SearchBlock) {
-        let escapedString = "\(song.title)+\(song.artist)"
-        service.call(path: MusicAssetManager.Path.search(term: escapedString), callback: { json, _ in
-            if let contents: [[String: Any]] = json?["results"] as? [[String: Any]] {
-                let content = contents.first
-                let trackViewUrl = content?["trackViewUrl"] as? String ?? ""
-                if trackViewUrl.count > 1 {
-                    let newTrack: String = "https://song.link/\(trackViewUrl)&app=music"
-                    print(newTrack)
-                    let item = SongLinkReadyItem(url: newTrack, originalUrl: trackViewUrl)
-                    searchBlock(item)
-                } else {
-                    searchBlock(nil)
-                }
-            } else {
-                searchBlock(nil)
-            }
+        let requests = songs.map { CoreRequest(identifier: $0.identifier, title: $0.title, artist: $0.artist, album: $0.album, index: $0.index) }
+        service.fetchSongs(requests, update: { song in
+            let link = SongLink(identifier: song.identifier,
+                                artist: song.artist,
+                                title: song.title,
+                                album: song.album,
+                                url: song.songLinkURL,
+                                originalUrl: song.appleURL,
+                                index: song.index,
+                                notFound: false,
+                                playcount: 0,
+                                downloaded: true,
+                                artwork: nil)
+            self.addToDatabase(song: link)
+        }, completion: { _ in
+            
         })
     }
     

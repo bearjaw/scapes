@@ -8,17 +8,28 @@
 import Foundation
 
 final public class SongLinkKit: NSObject {
-    private var service: NetworkService?
+    
+    private var service: NetworkService
+    
+    public override init() {
+        service = NetworkService()
+        super.init()
+    }
     
     public func fetchSongs(_ items: [CoreRequest], update: @escaping (CoreSongLink) -> Void, completion: ([CoreSongLink]) -> Void) {
         service = NetworkService()
-        try! service!.fetchSong(items.first!) { result in
-            switch result {
-            case .success(let song):
-                update(song)
-            case .failure(let error):
-                dump(error)
+        do {
+            try items.forEach { try service.fetchSong($0) { result in
+                switch result {
+                case .success(let link):
+                    update(link)
+                case .failure(let error):
+                    dump(error)
+                }
+                }
             }
+        } catch {
+            dump(error)
         }
     }
     

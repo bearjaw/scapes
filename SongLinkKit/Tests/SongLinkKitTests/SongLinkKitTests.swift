@@ -4,7 +4,7 @@ import XCTest
 final class SongLinkKitTests: XCTestCase {
     private var server: SongLinkKit?
     
-    func testExample() {
+    func testFetchSongFromNetwork() {
         let request = CoreRequest(identifier: 939990, title: "Lucky", artist: "Make do and mend", album: "", index: 0)
         server = SongLinkKit()
         let expectation = XCTestExpectation(description: "wait")
@@ -21,6 +21,6 @@ final class SongLinkKitTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testExample", testExample)
     ]
 }
