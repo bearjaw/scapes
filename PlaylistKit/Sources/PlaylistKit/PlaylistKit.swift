@@ -1,4 +1,4 @@
-import MediaPlayer
+import Foundation
 
 final public class PlaylistKit {
     

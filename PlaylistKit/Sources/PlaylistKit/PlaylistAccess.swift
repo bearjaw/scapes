@@ -14,28 +14,28 @@ public enum MusicSource {
 
 final class PlaylistAccess {
     
-     static func fetchPlaylists(source: MusicSource, onResult: @escaping (Result<[MPMediaItemCollection], Error>) -> Void) {
-            guard MPMediaLibrary.authorizationStatus() != .authorized else {
-                loadPlaylists(from: source, onResult: onResult)
-                return
-            }
-            MPMediaLibrary.requestAuthorization { status in
-                switch status {
-                case .authorized:
-                    self.loadPlaylists(from: source, onResult: onResult)
-                case .notDetermined:
-                    onResult(.failure(AccessError.notDetermined))
-                case .denied:
-                    onResult(.failure(AccessError.denied))
-                case .restricted:
-                    onResult(.failure(AccessError.restricted))
-                @unknown default:
-                    onResult(.failure(AccessError.unknown))
-                }
+    static func fetchPlaylists(source: MusicSource, onResult: @escaping (Result<[MPMediaItemCollection], Error>) -> Void) {
+        guard MPMediaLibrary.authorizationStatus() != .authorized else {
+            loadPlaylists(from: source, onResult: onResult)
+            return
+        }
+        MPMediaLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                self.loadPlaylists(from: source, onResult: onResult)
+            case .notDetermined:
+                onResult(.failure(AccessError.notDetermined))
+            case .denied:
+                onResult(.failure(AccessError.denied))
+            case .restricted:
+                onResult(.failure(AccessError.restricted))
+            @unknown default:
+                onResult(.failure(AccessError.unknown))
             }
         }
+    }
     
-     static func loadPlaylists(from source: MusicSource, onResult: @escaping (Result<[MPMediaItemCollection], Error>) -> Void) {
+    static func loadPlaylists(from source: MusicSource, onResult: @escaping (Result<[MPMediaItemCollection], Error>) -> Void) {
         let queue = DispatchQueue(label: "com.scapes.playlist.fetch.queue", qos: .background, attributes: .concurrent, target: .global(qos: .background))
         queue.async {
             let query = MPMediaQuery.playlists()
