@@ -104,12 +104,12 @@ final class PlaylistContainerViewController: UIViewController {
         containerView.tableView.tableHeaderView = detail.view
     }
     
-    fileprivate func addExportButton() {
-        //        let bbi = UIBarButtonItem(barButtonSystemItem: .action,
-        //                                  target: self,
-        //                                  action: #selector(PlaylistViewController.exportPlaylist)
-        //        )
-        //        navigationController?.navigationItem.rightBarButtonItem = bbi
+    private func addExportButton() {
+        let bbi = UIBarButtonItem(barButtonSystemItem: .action,
+                                  target: self,
+                                  action: #selector(PlaylistContainerViewController.exportPlaylist)
+        )
+        navigationItem.rightBarButtonItem = bbi
     }
 }
 
@@ -159,22 +159,22 @@ extension PlaylistContainerViewController {
     }
     
     @objc func exportPlaylist() {
-        //        var exportString = "\(viewModel.playlist.value?.name$) \n"
-        //        DispatchQueue.global(qos: .userInitiated).async {
-        //            for item in self.viewModel.data {
-        //                if item.url.lowercased().contains("Error".lowercased()) {
-        //                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-        //                } else {
-        //                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-        //                }
-        //            }
-        //            DispatchQueue.main.async {
-        //                let pasteBoard = UIPasteboard.general
-        //                pasteBoard.string = exportString
-        //                let generator = UINotificationFeedbackGenerator()
-        //                generator.notificationOccurred(.success)
-        //                self.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
-        //            }
-        //        }
+        var exportString = "\(viewModel.playlist.value?.name ?? "Unknown Playlist") \n"
+        DispatchQueue.global(qos: .userInitiated).async {
+            for item in self.viewModel.data {
+                if item.url.lowercased().contains("Error".lowercased()) {
+                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
+                } else {
+                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+                }
+            }
+            DispatchQueue.main.async {
+                let pasteBoard = UIPasteboard.general
+                pasteBoard.string = exportString
+                let generator = UINotificationFeedbackGenerator()
+                generator.notificationOccurred(.success)
+                self.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
+            }
+        }
     }
 }
