@@ -11,6 +11,7 @@
 		480E91F9222D8F8E0094359B /* SongLinkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91F8222D8F8E0094359B /* SongLinkRepository.swift */; };
 		480E9200222D9DF50094359B /* RepoToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91FF222D9DF50094359B /* RepoToken.swift */; };
 		4816EB4A22ED7C8B00419CCB /* ObserverKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4816EB4922ED7C8B00419CCB /* ObserverKit */; };
+		4816EB4C22EDA40500419CCB /* SongLinkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4816EB4B22EDA40500419CCB /* SongLinkKit */; };
 		483722642232DE8D00492E4B /* PlaylistsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483722632232DE8D00492E4B /* PlaylistsViewModel.swift */; };
 		483AB22F229FD71700FEE005 /* PlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483AB22E229FD71700FEE005 /* PlaylistDetailViewController.swift */; };
 		483AB231229FD72C00FEE005 /* PlaylistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483AB230229FD72C00FEE005 /* PlaylistDetailView.swift */; };
@@ -114,6 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4816EB4C22EDA40500419CCB /* SongLinkKit in Frameworks */,
 				49D5DBE743D9E626F3372158 /* Pods_Scapes.framework in Frameworks */,
 				4853514B22ECD5DC008FABE3 /* PlaylistKit in Frameworks */,
 				4816EB4A22ED7C8B00419CCB /* ObserverKit in Frameworks */,
@@ -374,6 +376,7 @@
 			packageProductDependencies = (
 				4853514A22ECD5DC008FABE3 /* PlaylistKit */,
 				4816EB4922ED7C8B00419CCB /* ObserverKit */,
+				4816EB4B22EDA40500419CCB /* SongLinkKit */,
 			);
 			productName = Linker;
 			productReference = 48A97BCF21AD7DF9006E5985 /* Scapes.app */;
@@ -728,6 +731,10 @@
 		4816EB4922ED7C8B00419CCB /* ObserverKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ObserverKit;
+		};
+		4816EB4B22EDA40500419CCB /* SongLinkKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SongLinkKit;
 		};
 		4853514A22ECD5DC008FABE3 /* PlaylistKit */ = {
 			isa = XCSwiftPackageProductDependency;
