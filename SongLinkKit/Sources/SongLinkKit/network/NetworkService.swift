@@ -27,32 +27,35 @@ enum HTTPMethod: String {
 final class NetworkService: NSObject {
     typealias JSON = [String: Any]
     
-    private var cancel: AnyCancellable?
+    private var cancel: [AnyCancellable] = []
     
     func fetchSong(_ song: CoreRequest, onCompleted: @escaping (Result<CoreSongLink, Error>) -> Void) throws {
         var request = URLRequest(url: song.appleURL)
         request.httpMethod = HTTPMethod.GET.rawValue
         request.allHTTPHeaderFields = ["Accept": "application/json"]
         
-        cancel = URLSession.shared.dataTaskPublisher(for: request)
-        .tryCatch { error -> URLSession.DataTaskPublisher in
-            guard error.networkUnavailableReason == .constrained else { throw error }
-            return URLSession.shared.dataTaskPublisher(for: request)
-        }
-        .tryMap { (data, response) -> CoreSongLink? in
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return nil }
-            guard let json: JSON = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? JSON else { return nil }
-            guard let result: [JSON] = json["results"] as? [JSON] else { return nil }
-            guard let content = result.first else { return nil }
-            let trackViewUrl = content["trackViewUrl"] as? String ?? ""
-            let songLinkURL = "https://song.link/\(trackViewUrl)&app=music"
-            return song.generateCoreSongLink(from: songLinkURL, trackViewURL: trackViewUrl)
-        }
-        .sink(receiveCompletion: { _ in
-            onCompleted(.failure(NetworkError.failed))
-        }, receiveValue: { songLink in
-            onCompleted(.success(songLink!))
-        })
+        cancel.append(
+            URLSession.shared.dataTaskPublisher(for: request)
+                .tryCatch { error -> URLSession.DataTaskPublisher in
+                    guard error.networkUnavailableReason == .constrained else { throw error }
+                    return URLSession.shared.dataTaskPublisher(for: request)
+            }
+            .tryMap { (data, response) -> CoreSongLink? in
+                guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return nil }
+                guard let json: JSON = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? JSON else { return nil }
+                guard let result: [JSON] = json["results"] as? [JSON] else { return nil }
+                guard let content = result.first else { return nil }
+                let trackViewUrl = content["trackViewUrl"] as? String ?? ""
+                let songLinkURL = "https://song.link/\(trackViewUrl)&app=music"
+                return song.generateCoreSongLink(from: songLinkURL, trackViewURL: trackViewUrl)
+            }
+            .sink(receiveCompletion: { error in
+                dump(error)
+                onCompleted(.failure(NetworkError.failed))
+            }, receiveValue: { songLink in
+                onCompleted(.success(songLink!))
+            })
+        )
     }
 }
 
