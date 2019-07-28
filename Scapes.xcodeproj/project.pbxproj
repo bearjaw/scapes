@@ -12,6 +12,7 @@
 		480E9200222D9DF50094359B /* RepoToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E91FF222D9DF50094359B /* RepoToken.swift */; };
 		4816EB4A22ED7C8B00419CCB /* ObserverKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4816EB4922ED7C8B00419CCB /* ObserverKit */; };
 		4816EB4C22EDA40500419CCB /* SongLinkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4816EB4B22EDA40500419CCB /* SongLinkKit */; };
+		4816EB8A22EDD37100419CCB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4816EB8922EDD37100419CCB /* SceneDelegate.swift */; };
 		483722642232DE8D00492E4B /* PlaylistsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483722632232DE8D00492E4B /* PlaylistsViewModel.swift */; };
 		483AB22F229FD71700FEE005 /* PlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483AB22E229FD71700FEE005 /* PlaylistDetailViewController.swift */; };
 		483AB231229FD72C00FEE005 /* PlaylistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483AB230229FD72C00FEE005 /* PlaylistDetailView.swift */; };
@@ -46,6 +47,7 @@
 		480E91F7222D8C000094359B /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		480E91F8222D8F8E0094359B /* SongLinkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkRepository.swift; sourceTree = "<group>"; };
 		480E91FF222D9DF50094359B /* RepoToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoToken.swift; sourceTree = "<group>"; };
+		4816EB8922EDD37100419CCB /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		483722632232DE8D00492E4B /* PlaylistsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsViewModel.swift; sourceTree = "<group>"; };
 		483AB22E229FD71700FEE005 /* PlaylistDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewController.swift; sourceTree = "<group>"; };
 		483AB230229FD72C00FEE005 /* PlaylistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailView.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				48A97BD221AD7DF9006E5985 /* AppDelegate.swift */,
+				4816EB8922EDD37100419CCB /* SceneDelegate.swift */,
 				48A97BD921AD7DFA006E5985 /* Assets.xcassets */,
 				48A97BDE21AD7DFA006E5985 /* Info.plist */,
 				48A97BDB21AD7DFA006E5985 /* LaunchScreen.storyboard */,
@@ -438,6 +441,7 @@
 				480E9200222D9DF50094359B /* RepoToken.swift in Sources */,
 				485FBEB521CEAAA100E813F0 /* View+Extensions.swift in Sources */,
 				48F135E322AEB59B00C00506 /* PlaylistContainerViewController.swift in Sources */,
+				4816EB8A22EDD37100419CCB /* SceneDelegate.swift in Sources */,
 				483AB233229FE3BB00FEE005 /* PlaylistDetailViewModel.swift in Sources */,
 				480E91F6222D89C20094359B /* PlaylistViewModel.swift in Sources */,
 				483AB237229FE67C00FEE005 /* NSObjectProtocol+Extensions.swift in Sources */,

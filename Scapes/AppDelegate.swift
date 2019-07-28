@@ -13,33 +13,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let viewModel = PlaylistsViewModel()
-        let viewController = PlaylistsTableViewController(viewModel: viewModel)
-        
-        let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.navigationItem.largeTitleDisplayMode = .automatic
-        navigationController.navigationBar.prefersLargeTitles = true
-        configureNavbar(for: navigationController)
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         return true
     }
     
-    private func configureNavbar(for navigationController: UINavigationController) {
-        let bar = UIBarAppearance(idiom: .phone)
-        bar.backgroundColor = .barTint
-        let navBar = UINavigationBarAppearance(barAppearance: bar)
-        navBar.titleTextAttributes = [.foregroundColor: UIColor.action]
-        navBar.largeTitleTextAttributes = [.foregroundColor: UIColor.action]
-        navBar.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.action]
-        navBar.buttonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.action]
-        navigationController.navigationBar.standardAppearance = navBar
-        navigationController.navigationBar.tintColor = .action
-        navigationController.navigationBar.compactAppearance = navBar
-        navigationController.navigationBar.scrollEdgeAppearance = navBar
-        navigationController.navigationBar.isTranslucent = false
+    // MARK: UISceneSession Lifecycle
+    
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // Called when a new scene session is being created.
+        // Use this method to select a configuration to create the new scene with.
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+    
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        // Called when the user discards a scene session.
+        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 }
