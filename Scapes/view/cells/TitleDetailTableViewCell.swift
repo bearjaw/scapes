@@ -107,7 +107,7 @@ final class TitleDetailTableViewCell: UITableViewCell {
                                        height: sizeAlbum.height
         ))
         originX = 0.0
-        originY = labelAlbum.rightBottom.y
+        originY = labelArtist.rightBottom.y
         
         labelLink.frame = (CGRect(x: originX + verticalSpaceMultiplier*verticalSpace,
                                        y: originY + horizontalSpaceMultiplier*horizontalSpace,

@@ -37,6 +37,15 @@ final class SongRepository: Repository {
         }
     }
     
+    func update(element identifier: String, value: Any?, for keyPath: String) {
+        guard let result = realm.object(ofType: RealmSongLink.self, forPrimaryKey: identifier) else {
+            return
+        }
+        safeWrite {
+            result.setValue(value, forKey: keyPath)
+        }
+    }
+    
     func delete(element: SongLink) {
         safeWrite {
             realm.delete(convert(element: element))

@@ -7,6 +7,6 @@ target 'Scapes' do
 
   # Pods for Scapes
   pod 'RealmSwift'
-  pod 'SwiftLint'
+  pod 'SwiftLint', configurations: ['Debug']
 
 end
