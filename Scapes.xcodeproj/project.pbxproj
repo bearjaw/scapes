@@ -243,8 +243,6 @@
 			children = (
 				48F135E122AEB58100C00506 /* playlistContainer */,
 				488544ED21C96F8700532B37 /* cells */,
-				488544E921C968E300532B37 /* playlist */,
-				483AB22B229FD6CD00FEE005 /* playlistDetail */,
 				488544EA21C968F000532B37 /* playlists */,
 			);
 			path = view;
@@ -253,6 +251,8 @@
 		48F135E122AEB58100C00506 /* playlistContainer */ = {
 			isa = PBXGroup;
 			children = (
+				488544E921C968E300532B37 /* playlist */,
+				483AB22B229FD6CD00FEE005 /* playlistDetail */,
 				48F135E222AEB59B00C00506 /* PlaylistContainerViewController.swift */,
 				48F135E422AEB6A100C00506 /* PlaylistContainerView.swift */,
 				48F135E622AEB81500C00506 /* PlaylistContainerViewModel.swift */,
