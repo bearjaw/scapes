@@ -28,14 +28,12 @@ final class SongRepository: Repository {
     }
     
     func add(element: SongLink) {
-        safeWrite {
-            realm.create(RealmSongLink.self, value: convert(element: element), update: true)
-        }
+        update(element: element)
     }
     
     func update(element: SongLink) {
         safeWrite {
-            realm.create(RealmSongLink.self, value: convert(element: element), update: true)
+            realm.create(RealmSongLink.self, value: convert(element: element), update: .modified)
         }
     }
     
@@ -67,13 +65,12 @@ final class SongRepository: Repository {
             results = results.filter(filter)
         }
         return RepoToken(
-            results.observe { [weak self] (changes: RealmCollectionChange) in
+            results.sorted(byKeyPath: "index").observe { [weak self] (changes: RealmCollectionChange) in
                 guard let self = self else { return }
                 switch changes {
                 case .initial(let collection):
-                    onInitial(collection.sorted(byKeyPath: "index").map({ self.convert(element: $0 )}))
+                    onInitial(collection.map({ self.convert(element: $0 )}))
                 case .update(let collection, let deletions, let insertions, let modifications):
-                    print("")
                     onChange(collection.map({ self.convert(element: $0 )}),
                              (deletions: deletions, insertions: insertions, modifications: modifications))
                 case .error(let error):
@@ -83,7 +80,7 @@ final class SongRepository: Repository {
     }
     
     func subscribe(entity: SongLink, onChange: @escaping (SongLink) -> Void) -> RepoToken? {
-        guard let model = realm.object(ofType: RealmSongLink.self, forPrimaryKey: entity.id) else {
+        guard let model = realm.object(ofType: RealmSongLink.self, forPrimaryKey: entity.identifier) else {
             fatalError("Could not fetch model. Id did not match any entities.")
         }
         return RepoToken(
@@ -113,7 +110,7 @@ extension SongRepository {
 
 extension SongRepository {
     private func convert(element: RealmSongLink) -> SongLink {
-        return SongLink( id: element.id,
+        return SongLink( identifier: UInt64(element.identifier)!,
                          artist: element.artist,
                          title: element.title,
                          album: element.album,
@@ -123,13 +120,12 @@ extension SongRepository {
                          notFound: element.notFound,
                          playcount: element.playcount,
                          downloaded: element.downloaded,
-                         playlistHash: element.playlistHash)
+                         artwork: Data())
     }
     
     private func convert(element: SongLink) -> RealmSongLink {
         let model = RealmSongLink()
-        model.id = element.id
-        model.itemId = "\(element.album) \(element.artist) \(element.title)"
+        model.identifier = "\(element.identifier)"
         model.artist = element.artist
         model.title = element.title
         model.album = element.album
@@ -139,7 +135,6 @@ extension SongRepository {
         model.notFound = element.notFound
         model.playcount = element.playcount
         model.downloaded = element.downloaded
-        model.playlistHash = element.playlistHash
         return model
     }
     
@@ -149,7 +144,7 @@ extension SongRepository {
                 write()
             }
         } catch {
-            fatalError("Could not open write transaction")
+            fatalError("Error: Could not open write transaction \(error)")
         }
     }
 }

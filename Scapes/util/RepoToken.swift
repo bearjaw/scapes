@@ -21,4 +21,8 @@ final class RepoToken {
     func invalidate() {
         token.invalidate()
     }
+    
+    deinit {
+        token.invalidate()
+    }
 }

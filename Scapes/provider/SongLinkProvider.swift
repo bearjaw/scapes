@@ -6,17 +6,17 @@
 //  Copyright © 2018 Max Baumbach. All rights reserved.
 //
 import Foundation
+import PlaylistKit
+import SongLinkKit
 
-class SongLinkProvider: NSObject {
-    
-    private lazy var service: MusicAssetManager = {
-        return MusicAssetManager.shared
-    }()
+final class SongLinkProvider: NSObject {
     
     typealias SearchBlock = (_ songLinkReadyItem: SongLinkReadyItem?) -> Void
     typealias Result = (_ songLinks: [SongLinkViewData]) -> Void
     
     typealias Content = (_ cache: [SongLinkViewData], _ remainingSongs: [SongLink]) -> Void
+    
+    private lazy var service: SongLinkKit = { SongLinkKit() }()
     
     override init() {
         super.init()
@@ -27,12 +27,22 @@ class SongLinkProvider: NSObject {
     }
     
     func provideCachedSongs(for playlist: Playlist, content: @escaping Content) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let data = self.checkForAvailableSongs(songs: playlist.items)
-                let cache = data.cache
-                let remainingSongs = data.downloads
-                DispatchQueue.main.async {
-                    content(cache, remainingSongs)
+        let queue = DispatchQueue(label: "com.scapes.fetch.songlinks.remote", qos: .userInitiated, attributes: .concurrent, target: .global(qos: .userInteractive))
+        queue.async {
+            PlaylistKit.fetchSongs(forPlaylist: playlist.identifier) { result in
+                switch result {
+                case .success(let songs):
+                    let songLinks = songs.map { SongLink(artist: $0.artist, album: $0.album, title: $0.title, identifier: $0.localPlaylistIdentifier) }
+                    let data = self.checkForAvailableSongs(songs: songLinks)
+                    let cache = data.cache
+                    let remainingSongs = data.downloads
+                    DispatchQueue.main.async {
+                        content(cache, remainingSongs)
+                    }
+                case .failure(let error):
+                    dump(error)
+                }
+                
             }
         }
     }
@@ -40,58 +50,22 @@ class SongLinkProvider: NSObject {
     // MARK: - Private
     
     private func downloadSongLinks(songs: [SongLink]) {
-        
-        for song in songs {
-            self.search(song: song, searchBlock: { [unowned self] item in
-                if let url = item?.url, let originalUrl = item?.originalUrl {
-                    let songLink = SongLink(id: song.id,
-                                            artist: song.artist,
-                                            title: song.title,
-                                            album: song.album,
-                                            url: url,
-                                            originalUrl: originalUrl,
-                                            index: song.index,
-                                            notFound: song.notFound,
-                                            playcount: song.playcount,
-                                            downloaded: true,
-                                            playlistHash: song.playlistHash)
-                    self.addToDatabase(song: songLink)
-                } else {
-                    let error = "Could not find the music track matching these criteria."
-                    let songLink = SongLink(id: song.id,
-                                            artist: song.artist,
-                                            title: song.title,
-                                            album: song.album,
-                                            url: error,
-                                            originalUrl: error,
-                                            index: song.index,
-                                            notFound: true,
-                                            playcount: song.playcount,
-                                            downloaded: true,
-                                            playlistHash: song.playlistHash)
-                    self.addToDatabase(song: songLink)
-                }
-            })
-        }
-    }
-    
-    private func search(song: SongLink, searchBlock: @escaping SearchBlock) {
-        let escapedString = "\(song.title)+\(song.artist)"
-        service.call(path: MusicAssetManager.Path.search(term: escapedString), callback: { json, _ in
-            if let contents: [[String: Any]] = json?["results"] as? [[String: Any]] {
-                let content = contents.first
-                let trackViewUrl = content?["trackViewUrl"] as? String ?? ""
-                if trackViewUrl.count > 1 {
-                    let newTrack: String = "https://song.link/\(trackViewUrl)&app=music"
-                    print(newTrack)
-                    let item = SongLinkReadyItem(url: newTrack, originalUrl: trackViewUrl)
-                    searchBlock(item)
-                } else {
-                    searchBlock(nil)
-                }
-            } else {
-                searchBlock(nil)
-            }
+        let requests = songs.map { CoreRequest(identifier: $0.identifier, title: $0.title, artist: $0.artist, album: $0.album, index: $0.index) }
+        service.fetchSongs(requests, update: { song in
+            let link = SongLink(identifier: song.identifier,
+                                artist: song.artist,
+                                title: song.title,
+                                album: song.album,
+                                url: song.songLinkURL,
+                                originalUrl: song.appleURL,
+                                index: song.index,
+                                notFound: false,
+                                playcount: 0,
+                                downloaded: true,
+                                artwork: nil)
+            self.addToDatabase(song: link)
+        }, completion: { _ in
+            
         })
     }
     
@@ -101,19 +75,19 @@ class SongLinkProvider: NSObject {
     }
     
     private func checkForAvailableSongs(songs: [SongLink]) -> (cache: [SongLinkViewData], downloads: [SongLink] ) {
-        let predicates = songs.map { NSPredicate(format: "itemId = %@ AND downloaded = true",
-                                                $0.itemId,
-                                                true) }
+        let predicates = songs.map { NSPredicate(format: "identifier = %@ AND downloaded = true",
+                                                 "\($0.identifier)",
+                                                 true) }
         let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         let songRepo = SongRepository()
         let results = songRepo.all(matching: compundPredicate)
-        results.forEach { songRepo.update(element: $0.itemId, value: $0.playcount, for: "playcount")}
+        results.forEach { songRepo.update(element: "\($0.identifier)", value: $0.playcount, for: "playcount")}
         let cache = results.map { SongLinkViewData(url: $0.url,
-                                                  success: true,
-                                                  title: $0.title,
-                                                  artist: $0.artist,
-                                                  album: $0.album,
-                                                  index: $0.index) }
+                                                   success: true,
+                                                   title: $0.title,
+                                                   artist: $0.artist,
+                                                   album: $0.album,
+                                                   index: $0.index) }
         let songsSet: Set<SongLink> = Set(songs)
         let songsToDownload: Set<SongLink> = songsSet.subtracting(Set(results))
         
@@ -136,7 +110,7 @@ struct SongLinkViewData: Equatable {
 }
 
 struct SongLink: Hashable {
-    let id: String
+    let identifier: UInt64
     let artist: String
     let title: String
     let album: String
@@ -146,10 +120,10 @@ struct SongLink: Hashable {
     let notFound: Bool
     let playcount: Int
     let downloaded: Bool
-    let playlistHash: String
+    let artwork: Data?
     
-    init(artist: String, album: String, title: String) {
-        self.id = ""
+    init(artist: String, album: String, title: String, identifier: UInt64) {
+        self.identifier = identifier
         self.artist = artist
         self.title = title
         self.album = album
@@ -159,10 +133,10 @@ struct SongLink: Hashable {
         self.notFound = false
         self.playcount = 0
         self.downloaded = false
-        self.playlistHash = ""
+        self.artwork = nil
     }
     
-    init(id: String,
+    init(identifier: UInt64,
          artist: String,
          title: String,
          album: String,
@@ -172,8 +146,8 @@ struct SongLink: Hashable {
          notFound: Bool,
          playcount: Int,
          downloaded: Bool,
-         playlistHash: String) {
-        self.id = id
+         artwork: Data?) {
+        self.identifier = identifier
         self.artist = artist
         self.title = title
         self.album = album
@@ -183,11 +157,7 @@ struct SongLink: Hashable {
         self.notFound = notFound
         self.playcount = playcount
         self.downloaded = downloaded
-        self.playlistHash = playlistHash
-    }
-    
-    var itemId: String {
-        return "\(self.album) \(self.artist) \(self.title)"
+        self.artwork = artwork
     }
 }
 
