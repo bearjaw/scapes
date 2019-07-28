@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaylistViewController: UIViewController {
+final class PlaylistViewController: UIViewController {
     
     private lazy var viewSongLink: SongLinkView = {
         let view = SongLinkView()
@@ -41,9 +41,9 @@ class PlaylistViewController: UIViewController {
             self.viewModel.fetchRemainingSongsIfNeeded()
             self.viewSongLink.updateState(state: .loading)
         }
-        addExportButton()
+//        addExportButton()
         subscribeToDataChanges()
-        self.title = viewModel.title
+        title = viewModel.title
     }
     
     // MARK: Lifecycle end
@@ -72,8 +72,7 @@ class PlaylistViewController: UIViewController {
                 self.viewSongLink.updateState(state: .show)
         })
         
-        viewModel.subscribe { [weak self] in
-            guard let self = self else { return }
+        viewModel.subscribe { [unowned self] in
             self.viewSongLink.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
             self.viewSongLink.updateState(state: .hide)
         }
@@ -121,33 +120,6 @@ extension PlaylistViewController: UITableViewDelegate {
 }
 
 extension PlaylistViewController {
-    fileprivate func addExportButton() {
-        let bbi = UIBarButtonItem(barButtonSystemItem: .action,
-                                  target: self,
-                                  action: #selector(PlaylistViewController.exportPlaylist)
-        )
-        navigationItem.rightBarButtonItem = bbi
-    }
-    
-    @objc func exportPlaylist() {
-        var exportString = "\(viewModel.title) \n"
-        DispatchQueue.global(qos: .userInitiated).async {
-            for item in self.viewModel.data {
-                if item.url.lowercased().contains("Error".lowercased()) {
-                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-                } else {
-                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-                }
-            }
-            DispatchQueue.main.async {
-                let pasteBoard = UIPasteboard.general
-                pasteBoard.string = exportString
-                let generator = UINotificationFeedbackGenerator()
-                generator.notificationOccurred(.success)
-                self.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
-            }
-        }
-    }
     
     private func configureTableView() {
         viewSongLink.tableView.delegate = self
@@ -155,21 +127,6 @@ extension PlaylistViewController {
         viewSongLink.tableView.rowHeight = UITableView.automaticDimension
         viewSongLink.tableView.estimatedRowHeight = 60.0
         viewSongLink.tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: "kPlaylistCell")
-    }
-}
-
-extension PlaylistViewController {
-    func showAlert(alert: Alert) {
-        let alertController = DarkAlertController(title: alert.title, message: alert.message, preferredStyle: .alert)
-        guard let coder = UIAlertController.classForCoder() as? UIAppearanceContainer.Type else { return }
-        UIVisualEffectView.appearance(
-            whenContainedInInstancesOf: [coder]
-            ).effect = UIBlurEffect(style: .dark)
-        present(alertController, animated: true, completion: {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                alertController.dismiss(animated: true, completion: nil)
-            }
-        })
     }
 }
 

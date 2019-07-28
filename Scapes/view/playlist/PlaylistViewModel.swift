@@ -61,7 +61,7 @@ final class PlaylistViewModel {
     private func filter() -> NSCompoundPredicate? {
         let predicates = self.songs.map({ NSPredicate(format: "identifier == %@",
                                                           "\($0.localPlaylistIdentifier)") })
-        predicates.forEach { print($0.predicateFormat)}
+        predicates.forEach { print($0.predicateFormat) }
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
