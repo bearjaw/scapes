@@ -8,49 +8,125 @@
 
 import UIKit
 
+enum GetButtonState {
+    case loading
+    case hide
+    case show
+}
+
 final class PlaylistContainerView: UIView {
-    private var detailView: UIView?
-    private var listView: UIView?
+    var targetAction: () -> Void = {}
+    
+    private(set) var tableView = UITableView(frame: .zero, style: .plain)
+    private var state: GetButtonState = .show
+    
+    private var buttonGet = UIButton()
+    private var spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.color = .text
+        return spinner
+    }()
+    
+    private let buttonText = "Get Song Links"
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .secondary
+        tableView.backgroundColor = .primary
+        tableView.tintColor = .text
+        tableView.tableFooterView = UIView()
+        addSubview(tableView)
+        
+        buttonGet.setTitle(buttonText, for: .normal)
+        buttonGet.backgroundColor = .button
+        buttonGet.titleLabel?.textColor = .text
+        buttonGet.layer.cornerRadius = 8
+        buttonGet.alpha = 0.0
+        buttonGet.addTarget(self, action: #selector(fetchPlaylist), for: .touchUpInside)
+        addSubview(buttonGet)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Layout
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layoutDetail()
-        layoutList()
-    }
-    
-    private func layoutDetail() {
-        guard let detailView = detailView else { return }
-        let usableSize = CGSize(width: bounds.width, height: .greatestFiniteMagnitude)
-        let size = detailView.sizeThatFits(usableSize)
-        let origin: CGPoint = .zero
-        detailView.frame = CGRect(origin: origin, size: size)
-    }
-    
-    private func layoutList() {
-        guard let listView = listView,
-        let detailView = detailView else { return }
-        let usableHeight = bounds.height - safeAreaInsets.top - detailView.bounds.height
-        let origin = CGPoint(x: 0, y: detailView.rightBottom.y)
-        let size = CGSize(width: bounds.width, height: usableHeight)
-        listView.frame = CGRect(origin: origin, size: size)
+        let horizontalSpace: CGFloat = 10.0
+        let verticalSpace: CGFloat = 10.0
+        let buttonHeight = 50.0
+        let yButton = Double(bounds.size.height-2*verticalSpace-safeAreaInsets.bottom)-buttonHeight
+        let xButton = Double(2*horizontalSpace)
+        switch state {
+        case .hide:
+            let horizontalSpace: CGFloat = 10.0
+            let newHeight = self.bounds.size.height - self.safeAreaInsets.bottom - horizontalSpace
+            self.tableView.frame = (CGRect(x: 0.0, y: 0.0, width: self.bounds.size.width, height: newHeight))
+        case .show, .loading:
+            let verticalSpace: CGFloat = 10.0
+            let buttonHeight: CGFloat = 50.0
+            let yButton: CGFloat = self.bounds.size.height-2*verticalSpace-self.safeAreaInsets.bottom-buttonHeight
+            self.tableView.frame = (CGRect(x: 0.0,
+                                           y: 0.0,
+                                           width: self.bounds.size.width,
+                                           height: yButton - 2*verticalSpace
+            ))
+        }
+        
+        buttonGet.frame = CGRect(x: xButton,
+                                 y: yButton,
+                                 width: Double(bounds.size.width - 4*horizontalSpace),
+                                 height: buttonHeight)
     }
     
     // MARK: - Update
     
-    func addDetailView(_ view: UIView) {
-        detailView?.removeFromSuperview()
-        addSubview(view)
-        detailView = view
-        setNeedsLayout()
+    func updateState(state: GetButtonState) {
+        self.state = state
+        switch state {
+        case .loading:
+            buttonGet.addSubview(spinner)
+            buttonGet.setTitle("", for: .normal)
+            let xSpinner: CGFloat = (buttonGet.bounds.size.width - spinner.bounds.size.width)/2
+            let ySpinner: CGFloat = (buttonGet.bounds.size.height - spinner.bounds.size.height)/2
+            spinner.frame = (CGRect(x: xSpinner,
+                                    y: ySpinner,
+                                    width: spinner.bounds.width,
+                                    height: spinner.bounds.height)
+            )
+            spinner.startAnimating()
+        case .hide:
+            UIView.animate(withDuration: 0.2) {
+                self.buttonGet.alpha = 0.0
+                self.spinner.stopAnimating()
+                self.spinner.removeFromSuperview()
+                self.buttonGet.setTitle(self.buttonText, for: .normal)
+                let horizontalSpace: CGFloat = 10.0
+                let newHeight = self.bounds.size.height - self.safeAreaInsets.bottom - horizontalSpace
+                self.tableView.frame = (CGRect(x: 0.0, y: 0.0, width: self.bounds.size.width, height: newHeight))
+            }
+        case .show:
+            UIView.animate(withDuration: 0.2) {
+                self.buttonGet.alpha = 1.0
+                self.spinner.stopAnimating()
+                self.spinner.removeFromSuperview()
+                self.buttonGet.setTitle(self.buttonText, for: .normal)
+                let verticalSpace: CGFloat = 10.0
+                let buttonHeight: CGFloat = 50.0
+                let yButton: CGFloat = self.bounds.size.height-2*verticalSpace-self.safeAreaInsets.bottom-buttonHeight
+                self.tableView.frame = (CGRect(x: 0.0,
+                                               y: 0.0,
+                                               width: self.bounds.size.width,
+                                               height: yButton - 2*verticalSpace
+                ))
+            }
+        }
     }
     
-    func addListView(_ view: UIView) {
-        listView?.removeFromSuperview()
-        addSubview(view)
-        listView = view
-        setNeedsLayout()
+    // MARK: - Action
+    @objc func fetchPlaylist() {
+        targetAction()
     }
-
 }

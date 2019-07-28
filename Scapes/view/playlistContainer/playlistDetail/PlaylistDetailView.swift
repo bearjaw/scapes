@@ -62,7 +62,7 @@ final class PlaylistDetailView: UIView {
     func update(title: String?, thumbnail: UIImage?) {
         self.title.text = title
         self.thumbnail.image = thumbnail
-        backgroundColor = .red
+        backgroundColor = .primary
         setNeedsLayout()
     }
 }
