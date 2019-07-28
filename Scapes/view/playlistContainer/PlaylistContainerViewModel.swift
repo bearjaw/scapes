@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ObserverKit
 
 protocol PlaylistContainerViewModelProtocol {
     var playlist: LiveData<Playlist> { get }
