@@ -10,33 +10,24 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
     
-    lazy var appearanceSerice: AppearanceService = {
-        return AppearanceService(style: .dark)
-    }()
-
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let viewModel = PlaylistViewModel()
-        let viewController = PlaylistsTableViewController(viewModel: viewModel)
-        
-        let navigationVC = UINavigationController(rootViewController: viewController)
-        navigationVC.navigationItem.largeTitleDisplayMode = .automatic
-        navigationVC.navigationBar.prefersLargeTitles = true
-        setupAppearance()
-        window?.rootViewController = navigationVC
-        window?.makeKeyAndVisible()
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         return true
     }
     
-    func setupAppearance() {
-        UINavigationBar.appearance().tintColor = AppearanceService.shared.button()
-        UINavigationBar.appearance().barTintColor = AppearanceService.shared.navigationBar()
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: AppearanceService.shared.button()]
-        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: AppearanceService.shared.button()]
-        UINavigationBar.appearance().isTranslucent = false
+    // MARK: UISceneSession Lifecycle
+    
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // Called when a new scene session is being created.
+        // Use this method to select a configuration to create the new scene with.
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+    
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        // Called when the user discards a scene session.
+        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 }

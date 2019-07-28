@@ -8,25 +8,27 @@
 
 import UIKit
 
-class TitleDetailTableViewCell: UITableViewCell {
+final class TitleDetailTableViewCell: UITableViewCell {
+    
+    static var reusueIdentifier: String { return "kTitleDetailTableViewCell"}
     
     private var labelSongTitle: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textTitle()
+        label.textColor = .title
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         return label
     }()
     
     private var labelArtist: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textSubHeadline()
+        label.textColor = .subtitle
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return label
     }()
     
     private var labelAlbum: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textSubHeadline()
+        label.textColor = .subtitle
         label.numberOfLines = 0
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return label
@@ -34,7 +36,7 @@ class TitleDetailTableViewCell: UITableViewCell {
     
     private var labelLink: UILabel = {
         let label = UILabel()
-        label.textColor = AppearanceService.shared.textLink()
+        label.textColor = .link
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.numberOfLines = 0
         return label
@@ -48,7 +50,7 @@ class TitleDetailTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = AppearanceService.shared.view()
+        backgroundColor = .secondary
         addSubview(labelSongTitle)
         addSubview(labelArtist)
         addSubview(labelAlbum)
@@ -76,7 +78,7 @@ class TitleDetailTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let maxSize = (CGSize(width: bounds.width - 4*verticalSpaceMultiplier*verticalSpace,
+        let maxSize = (CGSize(width: contentView.bounds.width - 4*verticalSpaceMultiplier*verticalSpace,
                               height: (bounds.height/spaceDivision) - 2*verticalSpace))
         let sizeSong = labelSongTitle.sizeThatFits(maxSize)
         let sizeArtist = labelArtist.sizeThatFits(maxSize)

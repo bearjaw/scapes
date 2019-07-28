@@ -10,6 +10,8 @@ import UIKit
 
 extension UIView {
     
+    var border: CGFloat { return 16 }
+    
     class func allSubviews<T: UIView>(view: UIView) -> [T] {
         return view.subviews.flatMap { subView -> [T] in
             var result = allSubviews(view: subView) as [T]
@@ -28,5 +30,24 @@ extension UIView {
 extension UIView {
     public var rightBottom: CGPoint {
         return CGPoint(x: frame.origin.x + bounds.size.width, y: frame.origin.y + bounds.size.height)
+    }
+}
+
+struct Alert {
+    let title: String
+    let message: String
+}
+
+extension UIViewController {
+    func add(_ viewController: UIViewController, subview: (UIView) -> Void) {
+        willMove(toParent: viewController)
+        addChild(viewController)
+        subview(viewController.view)
+        didMove(toParent: viewController)
+    }
+    
+    func remove() {
+        view.removeFromSuperview()
+        removeFromParent()
     }
 }
