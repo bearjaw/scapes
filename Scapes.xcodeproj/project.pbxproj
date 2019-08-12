@@ -27,7 +27,6 @@
 		48FC0ED42301D1E7009E901C /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EB72301D1E7009E901C /* TitleDetailTableViewCell.swift */; };
 		48FC0ED52301D1E7009E901C /* PlaylistsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EB92301D1E7009E901C /* PlaylistsViewModel.swift */; };
 		48FC0ED62301D1E7009E901C /* PlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EBA2301D1E7009E901C /* PlaylistsTableViewController.swift */; };
-		48FC0ED72301D1E7009E901C /* Food.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EBD2301D1E7009E901C /* Food.xcdatamodeld */; };
 		48FC0ED82301D1E7009E901C /* PlaylistContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EBF2301D1E7009E901C /* PlaylistContainerViewController.swift */; };
 		48FC0ED92301D1E7009E901C /* PlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EC12301D1E7009E901C /* PlaylistDetailViewController.swift */; };
 		48FC0EDA2301D1E7009E901C /* PlaylistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EC22301D1E7009E901C /* PlaylistDetailView.swift */; };
@@ -477,7 +476,6 @@
 				48FC0ED12301D1E7009E901C /* SongLinkProvider.swift in Sources */,
 				48FC0ED02301D1E7009E901C /* NSObjectProtocol+Extensions.swift in Sources */,
 				48FC0ECC2301D1E7009E901C /* SongLinkRepository.swift in Sources */,
-				48FC0ED72301D1E7009E901C /* Food.xcdatamodeld in Sources */,
 				48FC0E6B2301D002009E901C /* SceneDelegate.swift in Sources */,
 				48FC0EC72301D1E7009E901C /* Playlist.swift in Sources */,
 				48FC0ECB2301D1E7009E901C /* Repository.swift in Sources */,
