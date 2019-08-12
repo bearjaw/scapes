@@ -122,12 +122,12 @@ extension PlaylistContainerViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "kPlaylistCell") as? TitleDetailTableViewCell
             else { fatalError("Cell initialisation failed") }
         let item = viewModel.data[indexPath.row]
-        let viewData =  SongLinkViewData(url: item.url,
+        let viewData =  SongLinkViewData(url: item.url ?? "",
                                          success: item.notFound,
-                                         title: item.title,
-                                         artist: item.artist,
-                                         album: item.album,
-                                         index: item.index)
+                                         title: item.title  ?? "",
+                                         artist: item.artist  ?? "",
+                                         album: item.album  ?? "",
+                                         index: Int(item.index))
         cell.update(songViewData: viewData)
         return cell
     }
@@ -162,11 +162,11 @@ extension PlaylistContainerViewController {
         var exportString = "\(viewModel.playlist.value?.name ?? "Unknown Playlist") \n"
         DispatchQueue.global(qos: .userInitiated).async {
             for item in self.viewModel.data {
-                if item.url.lowercased().contains("Error".lowercased()) {
-                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-                } else {
-                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-                }
+//                if item.url.lowercased().contains("Error".lowercased()) {
+//                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
+//                } else {
+//                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+//                }
             }
             DispatchQueue.main.async {
                 let pasteBoard = UIPasteboard.general

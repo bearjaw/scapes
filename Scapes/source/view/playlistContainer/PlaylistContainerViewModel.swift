@@ -76,12 +76,12 @@ final class PlaylistContainerViewModel {
     }
     
     private func convert(_ value: SongLink) -> SongLinkViewData {
-        return SongLinkViewData(url: value.url,
+        return SongLinkViewData(url: value.url  ?? "",
                                 success: value.notFound,
-                                title: value.title,
-                                artist: value.artist,
-                                album: value.album,
-                                index: value.index)
+                                title: value.title ?? "",
+                                artist: value.artist ?? "",
+                                album: value.album ?? "",
+                                index: Int(value.index))
     }
     
     private func allSongsDownloaded(songs: [SongLink]) {
@@ -109,17 +109,17 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void) {
         let filter = self.filter()
-        token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
-            self.data = newValue
-            if newValue.isEmpty { onEmpty() }
-            onInitial()
-            self.allSongsDownloaded(songs: newValue)
-            }, onChange: { [unowned self] newValue, indecies  in
-                self.data = newValue
-                if newValue.isEmpty { onEmpty() }
-                onChange(indecies)
-                self.allSongsDownloaded(songs: newValue)
-        })
+//        token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
+//            self.data = newValue
+//            if newValue.isEmpty { onEmpty() }
+//            onInitial()
+//            self.allSongsDownloaded(songs: newValue)
+//            }, onChange: { [unowned self] newValue, indecies  in
+//                self.data = newValue
+//                if newValue.isEmpty { onEmpty() }
+//                onChange(indecies)
+//                self.allSongsDownloaded(songs: newValue)
+//        })
     }
     
     func fetchRemainingSongsIfNeeded() {
