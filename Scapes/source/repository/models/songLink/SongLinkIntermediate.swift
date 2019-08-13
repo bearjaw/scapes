@@ -7,21 +7,23 @@
 //
 
 import UIKit
+import PlaylistKit
+import SongLinkKit
 
 struct SongLinkIntermediate: Hashable {
     
     let localPlaylistItemId: UInt64
     let identifier: UUID
-    let artist: String
-    let title: String
-    let album: String
-    let url: String
-    let originalUrl: String
-    let index: Int
-    let notFound: Bool
-    let playcount: Int
-    let downloaded: Bool
-    let artwork: Data?
+    var artist: String
+    var title: String
+    var album: String
+    var url: String
+    var originalUrl: String
+    var index: Int
+    var notFound: Bool
+    var playcount: Int
+    var downloaded: Bool
+    var artwork: Data?
     
     internal init(localPlaylistItemId: UInt64, identifier: UUID, artist: String, title: String, album: String, url: String, originalUrl: String, index: Int, notFound: Bool, playcount: Int, downloaded: Bool, artwork: Data?) {
         self.localPlaylistItemId = localPlaylistItemId
@@ -38,10 +40,63 @@ struct SongLinkIntermediate: Hashable {
         self.artwork = artwork
     }
     
-
 }
+
 extension SongLinkIntermediate: Equatable {
     static func == (lhs: Self, rhs: Self) -> Bool {
         return (lhs.title == rhs.title && lhs.artist == rhs.artist && lhs.album == rhs.album)
+    }
+}
+
+extension SongLinkIntermediate {
+    var playlistItem: CorePlaylistItem {
+        CorePlaylistItem(title: self.title,
+                         album: self.album,
+                         artist: self.artist,
+                         localPlaylistIdentifier: self.localPlaylistItemId,
+                         index: self.index,
+                         playCount: self.playcount)
+    }
+    
+    var request: CoreRequest {
+        CoreRequest(identifier: self.localPlaylistItemId,
+                    title: self.title,
+                    artist: self.artist,
+                    album: self.album,
+                    index: self.index)
+    }
+}
+
+extension CorePlaylistItem {
+    var intermediate: SongLinkIntermediate {
+        SongLinkIntermediate(localPlaylistItemId: self.localPlaylistIdentifier,
+                             identifier: self.identifier,
+                             artist: self.artist,
+                             title: self.title,
+                             album: self.album,
+                             url: "",
+                             originalUrl: "",
+                             index: Int(self.index),
+                             notFound: false,
+                             playcount: Int(self.playCount),
+                             downloaded: false,
+                             artwork: nil)
+    }
+}
+
+extension SongLink {
+    var intermediate: SongLinkIntermediate {
+        SongLinkIntermediate(localPlaylistItemId: UInt64(self.localPlaylistIdentifier ?? "")!,
+                             identifier: self.identifier ?? UUID(),
+                             artist: self.artist ?? "",
+                             title: self.title ?? "",
+                             album: self.album ?? "",
+                             url: self.url ?? "",
+                             originalUrl: self.originalURL ?? "",
+                             index: Int(self.index),
+                             notFound: self.notFound,
+                             playcount: Int(self.playCount),
+                             downloaded: self.downloaded,
+                             artwork: self.artwork)
     }
 }
