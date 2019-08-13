@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4809B93423034B1100750CA0 /* SongLinkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4809B93323034B1100750CA0 /* SongLinkKit */; };
 		48FC0E692301D002009E901C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0E682301D002009E901C /* AppDelegate.swift */; };
 		48FC0E6B2301D002009E901C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0E6A2301D002009E901C /* SceneDelegate.swift */; };
 		48FC0E732301D002009E901C /* Scapes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0E712301D002009E901C /* Scapes.xcdatamodeld */; };
@@ -36,7 +37,6 @@
 		48FC0EE02301D2B7009E901C /* ErrorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0EDF2301D2B7009E901C /* ErrorKit */; };
 		48FC0EE22301D2B7009E901C /* ObserverKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0EE12301D2B7009E901C /* ObserverKit */; };
 		48FC0EE42301D2B7009E901C /* PlaylistKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0EE32301D2B7009E901C /* PlaylistKit */; };
-		48FC0F072301D360009E901C /* SongLinkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0F062301D360009E901C /* SongLinkKit */; };
 		48FC0F0D23033B4C009E901C /* SongLinkIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +58,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4809B93223034B0700750CA0 /* SongLinkKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SongLinkKit; sourceTree = "<group>"; };
 		48FC0E652301D002009E901C /* Scapes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scapes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48FC0E682301D002009E901C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48FC0E6A2301D002009E901C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -95,7 +96,6 @@
 		48FC0EC42301D1E7009E901C /* PlaylistContainerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerViewModel.swift; sourceTree = "<group>"; };
 		48FC0EC52301D1E7009E901C /* PlaylistContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerView.swift; sourceTree = "<group>"; };
 		48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkIntermediate.swift; sourceTree = "<group>"; };
-		48FC0F0F23034963009E901C /* SongLinkKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SongLinkKit; path = ../scapes/SongLinkKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48FC0F072301D360009E901C /* SongLinkKit in Frameworks */,
+				4809B93423034B1100750CA0 /* SongLinkKit in Frameworks */,
 				48FC0EE42301D2B7009E901C /* PlaylistKit in Frameworks */,
 				48FC0EE02301D2B7009E901C /* ErrorKit in Frameworks */,
 				48FC0EE22301D2B7009E901C /* ObserverKit in Frameworks */,
@@ -130,7 +130,7 @@
 		48FC0E5C2301D002009E901C = {
 			isa = PBXGroup;
 			children = (
-				48FC0F0F23034963009E901C /* SongLinkKit */,
+				4809B93223034B0700750CA0 /* SongLinkKit */,
 				48FC0E9C2301D1BC009E901C /* ErrorKit */,
 				48FC0E9D2301D1BC009E901C /* ObserverKit */,
 				48FC0E9B2301D1BC009E901C /* PlaylistKit */,
@@ -344,7 +344,7 @@
 				48FC0EDF2301D2B7009E901C /* ErrorKit */,
 				48FC0EE12301D2B7009E901C /* ObserverKit */,
 				48FC0EE32301D2B7009E901C /* PlaylistKit */,
-				48FC0F062301D360009E901C /* SongLinkKit */,
+				4809B93323034B1100750CA0 /* SongLinkKit */,
 			);
 			productName = Scapes;
 			productReference = 48FC0E652301D002009E901C /* Scapes.app */;
@@ -803,6 +803,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4809B93323034B1100750CA0 /* SongLinkKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SongLinkKit;
+		};
 		48FC0EDF2301D2B7009E901C /* ErrorKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ErrorKit;
@@ -814,10 +818,6 @@
 		48FC0EE32301D2B7009E901C /* PlaylistKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PlaylistKit;
-		};
-		48FC0F062301D360009E901C /* SongLinkKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SongLinkKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 
