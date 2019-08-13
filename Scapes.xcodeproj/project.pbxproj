@@ -94,8 +94,8 @@
 		48FC0EC32301D1E7009E901C /* PlaylistDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewModel.swift; sourceTree = "<group>"; };
 		48FC0EC42301D1E7009E901C /* PlaylistContainerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerViewModel.swift; sourceTree = "<group>"; };
 		48FC0EC52301D1E7009E901C /* PlaylistContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerView.swift; sourceTree = "<group>"; };
-		48FC0F052301D34C009E901C /* SongLinkKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SongLinkKit; path = ../scapes/SongLinkKit; sourceTree = "<group>"; };
 		48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkIntermediate.swift; sourceTree = "<group>"; };
+		48FC0F0F23034963009E901C /* SongLinkKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SongLinkKit; path = ../scapes/SongLinkKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,7 +130,7 @@
 		48FC0E5C2301D002009E901C = {
 			isa = PBXGroup;
 			children = (
-				48FC0F052301D34C009E901C /* SongLinkKit */,
+				48FC0F0F23034963009E901C /* SongLinkKit */,
 				48FC0E9C2301D1BC009E901C /* ErrorKit */,
 				48FC0E9D2301D1BC009E901C /* ObserverKit */,
 				48FC0E9B2301D1BC009E901C /* PlaylistKit */,
