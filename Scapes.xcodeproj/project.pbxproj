@@ -37,6 +37,7 @@
 		48FC0EE22301D2B7009E901C /* ObserverKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0EE12301D2B7009E901C /* ObserverKit */; };
 		48FC0EE42301D2B7009E901C /* PlaylistKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0EE32301D2B7009E901C /* PlaylistKit */; };
 		48FC0F072301D360009E901C /* SongLinkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0F062301D360009E901C /* SongLinkKit */; };
+		48FC0F0D23033B4C009E901C /* SongLinkIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		48FC0EC42301D1E7009E901C /* PlaylistContainerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerViewModel.swift; sourceTree = "<group>"; };
 		48FC0EC52301D1E7009E901C /* PlaylistContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerView.swift; sourceTree = "<group>"; };
 		48FC0F052301D34C009E901C /* SongLinkKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SongLinkKit; path = ../scapes/SongLinkKit; sourceTree = "<group>"; };
+		48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkIntermediate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +219,7 @@
 		48FC0EA42301D1E6009E901C /* songLink */ = {
 			isa = PBXGroup;
 			children = (
+				48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */,
 			);
 			path = songLink;
 			sourceTree = "<group>";
@@ -459,6 +462,7 @@
 			files = (
 				48FC0EDC2301D1E7009E901C /* PlaylistContainerViewModel.swift in Sources */,
 				48FC0E692301D002009E901C /* AppDelegate.swift in Sources */,
+				48FC0F0D23033B4C009E901C /* SongLinkIntermediate.swift in Sources */,
 				48FC0ECE2301D1E7009E901C /* Collection+Extension.swift in Sources */,
 				48FC0EDB2301D1E7009E901C /* PlaylistDetailViewModel.swift in Sources */,
 				48FC0ED82301D1E7009E901C /* PlaylistContainerViewController.swift in Sources */,
