@@ -7,8 +7,52 @@
 ///
 
 import Foundation
+import CoreData
 
-final class SongRepository: Repository {
+final class DataController: NSObject {
+    var managedObjectContext: NSManagedObjectContext
+    
+    private var persistentContainer: NSPersistentContainer
+    
+    init(completionClosure: @escaping () -> ()) {
+        persistentContainer = NSPersistentContainer(name: "Scapes")
+        managedObjectContext = persistentContainer.newBackgroundContext()
+        persistentContainer.loadPersistentStores() { (description, error) in
+            if let error = error {
+                fatalError("Failed to load Core Data stack: \(error)")
+            }
+            
+            completionClosure()
+        }
+    }
+}
+
+
+final class SongRepository: NSObject, Repository {
+    
+    typealias RepositoryType = SongLink
+    
+    typealias Token = String
+    
+    private var modelsIndexUpdate: ((ModelsChange) -> Void)?
+    private var modelUpdate: ((SongLink) -> Void)?
+    private var modelsUpdate: (([SongLink]) -> Void)?
+    
+    
+    private lazy var dataController: DataController = {
+        let controller = DataController {}
+        return controller
+    }()
+    
+    private lazy var resultsController: NSFetchedResultsController<SongLink> = {
+        let request = NSFetchRequest<SongLink>(entityName: "SongLink")
+        
+        let moc = dataController.managedObjectContext
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        return fetchedResultsController
+    }()
+    
     func all(matching predicate: NSPredicate?) -> [SongLink] {
         return []
     }
@@ -18,11 +62,12 @@ final class SongRepository: Repository {
     }
     
     func add(element: SongLink) {
-        
+        resultsController.managedObjectContext.insert(element)
+        save()
     }
     
     func update(element: SongLink) {
-        
+        save()
     }
     
     func update(element identifier: String, value: Any?, for keyPath: String) {
@@ -30,14 +75,23 @@ final class SongRepository: Repository {
     }
     
     func delete(element: SongLink) {
-        
+        resultsController.managedObjectContext.delete(element)
+        save()
     }
     
     func search(predicate: NSPredicate) -> SongLink? {
         return nil
     }
     
-    func subscribe(filter: NSPredicate?, onInitial: @escaping ([SongLink]) -> Void, onChange: @escaping ([SongLink], (deletions: [Int], insertions: [Int], modifications: [Int])) -> Void) -> String? {
+    func subscribe(filter: NSPredicate?, onInitial: @escaping ([SongLink]) -> Void, onChange: @escaping (ModelsChange) -> Void) -> String? {
+        self.modelsIndexUpdate = onChange
+        self.modelsUpdate = onInitial
+        resultsController.fetchRequest.predicate = filter
+        do {
+            try resultsController.performFetch()
+        } catch {
+            fatalError("Failed to initialize FetchedResultsController: \(error)")
+        }
         return nil
     }
     
@@ -45,146 +99,46 @@ final class SongRepository: Repository {
         return nil
     }
     
-    typealias RepositoryType = SongLink
+}
+
+extension SongRepository: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith diff: CollectionDifference<NSManagedObjectID>) {
+        guard let onChange = self.modelsUpdate, let objects = resultsController.fetchedObjects else { return }
+        onChange(objects)
+    }
     
-    typealias Token = String
-    
-//
-//    typealias RepositoryType = SongLink
-//    typealias Token = RepoToken
-//
-//    func all(matching predicate: NSPredicate?) -> [SongLink] {
-//        guard let predicate = predicate else { return [] }
-//        let items = realm.objects(RealmSongLink.self).filter(predicate).sorted(byKeyPath: "index")
-//        return items.map { convert(element: $0) }
-//    }
-//
-//    func element(for identifier: String) -> SongLink? {
-//        guard let result = realm.object(ofType: RealmSongLink.self, forPrimaryKey: identifier) else {
-//            return nil
-//        }
-//        return convert(element: result)
-//    }
-//
-//    func add(element: SongLink) {
-//        update(element: element)
-//    }
-//
-//    func update(element: SongLink) {
-//        safeWrite {
-//            realm.create(RealmSongLink.self, value: convert(element: element), update: .modified)
-//        }
-//    }
-//
-//    func update(element identifier: String, value: Any?, for keyPath: String) {
-//        guard let result = realm.object(ofType: RealmSongLink.self, forPrimaryKey: identifier) else {
-//            return
-//        }
-//        safeWrite {
-//            result.setValue(value, forKey: keyPath)
-//        }
-//    }
-//
-//    func delete(element: SongLink) {
-//        safeWrite {
-//            realm.delete(convert(element: element))
-//        }
-//    }
-//
-//    func search(predicate: NSPredicate) -> SongLink? {
-//        let results = realm.objects(RealmSongLink.self).filter(predicate)
-//        let songLinks: [SongLink] = results.map { convert(element: $0 )}
-//        return songLinks.first
-//    }
-//
-//    func subscribe(filter: NSPredicate? = nil, onInitial: @escaping ([SongLink]) -> Void,
-//                   onChange: @escaping ([SongLink], Indecies) -> Void) -> RepoToken? {
-//        var results = realm.objects(RealmSongLink.self)
-//        if let filter = filter {
-//            results = results.filter(filter)
-//        }
-//        return RepoToken(
-//            results.sorted(byKeyPath: "index").observe { [weak self] (changes: RealmCollectionChange) in
-//                guard let self = self else { return }
-//                switch changes {
-//                case .initial(let collection):
-//                    onInitial(collection.map({ self.convert(element: $0 )}))
-//                case .update(let collection, let deletions, let insertions, let modifications):
-//                    onChange(collection.map({ self.convert(element: $0 )}),
-//                             (deletions: deletions, insertions: insertions, modifications: modifications))
-//                case .error(let error):
-//                    fatalError("\(error)")
-//                }
-//        })
-//    }
-//
-//    func subscribe(entity: SongLink, onChange: @escaping (SongLink) -> Void) -> RepoToken? {
-//        guard let model = realm.object(ofType: RealmSongLink.self, forPrimaryKey: entity.identifier) else {
-//            fatalError("Could not fetch model. Id did not match any entities.")
-//        }
-//        return RepoToken(
-//            model.observe { [unowned self] change in
-//                switch change {
-//                case .change:
-//                    onChange(self.convert(element: model))
-//                case .error(let error):
-//                    print("An error occurred: \(error)")
-//                case .deleted:
-//                    print("The object was deleted.")
-//                }
-//        })
-//    }
-//}
-//
-//extension SongRepository {
-//    private var realm: Realm {
-//        var config = Realm.Configuration.defaultConfiguration
-//        config.deleteRealmIfMigrationNeeded = true
-//        guard let realm = try? Realm(configuration: config) else {
-//            fatalError("Could not create database instance.")
-//        }
-//        return realm
-//    }
-//}
-//
-//extension SongRepository {
-//    private func convert(element: RealmSongLink) -> SongLink {
-//        return SongLink()
-////        return SongLink( identifier: UInt64(element.identifier)!,
-////                         artist: element.artist,
-////                         title: element.title,
-////                         album: element.album,
-////                         url: element.url,
-////                         originalUrl: element.originalUrl,
-////                         index: element.index,
-////                         notFound: element.notFound,
-////                         playcount: element.playcount,
-////                         downloaded: element.downloaded,
-////                         artwork: Data())
-//    }
-//
-//    private func convert(element: SongLink) -> RealmSongLink {
-//        let model = RealmSongLink()
-//        model.identifier = "\(element.identifier)"
-////        model.artist = element.artist
-////        model.title = element.title
-////        model.album = element.album
-////        model.url = element.url
-////        model.originalUrl = element.originalUrl
-////        model.index = element.index
-////        model.notFound = element.notFound
-////        model.playcount = element.playcount
-////        model.downloaded = element.downloaded
-//        return model
-//    }
-//
-//    private func safeWrite(_ write: () -> Void) {
-//        do {
-//            try realm.write {
-//                write()
-//            }
-//        } catch {
-//            fatalError("Error: Could not open write transaction \(error)")
-//        }
-//    }
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .delete:
+            guard let onChange = self.modelsIndexUpdate,
+                let objects = resultsController.fetchedObjects,
+                let indexPath = indexPath else { return }
+            onChange((objects, [indexPath], [], []))
+        case .insert:
+            guard let onChange = self.modelsIndexUpdate,
+                let objects = resultsController.fetchedObjects,
+                let indexPath = indexPath else { return }
+            onChange((objects, [], [indexPath], []))
+        case .update:
+            guard let onChange = self.modelsIndexUpdate,
+                let objects = resultsController.fetchedObjects,
+                let indexPath = indexPath else { return }
+            onChange((objects, [], [], [indexPath]))
+        case .move:
+            break
+        @unknown default:
+            break
+        }
+    }
+}
+
+extension SongRepository {
+    private func save() {
+        guard  resultsController.managedObjectContext.hasChanges else { return }
+        do {
+            try resultsController.managedObjectContext.save()
+        } catch {
+            fatalError("Error: Could not save managed object context")
+        }
+    }
 }
