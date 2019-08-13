@@ -61,7 +61,7 @@ final class TitleDetailTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(songViewData: SongLinkViewData) {
+    func update(songViewData: SongLinkIntermediate) {
         labelSongTitle.text = songViewData.title
         labelArtist.text = "\(songViewData.artist) – "
         labelAlbum.text = songViewData.album

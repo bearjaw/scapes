@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import PlaylistKit
 
 final class DataController: NSObject {
     var managedObjectContext: NSManagedObjectContext
@@ -27,16 +28,15 @@ final class DataController: NSObject {
     }
 }
 
-
 final class SongRepository: NSObject, Repository {
     
-    typealias RepositoryType = SongLink
+    typealias RepositoryType = SongLinkIntermediate
     
     typealias Token = String
     
     private var modelsIndexUpdate: ((ModelsChange) -> Void)?
-    private var modelUpdate: ((SongLink) -> Void)?
-    private var modelsUpdate: (([SongLink]) -> Void)?
+    private var modelUpdate: ((SongLinkIntermediate) -> Void)?
+    private var modelsUpdate: (([SongLinkIntermediate]) -> Void)?
     
     
     private lazy var dataController: DataController = {
@@ -46,27 +46,40 @@ final class SongRepository: NSObject, Repository {
     
     private lazy var resultsController: NSFetchedResultsController<SongLink> = {
         let request = NSFetchRequest<SongLink>(entityName: "SongLink")
-        
+        request.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
         let moc = dataController.managedObjectContext
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController.delegate = self
         return fetchedResultsController
     }()
     
-    func all(matching predicate: NSPredicate?) -> [SongLink] {
-        return []
+    func all(matching predicate: NSPredicate?) -> [SongLinkIntermediate] {
+        resultsController.fetchRequest.predicate = predicate
+        do {
+            try resultsController.performFetch()
+            guard let objects = resultsController.fetchedObjects else { return [] }
+            let result = objects.map { convert($0) }
+            return result
+        } catch {
+            fatalError("Failed to initialize FetchedResultsController: \(error)")
+        }
     }
     
-    func element(for identifier: String) -> SongLink? {
+    func element(for identifier: String) -> SongLinkIntermediate? {
         return nil
     }
     
-    func add(element: SongLink) {
-        resultsController.managedObjectContext.insert(element)
+    func add(element: SongLinkIntermediate) {
+        let link = convert(element)
+        resultsController.managedObjectContext.insert(link)
         save()
     }
     
-    func update(element: SongLink) {
+    func update(element: SongLinkIntermediate) {
+        save()
+    }
+    
+    func saveObjects() {
         save()
     }
     
@@ -74,28 +87,25 @@ final class SongRepository: NSObject, Repository {
         
     }
     
-    func delete(element: SongLink) {
-        resultsController.managedObjectContext.delete(element)
+    func delete(element: SongLinkIntermediate) {
+        let link = convert(element)
+        resultsController.managedObjectContext.delete(link)
         save()
     }
     
-    func search(predicate: NSPredicate) -> SongLink? {
+    func search(predicate: NSPredicate) -> SongLinkIntermediate? {
         return nil
     }
     
-    func subscribe(filter: NSPredicate?, onInitial: @escaping ([SongLink]) -> Void, onChange: @escaping (ModelsChange) -> Void) -> String? {
+    func subscribe(filter: NSPredicate?, onInitial: @escaping ([SongLinkIntermediate]) -> Void, onChange: @escaping (ModelsChange) -> Void) -> String? {
         self.modelsIndexUpdate = onChange
         self.modelsUpdate = onInitial
-        resultsController.fetchRequest.predicate = filter
-        do {
-            try resultsController.performFetch()
-        } catch {
-            fatalError("Failed to initialize FetchedResultsController: \(error)")
-        }
+        let objects = all(matching: filter)
+        onInitial(objects)
         return nil
     }
     
-    func subscribe(entity: SongLink, onChange: @escaping (SongLink) -> Void) -> String? {
+    func subscribe(entity: SongLinkIntermediate, onChange: @escaping (SongLinkIntermediate) -> Void) -> String? {
         return nil
     }
     
@@ -104,7 +114,8 @@ final class SongRepository: NSObject, Repository {
 extension SongRepository: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith diff: CollectionDifference<NSManagedObjectID>) {
         guard let onChange = self.modelsUpdate, let objects = resultsController.fetchedObjects else { return }
-        onChange(objects)
+        let result = objects.map { convert($0) }
+        onChange(result)
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -113,22 +124,57 @@ extension SongRepository: NSFetchedResultsControllerDelegate {
             guard let onChange = self.modelsIndexUpdate,
                 let objects = resultsController.fetchedObjects,
                 let indexPath = indexPath else { return }
-            onChange((objects, [indexPath], [], []))
+            let result = objects.map { convert($0) }
+            onChange((result, [indexPath], [], []))
         case .insert:
             guard let onChange = self.modelsIndexUpdate,
                 let objects = resultsController.fetchedObjects,
                 let indexPath = indexPath else { return }
-            onChange((objects, [], [indexPath], []))
+            let result = objects.map { convert($0) }
+            onChange((result, [], [indexPath], []))
         case .update:
             guard let onChange = self.modelsIndexUpdate,
                 let objects = resultsController.fetchedObjects,
                 let indexPath = indexPath else { return }
-            onChange((objects, [], [], [indexPath]))
+            let result = objects.map { convert($0) }
+            onChange((result, [], [], [indexPath]))
         case .move:
             break
         @unknown default:
             break
         }
+    }
+    
+    private func convert(_ songLink: SongLink) -> SongLinkIntermediate {
+        return SongLinkIntermediate(localPlaylistItemId: UInt64(songLink.localPlaylistIdentifier ?? "")!,
+                                    identifier: songLink.identifier ?? UUID(),
+                                    artist: songLink.artist ?? "",
+                                    title: songLink.title ?? "",
+                                    album: songLink.album ?? "",
+                                    url: songLink.url ?? "",
+                                    originalUrl: songLink.originalURL ?? "",
+                                    index: Int(songLink.index),
+                                    notFound: songLink.notFound,
+                                    playcount: Int(songLink.playCount),
+                                    downloaded: songLink.downloaded,
+                                    artwork: songLink.artwork)
+    }
+    
+    private func convert(_ songLink: SongLinkIntermediate) -> SongLink {
+        let link = SongLink(context: resultsController.managedObjectContext)
+        link.localPlaylistIdentifier = "\(songLink.localPlaylistItemId)"
+        link.identifier = songLink.identifier
+        link.artist = songLink.artist
+        link.title = songLink.title
+        link.album = songLink.album
+        link.url = songLink.url
+        link.originalURL = songLink.originalUrl
+        link.index = Int64(songLink.index)
+        link.notFound = songLink.notFound
+        link.playCount = Int64(songLink.playcount)
+        link.downloaded = songLink.downloaded
+        link.artwork = songLink.artwork
+        return link
     }
 }
 
