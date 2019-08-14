@@ -40,12 +40,16 @@ struct SongLinkIntermediate: Hashable {
         self.artwork = artwork
     }
     
-}
-
-extension SongLinkIntermediate: Equatable {
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        return (lhs.title == rhs.title && lhs.artist == rhs.artist && lhs.album == rhs.album)
+    static func == (lhs: SongLinkIntermediate, rhs: SongLinkIntermediate) -> Bool {
+        return lhs.title == rhs.title && lhs.artist == rhs.artist && lhs.album == rhs.album
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(title)
+        hasher.combine(artist)
+        hasher.combine(album)
+    }
+    
 }
 
 extension SongLinkIntermediate {
