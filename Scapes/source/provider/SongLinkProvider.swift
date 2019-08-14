@@ -68,7 +68,6 @@ final class SongLinkProvider: NSObject {
                                                  "\($0.identifier)") }
         let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         let results: [SongLinkIntermediate] = songRepo.all(matching: compundPredicate)
-        songRepo.saveObjects()
         let songsSet = Set(songs)
         let songsToDownload = songsSet.subtracting(Set(results))
         return (results, Array(songsToDownload))
