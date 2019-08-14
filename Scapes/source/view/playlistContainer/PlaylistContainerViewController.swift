@@ -52,12 +52,9 @@ final class PlaylistContainerViewController: UIViewController {
                 guard let tableView = tableView else { return }
                 let (deletions, insertions, modifications) = changes
                 tableView.performBatchUpdates({
-                    tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
-                                         with: .automatic)
-                    tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0)}),
-                                         with: .automatic)
-                    tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
-                                         with: .automatic)
+                    tableView.deleteRows(at: deletions, with: .automatic)
+                    tableView.insertRows(at: insertions, with: .automatic)
+                    tableView.reloadRows(at: modifications, with: .automatic)
                 }, completion: nil)
                 self.containerView.updateState(state: .show)
             }, onEmpty: {
@@ -122,13 +119,7 @@ extension PlaylistContainerViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "kPlaylistCell") as? TitleDetailTableViewCell
             else { fatalError("Cell initialisation failed") }
         let item = viewModel.data[indexPath.row]
-        let viewData =  SongLinkViewData(url: item.url,
-                                         success: item.notFound,
-                                         title: item.title,
-                                         artist: item.artist,
-                                         album: item.album,
-                                         index: item.index)
-        cell.update(songViewData: viewData)
+        cell.update(songViewData: item)
         return cell
     }
 }
@@ -162,11 +153,11 @@ extension PlaylistContainerViewController {
         var exportString = "\(viewModel.playlist.value?.name ?? "Unknown Playlist") \n"
         DispatchQueue.global(qos: .userInitiated).async {
             for item in self.viewModel.data {
-                if item.url.lowercased().contains("Error".lowercased()) {
-                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-                } else {
-                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-                }
+                //                if item.url.lowercased().contains("Error".lowercased()) {
+                //                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
+                //                } else {
+                //                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+                //                }
             }
             DispatchQueue.main.async {
                 let pasteBoard = UIPasteboard.general

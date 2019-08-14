@@ -10,7 +10,7 @@ import Foundation
 
 protocol Repository {
     
-    typealias Indecies = (deletions: [Int], insertions: [Int], modifications: [Int])
+    typealias ModelsChange = ([RepositoryType], [IndexPath], [IndexPath], [IndexPath])
     
     associatedtype RepositoryType
     associatedtype Token
@@ -30,7 +30,7 @@ protocol Repository {
     func search(predicate: NSPredicate) -> RepositoryType?
     
     func subscribe(filter: NSPredicate?, onInitial: @escaping ([RepositoryType]) -> Void,
-                   onChange: @escaping ([RepositoryType], Indecies) -> Void) -> Token?
+                   onChange: @escaping (ModelsChange) -> Void) -> Token?
     
     func subscribe(entity: RepositoryType, onChange: @escaping (RepositoryType) -> Void) -> Token?
 }

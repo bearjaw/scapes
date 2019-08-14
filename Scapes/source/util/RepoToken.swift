@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import RealmSwift
 
-typealias Token = NotificationToken
+typealias Token = String
 
 final class RepoToken {
     private var token: Token
@@ -19,10 +18,10 @@ final class RepoToken {
     }
     
     func invalidate() {
-        token.invalidate()
+//        token.invalidate()
     }
     
     deinit {
-        token.invalidate()
+//        token.invalidate()
     }
 }

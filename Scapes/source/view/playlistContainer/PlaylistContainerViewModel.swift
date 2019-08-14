@@ -12,11 +12,11 @@ import PlaylistKit
 
 protocol PlaylistContainerViewModelProtocol {
     var playlist: LiveData<Playlist> { get }
-    typealias Indicies = (deletions: [Int], insertions: [Int], modifications: [Int])
+    typealias Indicies = (deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath])
     
     var title: String { get }
     
-    var data: [SongLink] { get set }
+    var data: [SongLinkIntermediate] { get set }
     
     func fetchRemainingSongsIfNeeded()
     
@@ -29,7 +29,7 @@ final class PlaylistContainerViewModel {
     
     private var _playlist = LiveData<Playlist>()
     private var token: RepoToken?
-    private var items: [SongLinkViewData] = []
+    private var items: [SongLinkIntermediate] = []
     private var songs: [CorePlaylistItem] = []
     private var onCompleted: (() -> Void)?
     
@@ -42,7 +42,7 @@ final class PlaylistContainerViewModel {
         return SongLinkProvider()
     }()
     
-    var data: [SongLink] = []
+    var data: [SongLinkIntermediate] = []
     
     init(playlist: Playlist) {
         self.playlist.value = playlist
@@ -61,30 +61,13 @@ final class PlaylistContainerViewModel {
     }
     
     private func filter() -> NSCompoundPredicate? {
-        let predicates = self.songs.map({ NSPredicate(format: "identifier == %@",
+        let predicates = self.songs.map({ NSPredicate(format: "localPlaylistIdentifier == %@",
                                                       "\($0.localPlaylistIdentifier)") })
         predicates.forEach { print($0.predicateFormat) }
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
-    private func convert(_ value: [SongLink]) -> [SongLinkViewData] {
-        if value.isEmpty {
-            return []
-        } else {
-            return value.map { convert($0) }
-        }
-    }
-    
-    private func convert(_ value: SongLink) -> SongLinkViewData {
-        return SongLinkViewData(url: value.url,
-                                success: value.notFound,
-                                title: value.title,
-                                artist: value.artist,
-                                album: value.album,
-                                index: value.index)
-    }
-    
-    private func allSongsDownloaded(songs: [SongLink]) {
+    private func allSongsDownloaded(songs: [SongLinkIntermediate]) {
         let completed = songs.filter { $0.downloaded == false }.isEmpty
         if completed && playlist.value!.count == songs.count, let onCompleted = self.onCompleted {
             self.data.sort { $0.index < $1.index }
@@ -92,13 +75,14 @@ final class PlaylistContainerViewModel {
         }
     }
     
-    private func downloadLinksIfNeeded(songs: [SongLink]) {
+    private func downloadLinksIfNeeded(songs: [SongLinkIntermediate]) {
         guard songs.isNonEmpty else { return }
         service.search(in: songs)
     }
 }
 
 extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
+    
     var playlist: LiveData<Playlist> {
         return _playlist
     }
@@ -109,22 +93,26 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void) {
         let filter = self.filter()
-        token = repo.subscribe(filter: filter, onInitial: { [unowned self] newValue in
-            self.data = newValue
-            if newValue.isEmpty { onEmpty() }
+        _ = repo.subscribe(filter: filter, onInitial: { [weak self] result in
+            guard let self = self else { return }
+            self.data = result
+            if result.isEmpty { onEmpty() }
             onInitial()
-            self.allSongsDownloaded(songs: newValue)
-            }, onChange: { [unowned self] newValue, indecies  in
-                self.data = newValue
-                if newValue.isEmpty { onEmpty() }
-                onChange(indecies)
-                self.allSongsDownloaded(songs: newValue)
+            self.allSongsDownloaded(songs: result)
+            }, onChange: { [weak self] change in
+                guard let self = self else { return }
+                let (update, deletions, insertions, modifications) = change
+                self.data = update
+                if update.isEmpty { onEmpty() }
+                onChange((deletions, insertions, modifications))
+                self.allSongsDownloaded(songs: update)
         })
     }
     
     func fetchRemainingSongsIfNeeded() {
-        service.provideCachedSongs(for: playlist.value!, content: { [weak self] _, remainingSongs in
+        service.provideCachedSongs(for: playlist.value!, content: { [weak self] cache, remainingSongs in
             guard let self = self else { return }
+            self.data = cache
             self.downloadLinksIfNeeded(songs: remainingSongs)
         })
     }
