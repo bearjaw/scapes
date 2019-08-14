@@ -19,10 +19,6 @@ final class SongLinkProvider: NSObject {
     
     private lazy var songRepo = { SongRepository() }()
     
-    override init() {
-        super.init()
-    }
-    
     func search(in songs: [SongLinkIntermediate]) {
         downloadSongLinks(songs: songs)
     }
@@ -64,12 +60,14 @@ final class SongLinkProvider: NSObject {
     }
     
     private func checkForAvailableSongs(songs: [SongLinkIntermediate]) -> (cache: [SongLinkIntermediate], downloads: [SongLinkIntermediate] ) {
-        let predicates = songs.map { NSPredicate(format: "identifier = %@ AND downloaded = true",
-                                                 "\($0.identifier)") }
+        let predicates = songs.map { NSPredicate(format: "localPlaylistIdentifier = %@ AND downloaded = true",
+                                                 "\($0.localPlaylistItemId)") }
         let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         let results: [SongLinkIntermediate] = songRepo.all(matching: compundPredicate)
         let songsSet = Set(songs)
-        let songsToDownload = songsSet.subtracting(Set(results))
+        let cache = Set(results)
+        let songsToDownload = songsSet.subtracting(results)
+        let alt = cache.subtracting(songsSet)
         return (results, Array(songsToDownload))
     }
 }
