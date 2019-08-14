@@ -11,18 +11,18 @@ import CoreData
 import PlaylistKit
 
 final class DataController: NSObject {
-    var managedObjectContext: NSManagedObjectContext
+    var managedObjectContext: NSManagedObjectContext?
     
     private var persistentContainer: NSPersistentContainer
     
     init(completionClosure: @escaping () -> ()) {
         persistentContainer = NSPersistentContainer(name: "Scapes")
-        managedObjectContext = persistentContainer.newBackgroundContext()
+        super.init()
         persistentContainer.loadPersistentStores() { (description, error) in
             if let error = error {
                 fatalError("Failed to load Core Data stack: \(error)")
             }
-            
+            self.managedObjectContext = self.persistentContainer.newBackgroundContext()
             completionClosure()
         }
     }
@@ -39,15 +39,12 @@ final class SongRepository: NSObject, Repository {
     private var modelsUpdate: (([SongLinkIntermediate]) -> Void)?
     
     
-    private lazy var dataController: DataController = {
-        let controller = DataController {}
-        return controller
-    }()
+    private lazy var dataController = DataController {}
     
     private lazy var resultsController: NSFetchedResultsController<SongLink> = {
         let request = NSFetchRequest<SongLink>(entityName: "SongLink")
         request.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
-        let moc = dataController.managedObjectContext
+        let moc = dataController.managedObjectContext!
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController.delegate = self
         return fetchedResultsController
@@ -161,19 +158,20 @@ extension SongRepository: NSFetchedResultsControllerDelegate {
     }
     
     private func convert(_ songLink: SongLinkIntermediate) -> SongLink {
-        let link = SongLink(context: resultsController.managedObjectContext)
-        link.localPlaylistIdentifier = "\(songLink.localPlaylistItemId)"
-        link.identifier = songLink.identifier
-        link.artist = songLink.artist
-        link.title = songLink.title
-        link.album = songLink.album
-        link.url = songLink.url
-        link.originalURL = songLink.originalUrl
-        link.index = Int64(songLink.index)
-        link.notFound = songLink.notFound
-        link.playCount = Int64(songLink.playcount)
-        link.downloaded = songLink.downloaded
-        link.artwork = songLink.artwork
+        let link = NSEntityDescription.insertNewObject(forEntityName: "SongLink", into: resultsController.managedObjectContext) as! SongLink
+        link.setValue("\(songLink.localPlaylistItemId)", forKeyPath: "localPlaylistIdentifier")
+        link.setValue(songLink.identifier, forKeyPath: "identifier")
+        link.setValue(songLink.artist, forKeyPath: "artist")
+        link.setValue(songLink.title, forKeyPath: "title")
+        link.setValue(songLink.album, forKeyPath: "album")
+        
+        link.setValue(songLink.url, forKeyPath: "url")
+        link.setValue(songLink.originalUrl, forKeyPath: "originalURL")
+        link.setValue(Int64(songLink.index), forKeyPath: "index")
+        link.setValue(songLink.notFound, forKeyPath: "notFound")
+        link.setValue(Int64(songLink.playcount), forKeyPath: "playCount")
+        link.setValue(songLink.downloaded, forKeyPath: "downloaded")
+        link.setValue(songLink.artwork, forKeyPath: "artwork")
         return link
     }
 }
