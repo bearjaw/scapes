@@ -93,22 +93,26 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void) {
         let filter = self.filter()
-      _ = repo.subscribe(filter: filter, onInitial: { result in
+        _ = repo.subscribe(filter: filter, onInitial: { [weak self] result in
+            guard let self = self else { return }
             self.data = result
             if result.isEmpty { onEmpty() }
             onInitial()
-        }, onChange: { change in
-            let (update, deletions, insertions, modifications) = change
-            self.data = update
-            if update.isEmpty { onEmpty() }
-            onChange((deletions, insertions, modifications))
-            self.allSongsDownloaded(songs: update)
+            self.allSongsDownloaded(songs: result)
+            }, onChange: { [weak self] change in
+                guard let self = self else { return }
+                let (update, deletions, insertions, modifications) = change
+                self.data = update
+                if update.isEmpty { onEmpty() }
+                onChange((deletions, insertions, modifications))
+                self.allSongsDownloaded(songs: update)
         })
     }
     
     func fetchRemainingSongsIfNeeded() {
-        service.provideCachedSongs(for: playlist.value!, content: { [weak self] _, remainingSongs in
+        service.provideCachedSongs(for: playlist.value!, content: { [weak self] cache, remainingSongs in
             guard let self = self else { return }
+            self.data = cache
             self.downloadLinksIfNeeded(songs: remainingSongs)
         })
     }
