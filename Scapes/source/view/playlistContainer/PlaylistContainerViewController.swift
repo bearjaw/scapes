@@ -153,11 +153,11 @@ extension PlaylistContainerViewController {
         var exportString = "\(viewModel.playlist.value?.name ?? "Unknown Playlist") \n"
         DispatchQueue.global(qos: .userInitiated).async {
             for item in self.viewModel.data {
-                //                if item.url.lowercased().contains("Error".lowercased()) {
-                //                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-                //                } else {
-                //                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-                //                }
+                if item.url.lowercased().isEmpty {
+                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n Couldn't find that song.")
+                } else {
+                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+                }
             }
             DispatchQueue.main.async {
                 let pasteBoard = UIPasteboard.general
