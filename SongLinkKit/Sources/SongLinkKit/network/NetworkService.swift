@@ -53,7 +53,8 @@ final class NetworkService: NSObject {
                 dump(error)
                 onCompleted(.failure(NetworkError.failed))
             }, receiveValue: { songLink in
-                onCompleted(.success(songLink!))
+                guard let song = songLink else { return }
+                onCompleted(.success(song))
             })
         )
     }
