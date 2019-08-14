@@ -66,8 +66,7 @@ final class SongLinkProvider: NSObject {
         let results: [SongLinkIntermediate] = songRepo.all(matching: compundPredicate)
         let songsSet = Set(songs)
         let cache = Set(results)
-        let songsToDownload = songsSet.subtracting(results)
-        let alt = cache.subtracting(songsSet)
+        let songsToDownload = songsSet.subtracting(cache)
         return (results, Array(songsToDownload))
     }
 }
