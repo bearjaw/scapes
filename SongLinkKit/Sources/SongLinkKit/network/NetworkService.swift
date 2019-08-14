@@ -44,7 +44,7 @@ final class NetworkService: NSObject {
                 guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return nil }
                 guard let json: JSON = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? JSON else { return nil }
                 guard let result: [JSON] = json["results"] as? [JSON] else { return nil }
-                guard let content = result.first else { return nil }
+                guard let content = result.first else { return  song.generateCoreSongLink(from: "", trackViewURL: "") }
                 let trackViewUrl = content["trackViewUrl"] as? String ?? ""
                 let songLinkURL = "https://song.link/\(trackViewUrl)&app=music"
                 return song.generateCoreSongLink(from: songLinkURL, trackViewURL: trackViewUrl)
@@ -53,7 +53,8 @@ final class NetworkService: NSObject {
                 dump(error)
                 onCompleted(.failure(NetworkError.failed))
             }, receiveValue: { songLink in
-                onCompleted(.success(songLink!))
+                guard let song = songLink else { return }
+                onCompleted(.success(song))
             })
         )
     }
