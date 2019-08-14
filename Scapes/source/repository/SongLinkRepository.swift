@@ -164,7 +164,6 @@ extension SongRepository: NSFetchedResultsControllerDelegate {
         link.setValue(songLink.artist, forKeyPath: "artist")
         link.setValue(songLink.title, forKeyPath: "title")
         link.setValue(songLink.album, forKeyPath: "album")
-        
         link.setValue(songLink.url, forKeyPath: "url")
         link.setValue(songLink.originalUrl, forKeyPath: "originalURL")
         link.setValue(Int64(songLink.index), forKeyPath: "index")
