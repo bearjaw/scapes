@@ -290,11 +290,11 @@
 		48FC0EBB2301D1E7009E901C /* playlistContainer */ = {
 			isa = PBXGroup;
 			children = (
-				48FC0EBC2301D1E7009E901C /* playlist */,
-				48FC0EBF2301D1E7009E901C /* PlaylistContainerViewController.swift */,
-				48FC0EC02301D1E7009E901C /* playlistDetail */,
-				48FC0EC42301D1E7009E901C /* PlaylistContainerViewModel.swift */,
 				48FC0EC52301D1E7009E901C /* PlaylistContainerView.swift */,
+				48FC0EBF2301D1E7009E901C /* PlaylistContainerViewController.swift */,
+				48FC0EC42301D1E7009E901C /* PlaylistContainerViewModel.swift */,
+				48FC0EBC2301D1E7009E901C /* playlist */,
+				48FC0EC02301D1E7009E901C /* playlistDetail */,
 			);
 			path = playlistContainer;
 			sourceTree = "<group>";
