@@ -50,4 +50,11 @@ final class PlaylistAccess {
         playlist.addFilterPredicate(predicate)
         return playlist.collections?.first
     }
+    
+    static func playlistArtwork(forIdentifier identifier: UInt64) -> Data? {
+        let playlist = fetchPlaylist(forIdentifier: identifier)
+        let data = playlist?.representativeItem?.value(forProperty: MPMediaItemPropertyArtwork) as? MPMediaItemArtwork
+        let image = data?.image(at: CGSize(width: 150, height: 150))?.pngData()
+        return image
+    }
 }

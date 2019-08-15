@@ -8,6 +8,7 @@
 
 import Foundation
 import PlaylistKit
+import os
 
 protocol PlaylistsViewModelProtocol {
     
@@ -26,18 +27,21 @@ final class PlaylistsViewModel {
     private var playlists: [Playlist] = []
     private var onInitial: InitialData?
     private var onChange: Changes?
+    private var queue = DispatchQueue(label: "com.scapes.playlists.viewmodel", qos: .background)
     
     private func fetchPlaylists() {
-        PlaylistKit.fetchPlaylist(source: .local) { [weak self] result in
-            switch result {
-            case .success(let items):
-                guard let self = self, let onInitial = self.onInitial else { return }
-                self.playlists = items.map { Playlist(name: $0.name, count: $0.itemCount, identifier: $0.localPlaylistIdentifier) }
-                DispatchQueue.main.async {
-                    onInitial()
+        queue.async {
+            PlaylistKit.fetchPlaylist(source: .local) { [weak self] result in
+                switch result {
+                case .success(let items):
+                    guard let self = self, let onInitial = self.onInitial else { return }
+                    self.playlists = items.map { Playlist(name: $0.name, count: $0.itemCount, identifier: $0.localPlaylistIdentifier, artwork: nil) }
+                    DispatchQueue.main.async {
+                        onInitial()
+                    }
+                case .failure(let error):
+                    os_log("%@", error.localizedDescription)
                 }
-            case .failure(let error):
-                dump(error)
             }
         }
     }

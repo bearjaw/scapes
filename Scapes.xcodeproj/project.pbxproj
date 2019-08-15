@@ -88,7 +88,6 @@
 		48FC0EB72301D1E7009E901C /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
 		48FC0EB92301D1E7009E901C /* PlaylistsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsViewModel.swift; sourceTree = "<group>"; };
 		48FC0EBA2301D1E7009E901C /* PlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsTableViewController.swift; sourceTree = "<group>"; };
-		48FC0EBE2301D1E7009E901C /* Food.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Food.xcdatamodel; sourceTree = "<group>"; };
 		48FC0EBF2301D1E7009E901C /* PlaylistContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerViewController.swift; sourceTree = "<group>"; };
 		48FC0EC12301D1E7009E901C /* PlaylistDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewController.swift; sourceTree = "<group>"; };
 		48FC0EC22301D1E7009E901C /* PlaylistDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistDetailView.swift; sourceTree = "<group>"; };
@@ -302,7 +301,6 @@
 		48FC0EBC2301D1E7009E901C /* playlist */ = {
 			isa = PBXGroup;
 			children = (
-				48FC0EBD2301D1E7009E901C /* Food.xcdatamodeld */,
 			);
 			path = playlist;
 			sourceTree = "<group>";
@@ -829,16 +827,6 @@
 			);
 			currentVersion = 48FC0E722301D002009E901C /* Scapes.xcdatamodel */;
 			path = Scapes.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		48FC0EBD2301D1E7009E901C /* Food.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				48FC0EBE2301D1E7009E901C /* Food.xcdatamodel */,
-			);
-			currentVersion = 48FC0EBE2301D1E7009E901C /* Food.xcdatamodel */;
-			path = Food.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

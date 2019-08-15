@@ -12,4 +12,5 @@ struct Playlist: Hashable, Codable {
     let name: String
     let count: Int
     let identifier: UInt64
+    let artwork: Data?
 }
