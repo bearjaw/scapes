@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import ObserverKit
 import PlaylistKit
+import os
 
 protocol PlaylistContainerViewModelProtocol {
     var playlist: Playlist { get }
@@ -29,9 +29,11 @@ final class PlaylistContainerViewModel {
     
     private var _playlist: Playlist
     private var token: RepoToken?
-    private var items: [SongLinkIntermediate] = []
     private var songs: [CorePlaylistItem] = []
     private var onCompleted: (() -> Void)?
+    private var onChange: ((Indicies) -> Void)?
+    private var onInitial: (() -> Void)?
+    private var onEmpty: (() -> Void)?
     private var queue = DispatchQueue(label: "com.scapes.playlist.detail.viewmodel", qos: .background)
     
     private lazy var repo: SongRepository = {
@@ -47,7 +49,6 @@ final class PlaylistContainerViewModel {
     
     init(playlist: Playlist) {
         _playlist = playlist
-        fetchSongs()
     }
     
     private func fetchSongs() {
@@ -57,16 +58,58 @@ final class PlaylistContainerViewModel {
                 switch result {
                 case .success(let items):
                     self.songs = items
+                    self.data = items.map { $0.intermediate }
+                    DispatchQueue.main.async {
+                        self.updateOnInitial()
+                    }
+                    self.observeChanges()
                 case .failure(let error):
-                    dump(error)
+                    os_log("%@", error.localizedDescription)
                 }
             }
-            
         }
     }
     
+    private func observeChanges() {
+        let filter = self.filter()
+        _ = repo.subscribe(filter: filter, onInitial: { [weak self] result in
+            guard let self = self else { return }
+            self.data = result
+            DispatchQueue.main.async {
+                self.updateOnInitial()
+                self.updateIsEmpty(result.isEmpty)
+                self.allSongsDownloaded(songs: result)
+            }
+            }, onChange: { [weak self] change in
+                guard let self = self else { return }
+                let (update, deletions, insertions, modifications) = change
+                self.data = update
+                DispatchQueue.main.async {
+                    self.updateIsEmpty(update.isEmpty)
+                    self.updateOnChange(deletions: deletions, insertions: insertions, modifications: modifications)
+                    self.allSongsDownloaded(songs: update)
+                }
+        })
+    }
+    
+    private func updateIsEmpty(_ isEmpty: Bool) {
+        guard isEmpty, let onEmpty = onEmpty else { return }
+        onEmpty()
+    }
+    
+    private func updateOnInitial() {
+        guard let onInitial = onInitial else { return }
+        onInitial()
+    }
+    
+    private func updateOnChange(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
+        guard let onChange = onChange else { return }
+        onChange((deletions, insertions, modifications))
+    }
+    
     private func filter() -> NSCompoundPredicate? {
-        let predicates = self.songs.map({ NSPredicate(format: "localPlaylistIdentifier == %@",
+        guard self.songs.isNonEmpty else { return  nil }
+        let predicates = self.songs.map({ NSPredicate(format:"localPlaylistIdentifier == %@",
                                                       "\($0.localPlaylistIdentifier)") })
         predicates.forEach { print($0.predicateFormat) }
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
@@ -97,21 +140,10 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
     }
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void) {
-        let filter = self.filter()
-        _ = repo.subscribe(filter: filter, onInitial: { [weak self] result in
-            guard let self = self else { return }
-            self.data = result
-            if result.isEmpty { onEmpty() }
-            onInitial()
-            self.allSongsDownloaded(songs: result)
-            }, onChange: { [weak self] change in
-                guard let self = self else { return }
-                let (update, deletions, insertions, modifications) = change
-                self.data = update
-                if update.isEmpty { onEmpty() }
-                onChange((deletions, insertions, modifications))
-                self.allSongsDownloaded(songs: update)
-        })
+        self.onChange = onChange
+        self.onInitial = onInitial
+        self.onEmpty = onEmpty
+        fetchSongs()
     }
     
     func fetchRemainingSongsIfNeeded() {
@@ -119,8 +151,6 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
             guard let self = self else { return }
             self.data = cache
             self.downloadLinksIfNeeded(songs: remainingSongs)
-            guard let onCompleted = self.onCompleted else { return }
-            onCompleted()
         })
     }
     
