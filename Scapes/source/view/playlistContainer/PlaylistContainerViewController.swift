@@ -11,10 +11,9 @@ import UIKit
 final class PlaylistContainerViewController: UIViewController {
     
     private var viewModel: PlaylistContainerViewModelProtocol
+    private var detailViewController: UIViewController?
     
-    private lazy var containerView: PlaylistContainerView = {
-        return PlaylistContainerView()
-    }()
+    private lazy var containerView: PlaylistContainerView = { PlaylistContainerView() }()
     
     init(viewModel: PlaylistContainerViewModelProtocol) {
         self.viewModel = viewModel
@@ -99,6 +98,7 @@ final class PlaylistContainerViewController: UIViewController {
         let size = CGSize(width: view.bounds.width, height: 150)
         detail.view.frame = CGRect(origin: .zero, size: size)
         containerView.tableView.tableHeaderView = detail.view
+        detailViewController = detail
     }
     
     private func addExportButton() {
