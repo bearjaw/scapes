@@ -42,8 +42,8 @@ final class TitleDetailTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let verticalSpace: CGFloat = 10.0
-    private let horizontalSpace: CGFloat = 5.0
+    private let verticalSpace: CGFloat = 8.0
+    private let horizontalSpace: CGFloat = 8.0
     private let spaceDivision: CGFloat = 3.0
     private let verticalSpaceMultiplier: CGFloat = 2.0
     private let horizontalSpaceMultiplier: CGFloat = 2.0
@@ -107,7 +107,7 @@ final class TitleDetailTableViewCell: UITableViewCell {
                                        height: sizeAlbum.height
         ))
         originX = 0.0
-        originY = labelArtist.rightBottom.y
+        originY = max(labelAlbum.rightBottom.y, labelArtist.rightBottom.y)
         
         labelLink.frame = (CGRect(x: originX + verticalSpaceMultiplier*verticalSpace,
                                        y: originY + horizontalSpaceMultiplier*horizontalSpace,
@@ -123,12 +123,20 @@ final class TitleDetailTableViewCell: UITableViewCell {
         let sizeArtist = labelArtist.sizeThatFits(maxSize)
         let sizeAlbum = labelAlbum.sizeThatFits(CGSize(width: maxSize.width - sizeArtist.width, height: maxSize.height))
         let sizeLink = labelLink.sizeThatFits(maxSize)
+        
+        let isMultiLine = size.width < sizeArtist.width + sizeAlbum.width + 3*horizontalSpace*horizontalSpaceMultiplier
+        let albumArtistHeight: CGFloat
+        if isMultiLine {
+            albumArtistHeight = sizeArtist.height + sizeAlbum.height + horizontalSpace
+        } else {
+            albumArtistHeight = max(sizeArtist.height, sizeAlbum.height)
+        }
         return (CGSize(width: size.width, height:
                         horizontalSpaceMultiplier*verticalSpace
                         + sizeSong.height
                         + horizontalSpace
-                        + max(sizeArtist.height, sizeAlbum.height)
-                        + horizontalSpaceMultiplier*verticalSpace
+                        + albumArtistHeight
+                        + horizontalSpaceMultiplier*horizontalSpace
                         + sizeLink.height
                         + horizontalSpaceMultiplier*horizontalSpace
         ))

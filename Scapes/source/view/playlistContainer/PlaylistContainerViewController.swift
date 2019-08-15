@@ -11,10 +11,9 @@ import UIKit
 final class PlaylistContainerViewController: UIViewController {
     
     private var viewModel: PlaylistContainerViewModelProtocol
+    private var detailViewController: UIViewController?
     
-    private lazy var containerView: PlaylistContainerView = {
-        return PlaylistContainerView()
-    }()
+    private lazy var containerView: PlaylistContainerView = { PlaylistContainerView() }()
     
     init(viewModel: PlaylistContainerViewModelProtocol) {
         self.viewModel = viewModel
@@ -93,12 +92,13 @@ final class PlaylistContainerViewController: UIViewController {
     }
     
     private func configureHeader() {
-        guard let playlist = self.viewModel.playlist.value else { return }
+        let playlist = self.viewModel.playlist
         let viewModel = PlaylistDetailViewModel(playlist: playlist)
         let detail = PlaylistDetailViewController(viewModel: viewModel)
         let size = CGSize(width: view.bounds.width, height: 150)
         detail.view.frame = CGRect(origin: .zero, size: size)
         containerView.tableView.tableHeaderView = detail.view
+        detailViewController = detail
     }
     
     private func addExportButton() {
@@ -150,14 +150,14 @@ extension PlaylistContainerViewController {
     }
     
     @objc func exportPlaylist() {
-        var exportString = "\(viewModel.playlist.value?.name ?? "Unknown Playlist") \n"
+        var exportString = viewModel.playlist.name
         DispatchQueue.global(qos: .userInitiated).async {
             for item in self.viewModel.data {
-                //                if item.url.lowercased().contains("Error".lowercased()) {
-                //                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n")
-                //                } else {
-                //                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-                //                }
+                if item.url.lowercased().isEmpty {
+                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n Couldn't find that song.")
+                } else {
+                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
+                }
             }
             DispatchQueue.main.async {
                 let pasteBoard = UIPasteboard.general
