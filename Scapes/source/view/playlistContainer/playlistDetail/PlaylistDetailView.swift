@@ -59,10 +59,12 @@ final class PlaylistDetailView: UIView {
     }
     // MARK: - Update
     
-    func update(title: String?, thumbnail: UIImage?) {
+    func update(title: String?, thumbnail: Data?) {
         self.title.text = title
-        self.thumbnail.image = thumbnail
         backgroundColor = .primary
         setNeedsLayout()
+        guard let data = thumbnail else { return }
+        self.thumbnail.image = UIImage(data: data)
+        
     }
 }

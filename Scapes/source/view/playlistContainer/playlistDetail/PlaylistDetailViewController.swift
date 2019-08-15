@@ -35,7 +35,7 @@ final class PlaylistDetailViewController: UIViewController {
     
     private func configureDetailView() {
         viewModel.subscribe { [unowned self] playlist in
-            self.viewDetail.update(title: playlist.name, thumbnail: nil)
+            self.viewDetail.update(title: playlist.name, thumbnail: playlist.artwork)
         }
     }
 }
