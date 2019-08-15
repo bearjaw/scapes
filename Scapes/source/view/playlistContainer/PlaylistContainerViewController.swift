@@ -92,7 +92,7 @@ final class PlaylistContainerViewController: UIViewController {
     }
     
     private func configureHeader() {
-        guard let playlist = self.viewModel.playlist.value else { return }
+        let playlist = self.viewModel.playlist
         let viewModel = PlaylistDetailViewModel(playlist: playlist)
         let detail = PlaylistDetailViewController(viewModel: viewModel)
         let size = CGSize(width: view.bounds.width, height: 150)
@@ -150,7 +150,7 @@ extension PlaylistContainerViewController {
     }
     
     @objc func exportPlaylist() {
-        var exportString = "\(viewModel.playlist.value?.name ?? "Unknown Playlist") \n"
+        var exportString = viewModel.playlist.name
         DispatchQueue.global(qos: .userInitiated).async {
             for item in self.viewModel.data {
                 if item.url.lowercased().isEmpty {

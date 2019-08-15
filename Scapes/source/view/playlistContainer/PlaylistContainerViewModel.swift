@@ -11,7 +11,7 @@ import ObserverKit
 import PlaylistKit
 
 protocol PlaylistContainerViewModelProtocol {
-    var playlist: LiveData<Playlist> { get }
+    var playlist: Playlist { get }
     typealias Indicies = (deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath])
     
     var title: String { get }
@@ -27,11 +27,12 @@ protocol PlaylistContainerViewModelProtocol {
 
 final class PlaylistContainerViewModel {
     
-    private var _playlist = LiveData<Playlist>()
+    private var _playlist: Playlist
     private var token: RepoToken?
     private var items: [SongLinkIntermediate] = []
     private var songs: [CorePlaylistItem] = []
     private var onCompleted: (() -> Void)?
+    private var queue = DispatchQueue(label: "com.scapes.playlist.detail.viewmodel", qos: .background)
     
     private lazy var repo: SongRepository = {
         let repo = SongRepository()
@@ -45,18 +46,22 @@ final class PlaylistContainerViewModel {
     var data: [SongLinkIntermediate] = []
     
     init(playlist: Playlist) {
-        self.playlist.value = playlist
+        _playlist = playlist
         fetchSongs()
     }
     
     private func fetchSongs() {
-        PlaylistKit.fetchSongs(forPlaylist: playlist.value!.identifier) { result in
-            switch result {
-            case .success(let items):
-                self.songs = items
-            case .failure(let error):
-                dump(error)
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            PlaylistKit.fetchSongs(forPlaylist: self.playlist.identifier) { result in
+                switch result {
+                case .success(let items):
+                    self.songs = items
+                case .failure(let error):
+                    dump(error)
+                }
             }
+            
         }
     }
     
@@ -69,7 +74,7 @@ final class PlaylistContainerViewModel {
     
     private func allSongsDownloaded(songs: [SongLinkIntermediate]) {
         let completed = songs.filter { $0.downloaded == false }.isEmpty
-        if completed && playlist.value!.count == songs.count, let onCompleted = self.onCompleted {
+        if completed && playlist.count == songs.count, let onCompleted = self.onCompleted {
             self.data.sort { $0.index < $1.index }
             onCompleted()
         }
@@ -83,12 +88,12 @@ final class PlaylistContainerViewModel {
 
 extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
     
-    var playlist: LiveData<Playlist> {
+    var playlist: Playlist {
         return _playlist
     }
     
     var title: String {
-        return self.playlist.value!.name
+        return self.playlist.name
     }
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void) {
@@ -110,10 +115,12 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
     }
     
     func fetchRemainingSongsIfNeeded() {
-        service.provideCachedSongs(for: playlist.value!, content: { [weak self] cache, remainingSongs in
+        service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
             guard let self = self else { return }
             self.data = cache
             self.downloadLinksIfNeeded(songs: remainingSongs)
+            guard let onCompleted = self.onCompleted else { return }
+            onCompleted()
         })
     }
     
