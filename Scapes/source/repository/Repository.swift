@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import UIKit
 
 protocol Repository {
     
-    typealias ModelsChange = ([RepositoryType], [IndexPath], [IndexPath], [IndexPath])
+    typealias ModelsChange = (NSDiffableDataSourceSnapshot<SectionType, RepositoryType>)
     
-    associatedtype RepositoryType
-    associatedtype Token
+    associatedtype RepositoryType: Hashable
+    associatedtype SectionType: Hashable
     
     func all(matching predicate: NSPredicate?) -> [RepositoryType]
     
@@ -30,7 +31,7 @@ protocol Repository {
     func search(predicate: NSPredicate) -> RepositoryType?
     
     func subscribe(filter: NSPredicate?, onInitial: @escaping ([RepositoryType]) -> Void,
-                   onChange: @escaping (ModelsChange) -> Void) -> Token?
+                   onChange: @escaping (ModelsChange) -> Void)
     
-    func subscribe(entity: RepositoryType, onChange: @escaping (RepositoryType) -> Void) -> Token?
+    func subscribe(entity: RepositoryType, onChange: @escaping (RepositoryType) -> Void)
 }

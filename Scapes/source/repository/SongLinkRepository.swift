@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import PlaylistKit
+import UIKit
 
 final class DataController: NSObject {
     var managedObjectContext: NSManagedObjectContext?
@@ -19,6 +20,7 @@ final class DataController: NSObject {
         persistentContainer = NSPersistentContainer(name: "Scapes")
         super.init()
         persistentContainer.loadPersistentStores() { (description, error) in
+            self.persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             if let error = error {
                 fatalError("Failed to load Core Data stack: \(error)")
             }
@@ -29,12 +31,12 @@ final class DataController: NSObject {
 }
 
 final class SongRepository: NSObject, Repository {
+   
+    typealias SectionType = PlaylistSection
     
     typealias RepositoryType = SongLinkIntermediate
     
-    typealias Token = String
-    
-    private var modelsIndexUpdate: ((ModelsChange) -> Void)?
+    private var onDiffUpdate: ((NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>) -> Void)?
     private var modelUpdate: ((SongLinkIntermediate) -> Void)?
     private var modelsUpdate: (([SongLinkIntermediate]) -> Void)?
     
@@ -55,7 +57,8 @@ final class SongRepository: NSObject, Repository {
         do {
             try resultsController.performFetch()
             guard let objects = resultsController.fetchedObjects else { return [] }
-            let result = objects.map { convert($0) }
+            let result = objects.map { $0.intermediate }
+            updateSnapshot()
             return result
         } catch {
             fatalError("Failed to initialize FetchedResultsController: \(error)")
@@ -70,14 +73,12 @@ final class SongRepository: NSObject, Repository {
         let link = convert(element)
         resultsController.managedObjectContext.insert(link)
         save()
+        updateSnapshot()
     }
     
     func update(element: SongLinkIntermediate) {
         save()
-    }
-    
-    func saveObjects() {
-        save()
+        updateSnapshot()
     }
     
     func update(element identifier: String, value: Any?, for keyPath: String) {
@@ -88,73 +89,38 @@ final class SongRepository: NSObject, Repository {
         let link = convert(element)
         resultsController.managedObjectContext.delete(link)
         save()
+        updateSnapshot()
     }
     
     func search(predicate: NSPredicate) -> SongLinkIntermediate? {
         return nil
     }
     
-    func subscribe(filter: NSPredicate?, onInitial: @escaping ([SongLinkIntermediate]) -> Void, onChange: @escaping (ModelsChange) -> Void) -> String? {
-        self.modelsIndexUpdate = onChange
+    func subscribe(filter: NSPredicate?, onInitial: @escaping ([SongLinkIntermediate]) -> Void, onChange: @escaping (ModelsChange) -> Void){
+        self.onDiffUpdate = onChange
         self.modelsUpdate = onInitial
         let objects = all(matching: filter)
         onInitial(objects)
-        return nil
+    }
+
+    func subscribe(entity: SongLinkIntermediate, onChange: @escaping (SongLinkIntermediate) -> Void) {
+        
     }
     
-    func subscribe(entity: SongLinkIntermediate, onChange: @escaping (SongLinkIntermediate) -> Void) -> String? {
-        return nil
+    private func updateSnapshot() {
+        guard let onDiffUpdate = onDiffUpdate else { return }
+        let diffableDataSourceSnapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
+        diffableDataSourceSnapshot.appendSections([.items])
+        diffableDataSourceSnapshot.appendItems(resultsController.fetchedObjects?.compactMap({ $0.intermediate }) ?? [])
+        onDiffUpdate(diffableDataSourceSnapshot)
     }
     
 }
 
 extension SongRepository: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith diff: CollectionDifference<NSManagedObjectID>) {
-        guard let onChange = self.modelsUpdate, let objects = resultsController.fetchedObjects else { return }
-        let result = objects.map { convert($0) }
-        onChange(result)
-    }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .delete:
-            guard let onChange = self.modelsIndexUpdate,
-                let objects = resultsController.fetchedObjects,
-                let indexPath = indexPath else { return }
-            let result = objects.map { convert($0) }
-            onChange((result, [indexPath], [], []))
-        case .insert:
-            guard let onChange = self.modelsIndexUpdate,
-                let objects = resultsController.fetchedObjects,
-                let indexPath = indexPath else { return }
-            let result = objects.map { convert($0) }
-            onChange((result, [], [indexPath], []))
-        case .update:
-            guard let onChange = self.modelsIndexUpdate,
-                let objects = resultsController.fetchedObjects,
-                let indexPath = indexPath else { return }
-            let result = objects.map { convert($0) }
-            onChange((result, [], [], [indexPath]))
-        case .move:
-            break
-        @unknown default:
-            break
-        }
-    }
-    
-    private func convert(_ songLink: SongLink) -> SongLinkIntermediate {
-        return SongLinkIntermediate(localPlaylistItemId: UInt64(songLink.localPlaylistIdentifier ?? "")!,
-                                    identifier: songLink.identifier ?? UUID(),
-                                    artist: songLink.artist ?? "",
-                                    title: songLink.title ?? "",
-                                    album: songLink.album ?? "",
-                                    url: songLink.url ?? "",
-                                    originalUrl: songLink.originalURL ?? "",
-                                    index: Int(songLink.index),
-                                    notFound: songLink.notFound,
-                                    playcount: Int(songLink.playCount),
-                                    downloaded: songLink.downloaded,
-                                    artwork: songLink.artwork)
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        updateSnapshot()
     }
     
     private func convert(_ songLink: SongLinkIntermediate) -> SongLink {
