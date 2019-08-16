@@ -8,12 +8,17 @@
 
 import UIKit
 
+enum PlaylistSection: CaseIterable {
+    case items
+}
+
 final class PlaylistContainerViewController: UIViewController {
     
     private var viewModel: PlaylistContainerViewModelProtocol
     private var detailViewController: UIViewController?
     
     private lazy var containerView: PlaylistContainerView = { PlaylistContainerView() }()
+    private var dataSource: UITableViewDiffableDataSource<PlaylistSection, SongLinkIntermediate>?
     
     init(viewModel: PlaylistContainerViewModelProtocol) {
         self.viewModel = viewModel
@@ -40,32 +45,6 @@ final class PlaylistContainerViewController: UIViewController {
         }
     }
     
-    // MARK: - View setup
-    
-    func subscribeToDataChanges() {
-        viewModel.subscribe(onInitial: { [weak self] in
-            guard let self = self else { return }
-            self.containerView.tableView.reloadData()
-            self.containerView.updateState(state: .show)
-            }, onChange: { [weak tableView = self.containerView.tableView] changes in
-                guard let tableView = tableView else { return }
-                let (deletions, insertions, modifications) = changes
-                tableView.performBatchUpdates({
-                    tableView.deleteRows(at: deletions, with: .automatic)
-                    tableView.insertRows(at: insertions, with: .automatic)
-                    tableView.reloadRows(at: modifications, with: .automatic)
-                }, completion: nil)
-                self.containerView.updateState(state: .show)
-            }, onEmpty: {
-                self.containerView.updateState(state: .show)
-        })
-        
-        viewModel.subscribe { [unowned self] in
-            self.containerView.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-            self.containerView.updateState(state: .hide)
-        }
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(alongsideTransition: { _ in
@@ -75,12 +54,43 @@ final class PlaylistContainerViewController: UIViewController {
         })
     }
     
+    // MARK: - View setup
+    
+    func subscribeToDataChanges() {
+        viewModel.subscribe(onInitial: { [weak self] in
+            guard let self = self else { return }
+            self.containerView.tableView.reloadData()
+            self.containerView.updateState(state: .show)
+            }, onChange: { [weak self] changes in
+                guard let self = self, let dataSource = self.dataSource else { return }
+                dataSource.apply(changes)
+                DispatchQueue.main.async {
+                    self.containerView.updateState(state: .show)
+                }
+            }, onEmpty: {
+                DispatchQueue.main.async {
+                    self.containerView.updateState(state: .show)
+                }
+        })
+        
+        viewModel.subscribe { [unowned self] in
+            self.containerView.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+            self.containerView.updateState(state: .hide)
+        }
+    }
+    
     private func configureTableView() {
         containerView.tableView.delegate = self
-        containerView.tableView.dataSource = self
         containerView.tableView.rowHeight = UITableView.automaticDimension
         containerView.tableView.estimatedRowHeight = 60.0
-        containerView.tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: "kPlaylistCell")
+        containerView.tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: TitleDetailTableViewCell.reusueIdentifier)
+        dataSource = UITableViewDiffableDataSource<PlaylistSection, SongLinkIntermediate>(tableView: containerView.tableView, cellProvider: { (tableView, indexPath, item) -> TitleDetailTableViewCell? in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleDetailTableViewCell.reusueIdentifier, for: indexPath) as? TitleDetailTableViewCell else {
+                fatalError("Error: Wrong cell dequeued. Expected: \(TitleDetailTableViewCell.self) but got")
+            }
+            cell.update(songViewData: item)
+            return cell
+        })
         configureHeader()
         configureNavigationBar()
     }
@@ -107,20 +117,6 @@ final class PlaylistContainerViewController: UIViewController {
                                   action: #selector(PlaylistContainerViewController.exportPlaylist)
         )
         navigationItem.rightBarButtonItem = bbi
-    }
-}
-
-extension PlaylistContainerViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.data.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "kPlaylistCell") as? TitleDetailTableViewCell
-            else { fatalError("Cell initialisation failed") }
-        let item = viewModel.data[indexPath.row]
-        cell.update(songViewData: item)
-        return cell
     }
 }
 
