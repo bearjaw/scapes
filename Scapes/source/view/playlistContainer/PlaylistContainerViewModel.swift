@@ -63,7 +63,6 @@ final class PlaylistContainerViewModel {
                     DispatchQueue.main.async {
                         self.updateOnInitial()
                     }
-                    self.observeChanges()
                 case .failure(let error):
                     os_log("%@", error.localizedDescription)
                 }
@@ -139,6 +138,7 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         self.onInitial = onInitial
         self.onEmpty = onEmpty
         fetchSongs()
+        observeChanges()
     }
     
     func fetchRemainingSongsIfNeeded() {
