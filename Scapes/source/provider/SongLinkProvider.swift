@@ -17,10 +17,14 @@ final class SongLinkProvider: NSObject {
     
     private lazy var service: SongLinkKit = { SongLinkKit() }()
     
-    private lazy var songRepo = { SongRepository() }()
+    private var songRepo: SongRepository?
     
     func search(in songs: [SongLinkIntermediate]) {
         downloadSongLinks(songs: songs)
+    }
+    
+    func addToRepository( repository: SongRepository) {
+        self.songRepo = repository
     }
     
     func provideCachedSongs(for playlist: Playlist, content: @escaping Content) {
@@ -53,7 +57,7 @@ final class SongLinkProvider: NSObject {
             link.downloaded = true
             link.originalUrl = song.appleURL
             link.url = song.songLinkURL
-            self.songRepo.add(element: link)
+            self.repository.add(element: link)
         }, completion: { _ in
 
         })
@@ -63,10 +67,23 @@ final class SongLinkProvider: NSObject {
         let predicates = songs.map { NSPredicate(format: "localPlaylistIdentifier = %@ AND downloaded = true",
                                                  "\($0.localPlaylistItemId)") }
         let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
-        let results: [SongLinkIntermediate] = songRepo.all(matching: compundPredicate)
+        let results: [SongLinkIntermediate] = repository.all(matching: compundPredicate)
         let songsSet = Set(songs)
         let cache = Set(results)
         let songsToDownload = songsSet.subtracting(cache)
         return (results, Array(songsToDownload))
+    }
+}
+
+extension SongLinkProvider {
+    
+    private var repository: SongRepository {
+        if let songRepo = songRepo {
+            return songRepo
+        } else  {
+            let songRepo = SongRepository()
+            self.songRepo = songRepo
+            return songRepo
+        }
     }
 }
