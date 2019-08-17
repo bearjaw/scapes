@@ -34,4 +34,6 @@ protocol Repository {
                    onChange: @escaping (ModelsChange) -> Void)
     
     func subscribe(entity: RepositoryType, onChange: @escaping (RepositoryType) -> Void)
+    
+    func applyGlobalFilter(_ predicate: NSPredicate)
 }
