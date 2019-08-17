@@ -18,9 +18,7 @@ final class PlaylistParser {
         for collection in collections {
             let name = (collection.value(forProperty: MPMediaPlaylistPropertyName) as? String)
             let count = collection.count
-            let artwork = collection.representativeItem?.artwork?.image(at: CGSize(width: 100, height: 100))?.pngData()
-            var playlist = CorePlaylist(name: name, itemCount: count, localPlaylistIdentifier: collection.persistentID)
-            playlist.artwork = artwork
+            let playlist = CorePlaylist(name: name, itemCount: count, localPlaylistIdentifier: collection.persistentID)
             result.append(playlist)
         }
         return result
@@ -36,26 +34,49 @@ final class PlaylistParser {
     private func parse(songs: [MPMediaItem]) -> [CorePlaylistItem] {
         var result: [CorePlaylistItem] = []
         var index = 0
+        #if targetEnvironment(simulator)
+        return getMockSongs()
+        #endif
+        
         for song in songs {
             let title = song.title
             let artist = song.artist
             let album = song.albumTitle
             let playCount = song.playCount
             let identifier = song.persistentID
-            var item = CorePlaylistItem(title: title,
+            let item = CorePlaylistItem(title: title,
                                         album: album,
                                         artist: artist,
                                         localPlaylistIdentifier: identifier,
                                         index: index,
                                         playCount: playCount)
-            if let artwork = song.artwork {
-                let data = artwork.image(at: CGSize(width: 100, height: 100))?.pngData()
-                item.artwork = data
-            }
-            item.playCount = playCount
             result.append(item)
             index += 1
         }
         return result
+    }
+}
+
+extension PlaylistParser {
+    private func getMockSongs() -> [CorePlaylistItem] {
+        let item0 = CorePlaylistItem(title: "Flip your wig",
+                                     album:"Flip your wig",
+                                     artist: "Hüsker Dü",
+                                     localPlaylistIdentifier: 7719662635198339807,
+                                     index: 0,
+                                     playCount: 0)
+        let item1 = CorePlaylistItem(title: "Makes no Sense at all",
+                                     album:"Flip your wig",
+                                     artist: "Hüsker Dü",
+                                     localPlaylistIdentifier: 7719662635398339807,
+                                     index: 0,
+                                     playCount: 0)
+        let item2 = CorePlaylistItem(title: "Every everything",
+                                     album:"Flip your wig",
+                                     artist: "Hüsker Dü",
+                                     localPlaylistIdentifier: 7719622625398339807,
+                                     index: 0,
+                                     playCount: 0)
+        return [item0, item1, item2]
     }
 }

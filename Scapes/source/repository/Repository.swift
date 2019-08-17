@@ -20,11 +20,11 @@ protocol Repository {
     
     func element(for identifier: String) -> RepositoryType?
     
+    func add(elements: [RepositoryType])
+    
     func add(element: RepositoryType)
     
     func update(element: RepositoryType)
-    
-    func update(element identifier: String, value: Any?, for keyPath: String)
     
     func delete(element: RepositoryType)
     
@@ -34,4 +34,6 @@ protocol Repository {
                    onChange: @escaping (ModelsChange) -> Void)
     
     func subscribe(entity: RepositoryType, onChange: @escaping (RepositoryType) -> Void)
+    
+    func applyGlobalFilter(_ predicate: NSPredicate)
 }
