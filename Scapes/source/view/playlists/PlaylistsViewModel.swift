@@ -28,6 +28,7 @@ final class PlaylistsViewModel {
     private var onInitial: InitialData?
     private var onChange: Changes?
     private var queue = DispatchQueue(label: "com.scapes.playlists.viewmodel", qos: .background)
+    private lazy var songRepo: SongRepository = { SongRepository() }()
     
     private func fetchPlaylists() {
         queue.async {
@@ -35,7 +36,11 @@ final class PlaylistsViewModel {
                 switch result {
                 case .success(let items):
                     guard let self = self, let onInitial = self.onInitial else { return }
-                    self.playlists = items.map { Playlist(name: $0.name, count: $0.itemCount, identifier: $0.localPlaylistIdentifier, artwork: nil) }
+                    self.playlists = items.map { item in
+                        let artwork = PlaylistKit.fetchArtwork(forType: .playlist(identifier: item.localPlaylistIdentifier))
+                        let playlist = Playlist(name: item.name, count: item.itemCount, identifier: item.localPlaylistIdentifier, artwork: artwork)
+                        return playlist
+                    }
                     DispatchQueue.main.async {
                         onInitial()
                     }
@@ -46,12 +51,10 @@ final class PlaylistsViewModel {
         }
     }
     
-    func item(at indexPath: IndexPath) -> Playlist {
-        return playlists[indexPath.row]
-    }
 }
 
 extension PlaylistsViewModel: PlaylistsViewModelProtocol {
+    
     var count: Int {
         return self.playlists.count
     }
@@ -61,4 +64,9 @@ extension PlaylistsViewModel: PlaylistsViewModelProtocol {
         self.onChange = onChange
         fetchPlaylists()
     }
+    
+    func item(at indexPath: IndexPath) -> Playlist {
+        return playlists[indexPath.row]
+    }
+    
 }
