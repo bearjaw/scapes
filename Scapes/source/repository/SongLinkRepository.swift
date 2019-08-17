@@ -177,6 +177,8 @@ extension SongRepository: NSFetchedResultsControllerDelegate {
             link.setValue(originalURL, forKeyPath: "originalURL")
         } else {
             link = NSEntityDescription.insertNewObject(forEntityName: "SongLink", into: resultsController.managedObjectContext) as! SongLink
+            link.setValue(songLink.url, forKeyPath: "url")
+            link.setValue(songLink.originalUrl, forKeyPath: "originalURL")
         }
         link.setValue("\(songLink.localPlaylistItemId)", forKeyPath: "localPlaylistIdentifier")
         link.setValue(songLink.identifier, forKeyPath: "identifier")
