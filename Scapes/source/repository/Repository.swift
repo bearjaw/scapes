@@ -20,11 +20,11 @@ protocol Repository {
     
     func element(for identifier: String) -> RepositoryType?
     
+    func add(elements: [RepositoryType])
+    
     func add(element: RepositoryType)
     
     func update(element: RepositoryType)
-    
-    func update(element identifier: String, value: Any?, for keyPath: String)
     
     func delete(element: RepositoryType)
     
