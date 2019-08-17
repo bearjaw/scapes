@@ -72,11 +72,6 @@ final class PlaylistContainerViewController: UIViewController {
                     self.containerView.updateState(state: .show)
                 }
         })
-        
-        viewModel.subscribe { [unowned self] in
-            self.containerView.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-            self.containerView.updateState(state: .hide)
-        }
     }
     
     private func configureTableView() {
