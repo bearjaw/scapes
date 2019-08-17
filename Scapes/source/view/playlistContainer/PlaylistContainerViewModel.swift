@@ -50,6 +50,10 @@ final class PlaylistContainerViewModel {
     
     init(playlist: Playlist) {
         _playlist = playlist
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            self.addSongsToDatabase(forPlaylist: playlist)
+        }
     }
     
     private func fetchSongs() {
@@ -120,6 +124,18 @@ final class PlaylistContainerViewModel {
     private func downloadLinksIfNeeded(songs: [SongLinkIntermediate]) {
         guard songs.isNonEmpty else { return }
         service.search(in: songs)
+    }
+    
+    private func addSongsToDatabase(forPlaylist playlist: Playlist) {
+        PlaylistKit.fetchSongs(forPlaylist: playlist.identifier) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(items):
+                self.repo.add(elements: items.map({ $0.intermediate }))
+            case let .failure(error):
+                os_log("Error occured: %@", error.localizedDescription)
+            }
+        }
     }
 }
 
