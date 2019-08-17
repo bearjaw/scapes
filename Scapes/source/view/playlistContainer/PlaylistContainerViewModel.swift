@@ -120,7 +120,9 @@ final class PlaylistContainerViewModel {
                 self.repo.applyGlobalFilter(predicate)
                 self.repo.add(elements: items.map({ $0.intermediate }))
                 guard let onInitial = onInitial else { return }
-                onInitial()
+                DispatchQueue.main.async {
+                    onInitial()
+                }
             case let .failure(error):
                 os_log("Error occured: %@", error.localizedDescription)
             }
