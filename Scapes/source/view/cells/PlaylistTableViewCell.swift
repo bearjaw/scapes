@@ -16,13 +16,15 @@ final class PlaylistTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = .systemFill
         label.accessibilityLabel = "Author"
+        contentView.addSubview(label)
         return label
     }()
     
     private lazy var labelTitle: UILabel = {
         let label = UILabel()
         label.textColor = .systemFill
-        label.accessibilityLabel = "Author"
+        label.accessibilityLabel = "Playlist name"
+        contentView.addSubview(label)
         return label
     }()
     
@@ -30,8 +32,26 @@ final class PlaylistTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .center
         imageView.backgroundColor = .primary
+        imageView.accessibilityLabel = "Playlist artwork"
+        contentView.addSubview(imageView)
         return imageView
     }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        applyStyle()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        applyStyle()
+    }
+    
+    private func applyStyle() {
+        backgroundColor = .secondary
+        contentView.backgroundColor = .secondary
+        accessoryType = .disclosureIndicator
+    }
     
     // MARK: - Update
     
@@ -44,13 +64,20 @@ final class PlaylistTableViewCell: UITableViewCell {
     
     func update(title: String, author: String, artwork: Data?) {
         labelAuthor.text = author
+        labelAuthor.accessibilityValue = author
         labelTitle.text = title
+        labelTitle.accessibilityValue = title
         guard let data = artwork else { setNeedsLayout(); return }
         self.artwork.image = UIImage(data: data)
         setNeedsLayout()
     }
     
     // MARK: - Layout
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let sizeImage = artwork.image?.size ?? CGSize(width: 150, height: 150)
+        return CGSize(width: size.width, height: sizeImage.height)
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
