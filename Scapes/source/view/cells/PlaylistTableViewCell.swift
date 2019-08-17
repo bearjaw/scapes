@@ -30,7 +30,8 @@ final class PlaylistTableViewCell: UITableViewCell {
     
     private lazy var artwork: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .center
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
         imageView.backgroundColor = .primary
         imageView.accessibilityLabel = "Playlist artwork"
         contentView.addSubview(imageView)
