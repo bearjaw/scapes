@@ -51,10 +51,10 @@ final class PlaylistAccess {
         return playlist.collections?.first
     }
     
-    static func playlistArtwork(forIdentifier identifier: UInt64) -> Data? {
+    static func playlistArtwork(forIdentifier identifier: UInt64, size: CGSize = CGSize(width: 150, height: 150)) -> Data? {
         let playlist = fetchPlaylist(forIdentifier: identifier)
         let data = playlist?.representativeItem?.value(forProperty: MPMediaItemPropertyArtwork) as? MPMediaItemArtwork
-        let image = data?.image(at: CGSize(width: 150, height: 150))?.pngData()
+        let image = data?.image(at: size)?.pngData()
         return image
     }
 }
