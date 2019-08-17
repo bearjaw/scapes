@@ -92,14 +92,14 @@ final class SongRepository: NSObject {
         return nil
     }
     
-    private func addOrUpdate(element: SongLinkIntermediate) {
-        _ = convert(element)
-    }
-    
     private func updateSnapshot() {
-        guard let onDiffUpdate = onDiffUpdate else { return }
+        guard let onDiffUpdate = onDiffUpdate else {
+            os_log("No sub")
+            return
+        }
         let diffableDataSourceSnapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
         diffableDataSourceSnapshot.appendSections([.items])
+        try? self.resultsController.performFetch()
         diffableDataSourceSnapshot.appendItems(self.resultsController.fetchedObjects?.compactMap({ $0.intermediate }) ?? [])
         onDiffUpdate(diffableDataSourceSnapshot)
     }
@@ -123,18 +123,19 @@ extension SongRepository: Repository {
     }
     
     func add(elements: [SongLinkIntermediate]) {
-        let links = elements.map{ convert($0) }
-        links.forEach { self.resultsController.managedObjectContext.insert($0); self.save() }
+        elements.forEach { add(element: $0) }
     }
     
     func add(element: SongLinkIntermediate) {
         let link = convert(element)
-        resultsController.managedObjectContext.insert(link)
+        if search(element) == nil {
+            resultsController.managedObjectContext.insert(link)
+        }
         save()
     }
     
     func update(element: SongLinkIntermediate) {
-        addOrUpdate(element: element)
+        _ = convert(element)
         save()
     }
     
@@ -153,6 +154,10 @@ extension SongRepository: Repository {
     
     func subscribe(entity: SongLinkIntermediate, onChange: @escaping (SongLinkIntermediate) -> Void) {
         
+    }
+    
+    func applyGlobalFilter(_ predicate: NSPredicate) {
+        resultsController.fetchRequest.predicate = predicate
     }
 }
 
