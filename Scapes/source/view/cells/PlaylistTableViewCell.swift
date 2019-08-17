@@ -23,6 +23,7 @@ final class PlaylistTableViewCell: UITableViewCell {
     private lazy var labelTitle: UILabel = {
         let label = UILabel()
         label.textColor = .systemFill
+        label.textColor = .title
         label.accessibilityLabel = "Playlist name"
         contentView.addSubview(label)
         return label
@@ -32,6 +33,7 @@ final class PlaylistTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 4
         imageView.backgroundColor = .primary
         imageView.accessibilityLabel = "Playlist artwork"
         contentView.addSubview(imageView)
@@ -76,8 +78,8 @@ final class PlaylistTableViewCell: UITableViewCell {
     // MARK: - Layout
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let sizeImage = artwork.image?.size ?? CGSize(width: 150, height: 150)
-        return CGSize(width: size.width, height: sizeImage.height)
+        let sizeImage = CGSize(width: 100, height: 100)
+        return CGSize(width: size.width, height: sizeImage.height + 2*border)
     }
     
     override func layoutSubviews() {
@@ -87,9 +89,7 @@ final class PlaylistTableViewCell: UITableViewCell {
     }
     
     private func layoutArtwork() {
-        let dimension = contentView.bounds.height - 2*border
-        let sizeDefault = CGSize(width: dimension, height: dimension)
-        let sizeImage = artwork.image?.size ?? sizeDefault
+        let sizeImage = CGSize(width: 100, height: 100)
         let origin = CGPoint(x: border, y: border)
         artwork.frame = CGRect(origin: origin, size: sizeImage)
     }
