@@ -69,6 +69,10 @@ extension SongLinkIntermediate {
                     album: self.album,
                     index: self.index)
     }
+    
+    var query: NSPredicate {
+        NSPredicate(format: "localPlaylistIdentifier == %@", "\(self.localPlaylistItemId)")
+    }
 }
 
 extension CorePlaylistItem {

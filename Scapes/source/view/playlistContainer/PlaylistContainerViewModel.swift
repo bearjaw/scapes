@@ -43,31 +43,18 @@ final class PlaylistContainerViewModel {
     }()
     
     private lazy var service: SongLinkProvider = {
-        return SongLinkProvider()
+        let provider = SongLinkProvider()
+        provider.addToRepository(repository: repo)
+        return provider
     }()
     
     var data: [SongLinkIntermediate] = []
     
     init(playlist: Playlist) {
         _playlist = playlist
-    }
-    
-    private func fetchSongs() {
         queue.async { [weak self] in
             guard let self = self else { return }
-            PlaylistKit.fetchSongs(forPlaylist: self.playlist.identifier) { result in
-                switch result {
-                case .success(let items):
-                    self.songs = items
-                    self.data = items.map { $0.intermediate }
-                    DispatchQueue.main.async {
-                        self.updateOnInitial()
-                    }
-                    self.observeChanges()
-                case .failure(let error):
-                    os_log("%@", error.localizedDescription)
-                }
-            }
+            self.addSongsToDatabase(forPlaylist: playlist)
         }
     }
     
@@ -122,6 +109,23 @@ final class PlaylistContainerViewModel {
         guard songs.isNonEmpty else { return }
         service.search(in: songs)
     }
+    
+    private func addSongsToDatabase(forPlaylist playlist: Playlist) {
+        PlaylistKit.fetchSongs(forPlaylist: playlist.identifier) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(items):
+                self.songs = items
+                guard let predicate = self.filter() else { return }
+                self.repo.applyGlobalFilter(predicate)
+                self.repo.add(elements: items.map({ $0.intermediate }))
+                guard let onInitial = onInitial else { return }
+                onInitial()
+            case let .failure(error):
+                os_log("Error occured: %@", error.localizedDescription)
+            }
+        }
+    }
 }
 
 extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
@@ -138,7 +142,7 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         self.onChange = onChange
         self.onInitial = onInitial
         self.onEmpty = onEmpty
-        fetchSongs()
+        observeChanges()
     }
     
     func fetchRemainingSongsIfNeeded() {

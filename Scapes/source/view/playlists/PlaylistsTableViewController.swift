@@ -38,7 +38,7 @@ final class PlaylistsTableViewController: UITableViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
-        tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: TitleDetailTableViewCell.reusueIdentifier)
+        tableView.register(PlaylistTableViewCell.self, forCellReuseIdentifier: PlaylistTableViewCell.reuseIdentifier)
     }
     
     private func observePlaylists() {
@@ -48,7 +48,7 @@ final class PlaylistsTableViewController: UITableViewController {
             self.tableView.performBatchUpdates({
                 self.tableView.deleteRows(at: deletions, with: .automatic)
                 self.tableView.insertRows(at: insertions, with: .automatic)
-                self.tableView.reloadRows(at: modifications, with: .none)
+                self.tableView.reloadRows(at: modifications, with: .automatic)
             }, completion: nil)
         })
     }
@@ -61,10 +61,11 @@ extension PlaylistsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TitleDetailTableViewCell.reusueIdentifier, for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PlaylistTableViewCell.reuseIdentifier, for: indexPath) as? PlaylistTableViewCell else {
+            fatalError("Error: Wrong cell dequeued for identifier. Expected \(PlaylistTableViewCell.self)")
+        }
         let playlist = viewModel.item(at: indexPath)
-        cell.textLabel?.text = "\(playlist.name), Items:\(playlist.count)"
-        cell.textLabel?.textColor = .text
+        cell.update(title: playlist.name, author: "", artwork: playlist.artwork)
         return cell
     }
     
