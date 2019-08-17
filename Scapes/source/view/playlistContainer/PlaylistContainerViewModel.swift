@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import UIKit
 import PlaylistKit
 import os
 
 protocol PlaylistContainerViewModelProtocol {
     var playlist: Playlist { get }
-    typealias Indicies = (deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath])
+    
+    typealias Snapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>
     
     var title: String { get }
     
@@ -20,7 +22,7 @@ protocol PlaylistContainerViewModelProtocol {
     
     func fetchRemainingSongsIfNeeded()
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void)
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Snapshot) -> Void, onEmpty: @escaping () -> Void)
     
     func subscribe(onCompleted: @escaping () -> Void)
 }
@@ -28,10 +30,9 @@ protocol PlaylistContainerViewModelProtocol {
 final class PlaylistContainerViewModel {
     
     private var _playlist: Playlist
-    private var token: RepoToken?
     private var songs: [CorePlaylistItem] = []
     private var onCompleted: (() -> Void)?
-    private var onChange: ((Indicies) -> Void)?
+    private var onChange: ((Snapshot) -> Void)?
     private var onInitial: (() -> Void)?
     private var onEmpty: (() -> Void)?
     private var queue = DispatchQueue(label: "com.scapes.playlist.detail.viewmodel", qos: .background)
@@ -72,7 +73,7 @@ final class PlaylistContainerViewModel {
     
     private func observeChanges() {
         let filter = self.filter()
-        _ = repo.subscribe(filter: filter, onInitial: { [weak self] result in
+        repo.subscribe(filter: filter, onInitial: { [weak self] result in
             guard let self = self else { return }
             self.data = result
             DispatchQueue.main.async {
@@ -80,15 +81,9 @@ final class PlaylistContainerViewModel {
                 self.updateIsEmpty(result.isEmpty)
                 self.allSongsDownloaded(songs: result)
             }
-            }, onChange: { [weak self] change in
+            }, onChange: { [weak self] snapshot in
                 guard let self = self else { return }
-                let (update, deletions, insertions, modifications) = change
-                self.data = update
-                DispatchQueue.main.async {
-                    self.updateIsEmpty(update.isEmpty)
-                    self.updateOnChange(deletions: deletions, insertions: insertions, modifications: modifications)
-                    self.allSongsDownloaded(songs: update)
-                }
+                self.updateOnChange(snapshot)
         })
     }
     
@@ -102,9 +97,9 @@ final class PlaylistContainerViewModel {
         onInitial()
     }
     
-    private func updateOnChange(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
+    private func updateOnChange(_ snapshot: NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>) {
         guard let onChange = onChange else { return }
-        onChange((deletions, insertions, modifications))
+        onChange(snapshot)
     }
     
     private func filter() -> NSCompoundPredicate? {
@@ -139,7 +134,7 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         return self.playlist.name
     }
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Indicies) -> Void, onEmpty: @escaping () -> Void) {
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Snapshot) -> Void, onEmpty: @escaping () -> Void) {
         self.onChange = onChange
         self.onInitial = onInitial
         self.onEmpty = onEmpty
