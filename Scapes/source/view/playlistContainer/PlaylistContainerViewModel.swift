@@ -21,19 +21,16 @@ protocol PlaylistContainerViewModelProtocol {
     
     func fetchRemainingSongsIfNeeded()
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (IntermediateSnapshot) -> Void, onEmpty: @escaping () -> Void)
-    
-    func subscribe(onCompleted: @escaping () -> Void)
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (IntermediateSnapshot) -> Void, onCompleted: @escaping (Bool) -> Void)
 }
 
 final class PlaylistContainerViewModel {
     
     private var _playlist: Playlist
     private var _plugins: [Plugin] = []
-    private var onCompleted: (() -> Void)?
     private var onChange: ((IntermediateSnapshot) -> Void)?
     private var onInitial: (() -> Void)?
-    private var onEmpty: (() -> Void)?
+    private var onCompleted: ((Bool) -> Void)?
     private var queue = DispatchQueue(label: "com.scapes.playlist.detail.viewmodel", qos: .background)
     
     private lazy var repo: SongRepository = { SongRepository() }()
@@ -78,13 +75,9 @@ final class PlaylistContainerViewModel {
             }
         }, onUpdate: { [weak self] update in
             guard let self = self else { return }
+            self.data = update.itemIdentifiers
             self.updateOnChange(update)
         })
-    }
-    
-    private func updateIsEmpty(_ isEmpty: Bool) {
-        guard isEmpty, let onEmpty = onEmpty else { return }
-        onEmpty()
     }
     
     private func updateOnInitial() {
@@ -108,10 +101,10 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         return self.playlist.name
     }
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (IntermediateSnapshot) -> Void, onEmpty: @escaping () -> Void) {
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (IntermediateSnapshot) -> Void, onCompleted: @escaping (Bool) -> Void) {
         self.onChange = onChange
         self.onInitial = onInitial
-        self.onEmpty = onEmpty
+        self.onCompleted = onCompleted
     }
     
     func fetchRemainingSongsIfNeeded() {
@@ -119,13 +112,13 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
             data.isNonEmpty,
         let plugin = download else { return }
         let songs = plugin.songsToDownload(filter)
+        guard songs.isNonEmpty else {
+            onCompleted?(true)
+            return
+        }
         queue.async {
             plugin.downloadSongs(songs: songs)
         }
-    }
-    
-    func subscribe(onCompleted: @escaping () -> Void) {
-        self.onCompleted = onCompleted
     }
 }
 

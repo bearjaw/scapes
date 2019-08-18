@@ -67,9 +67,9 @@ final class PlaylistContainerViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.containerView.updateState(state: .show)
                 }
-            }, onEmpty: {
+            }, onCompleted: { completed in
                 DispatchQueue.main.async {
-                    self.containerView.updateState(state: .show)
+                    self.containerView.updateState(state: completed ? .hide : .show)
                 }
         })
     }
