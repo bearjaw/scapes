@@ -38,12 +38,5 @@ final class FetchPlaylistsPlugin {
 }
 
 extension FetchPlaylistsPlugin: Plugin {
-    var type: Int {
-        return ScapesPuginType.fetchPlaylist.rawValue
-    }
-}
-
-enum ScapesPuginType: Int {
-    case fetchPlaylist = 0
-    case fetchSongs
+    var type: Int { ScapesPluginType.fetchPlaylist.rawValue }
 }
