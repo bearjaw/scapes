@@ -71,7 +71,11 @@ extension PlaylistsTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let playlist = viewModel.item(at: indexPath)
-        let viewModel = PlaylistContainerViewModel(playlist: playlist)
+        let databasePlugin = SongsDatabasePlugin()
+        let fetchSongsPlugin = FetchSongsPlugin()
+        let downloadPlugin = DownloadSongPlugin(database: databasePlugin)
+        let plugins: [Plugin] = [fetchSongsPlugin, databasePlugin, downloadPlugin]
+        let viewModel = PlaylistContainerViewModel(playlist: playlist, plugins: plugins)
         let container = PlaylistContainerViewController(viewModel: viewModel)
         navigationController?.pushViewController(container, animated: true)
     }

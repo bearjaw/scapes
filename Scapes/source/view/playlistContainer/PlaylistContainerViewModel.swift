@@ -12,9 +12,8 @@ import PlaylistKit
 import os
 
 protocol PlaylistContainerViewModelProtocol {
-    var playlist: Playlist { get }
     
-    typealias Snapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>
+    var playlist: Playlist { get }
     
     var title: String { get }
     
@@ -22,7 +21,7 @@ protocol PlaylistContainerViewModelProtocol {
     
     func fetchRemainingSongsIfNeeded()
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Snapshot) -> Void, onEmpty: @escaping () -> Void)
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (IntermediateSnapshot) -> Void, onEmpty: @escaping () -> Void)
     
     func subscribe(onCompleted: @escaping () -> Void)
 }
@@ -30,17 +29,14 @@ protocol PlaylistContainerViewModelProtocol {
 final class PlaylistContainerViewModel {
     
     private var _playlist: Playlist
-    private var songs: [CorePlaylistItem] = []
+    private var _plugins: [Plugin] = []
     private var onCompleted: (() -> Void)?
-    private var onChange: ((Snapshot) -> Void)?
+    private var onChange: ((IntermediateSnapshot) -> Void)?
     private var onInitial: (() -> Void)?
     private var onEmpty: (() -> Void)?
     private var queue = DispatchQueue(label: "com.scapes.playlist.detail.viewmodel", qos: .background)
     
-    private lazy var repo: SongRepository = {
-        let repo = SongRepository()
-        return repo
-    }()
+    private lazy var repo: SongRepository = { SongRepository() }()
     
     private lazy var service: SongLinkProvider = {
         let provider = SongLinkProvider()
@@ -50,27 +46,37 @@ final class PlaylistContainerViewModel {
     
     var data: [SongLinkIntermediate] = []
     
-    init(playlist: Playlist) {
+    init(playlist: Playlist, plugins: [Plugin]) {
         _playlist = playlist
+        _plugins = plugins
         queue.async { [weak self] in
             guard let self = self else { return }
-            self.addSongsToDatabase(forPlaylist: playlist)
+            guard let plugin = self.fetchSongs else { return }
+            plugin.fetchSongs(forPlaylist: playlist) { songs in
+                self.data = songs
+                guard let plugin = self.database,
+                    let filter = self.filter else { return }
+                // Always add or update songs to keept track of properties like playcount
+                plugin.addSongsToDatabase(songs, filter: filter) {
+                    // Observe & apply any changes
+                    self.observerPlaylist()
+                }
+            }
         }
     }
     
-    private func observeChanges() {
-        let filter = self.filter()
-        repo.subscribe(filter: filter, onInitial: { [weak self] result in
+    private func observerPlaylist() {
+        guard let plugin = database, let filter = filter else { return }
+        plugin.observeSongs(filter: filter, onInitial: { [weak self] songs in
             guard let self = self else { return }
-            self.data = result
-            DispatchQueue.main.async {
-                self.updateOnInitial()
-                self.updateIsEmpty(result.isEmpty)
-                self.allSongsDownloaded(songs: result)
-            }
-            }, onChange: { [weak self] snapshot in
-                guard let self = self else { return }
-                self.updateOnChange(snapshot)
+            self.data = songs
+            let snapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
+            snapshot.appendSections([.items])
+            snapshot.appendItems(songs)
+            self.updateOnChange(snapshot)
+        }, onUpdate: { [weak self] update in
+            guard let self = self else { return }
+            self.updateOnChange(update)
         })
     }
     
@@ -88,46 +94,6 @@ final class PlaylistContainerViewModel {
         guard let onChange = onChange else { return }
         onChange(snapshot)
     }
-    
-    private func filter() -> NSCompoundPredicate? {
-        guard self.songs.isNonEmpty else { return  nil }
-        let predicates = self.songs.map({ NSPredicate(format:"localPlaylistIdentifier == %@",
-                                                      "\($0.localPlaylistIdentifier)") })
-        predicates.forEach { print($0.predicateFormat) }
-        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
-    }
-    
-    private func allSongsDownloaded(songs: [SongLinkIntermediate]) {
-        let completed = songs.filter { $0.downloaded == false }.isEmpty
-        if completed && playlist.count == songs.count, let onCompleted = self.onCompleted {
-            self.data.sort { $0.index < $1.index }
-            onCompleted()
-        }
-    }
-    
-    private func downloadLinksIfNeeded(songs: [SongLinkIntermediate]) {
-        guard songs.isNonEmpty else { return }
-        service.search(in: songs)
-    }
-    
-    private func addSongsToDatabase(forPlaylist playlist: Playlist) {
-        PlaylistKit.fetchSongs(forPlaylist: playlist.identifier) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .success(items):
-                self.songs = items
-                guard let predicate = self.filter() else { return }
-                self.repo.applyGlobalFilter(predicate)
-                self.repo.add(elements: items.map({ $0.intermediate }))
-                guard let onInitial = onInitial else { return }
-                DispatchQueue.main.async {
-                    onInitial()
-                }
-            case let .failure(error):
-                os_log("Error occured: %@", error.localizedDescription)
-            }
-        }
-    }
 }
 
 extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
@@ -140,22 +106,69 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         return self.playlist.name
     }
     
-    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (Snapshot) -> Void, onEmpty: @escaping () -> Void) {
+    func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (IntermediateSnapshot) -> Void, onEmpty: @escaping () -> Void) {
         self.onChange = onChange
         self.onInitial = onInitial
         self.onEmpty = onEmpty
-        observeChanges()
     }
     
     func fetchRemainingSongsIfNeeded() {
-        service.provideCachedSongs(for: playlist, content: { [weak self] cache, remainingSongs in
-            guard let self = self else { return }
-            self.data = cache
-            self.downloadLinksIfNeeded(songs: remainingSongs)
-        })
+        guard let filter = self.downloadFilter,
+            data.isNonEmpty,
+        let plugin = download else { return }
+        let songs = plugin.songsToDownload(filter)
+        plugin.downloadSongs(songs: songs)
     }
     
     func subscribe(onCompleted: @escaping () -> Void) {
         self.onCompleted = onCompleted
+    }
+}
+
+extension PlaylistContainerViewModel {
+    var filter: NSPredicate? {
+        guard self.data.isNonEmpty else { return  nil }
+        let predicates = self.data.map({ NSPredicate(format:"localPlaylistItemIdentifier == %@",
+                                                      "\($0.localPlaylistItemId)") })
+        predicates.forEach { print($0.predicateFormat) }
+        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+    }
+    
+    var downloadFilter: NSPredicate? {
+        guard self.data.isNonEmpty else { return  nil }
+        let predicates = self.data.map({ NSPredicate(format:"localPlaylistItemIdentifier == %@ AND downloaded == false",
+                                                      "\($0.localPlaylistItemId)") })
+        predicates.forEach { print($0.predicateFormat) }
+        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+    }
+}
+
+// MARK: - Convenience Plugin Getters
+
+extension PlaylistContainerViewModel: ViewModel {
+    var plugins: [Plugin] {
+        get {
+            _plugins
+        }
+        set {
+            _plugins = newValue
+        }
+    }
+    
+    private var database: SongsDatabasePlugin? {
+        guard let plugin = _plugins.first(where: { $0.type == ScapesPluginType.addToDatabase.rawValue }) as? SongsDatabasePlugin else {
+            return nil
+        }
+        return plugin
+    }
+    
+    private var fetchSongs: FetchSongsPlugin? {
+        guard let plugin = self._plugins.first(where: { $0.type == ScapesPluginType.fetchSongs.rawValue }) as? FetchSongsPlugin else { return nil }
+        return plugin
+    }
+    
+    private var download: DownloadSongPlugin? {
+        guard let plugin = self._plugins.first(where: { $0.type == ScapesPluginType.downloadSongs.rawValue }) as? DownloadSongPlugin else { return nil }
+        return plugin
     }
 }
