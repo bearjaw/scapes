@@ -126,6 +126,7 @@ final class PlaylistContainerView: UIView {
     }
     
     // MARK: - Action
+    
     @objc func fetchPlaylist() {
         targetAction()
     }
