@@ -118,7 +118,7 @@ extension SongRepository: Repository {
     }
     
     func element(for identifier: String) -> SongLinkIntermediate? {
-        let predicate = NSPredicate(format: "localPlaylistIdentifier == %@", identifier)
+        let predicate = NSPredicate(format: "localPlaylistItemIdentifier == %@", identifier)
         return search(predicate: predicate)
     }
     
@@ -158,6 +158,12 @@ extension SongRepository: Repository {
     
     func applyGlobalFilter(_ predicate: NSPredicate) {
         resultsController.fetchRequest.predicate = predicate
+        do {
+            try resultsController.performFetch()
+        } catch {
+            os_log("Could perform fetch request. Predicate was: %@", predicate.predicateFormat)
+        }
+        
     }
 }
 
@@ -175,20 +181,24 @@ extension SongRepository: NSFetchedResultsControllerDelegate {
             let originalURL = songLink.originalUrl.isEmpty ? link.originalURL : songLink.originalUrl
             link.setValue(url, forKeyPath: "url")
             link.setValue(originalURL, forKeyPath: "originalURL")
+            link.setValue(songLink.notFound, forKeyPath: "notFound")
+            link.setValue(songLink.downloaded, forKeyPath: "downloaded")
         } else {
             link = NSEntityDescription.insertNewObject(forEntityName: "SongLink", into: resultsController.managedObjectContext) as! SongLink
             link.setValue(songLink.url, forKeyPath: "url")
             link.setValue(songLink.originalUrl, forKeyPath: "originalURL")
+            link.setValue(songLink.notFound, forKeyPath: "notFound")
+            link.setValue(songLink.downloaded, forKeyPath: "downloaded")
         }
-        link.setValue("\(songLink.localPlaylistItemId)", forKeyPath: "localPlaylistIdentifier")
+        link.setValue("\(songLink.localPlaylistItemId)", forKeyPath: "localPlaylistItemIdentifier")
         link.setValue(songLink.identifier, forKeyPath: "identifier")
         link.setValue(songLink.artist, forKeyPath: "artist")
         link.setValue(songLink.title, forKeyPath: "title")
         link.setValue(songLink.album, forKeyPath: "album")
         link.setValue(Int64(songLink.index), forKeyPath: "index")
-        link.setValue(songLink.notFound, forKeyPath: "notFound")
+        
         link.setValue(Int64(songLink.playcount), forKeyPath: "playCount")
-        link.setValue(songLink.downloaded, forKeyPath: "downloaded")
+        
         link.setValue(songLink.artwork, forKeyPath: "artwork")
         return link
     }
