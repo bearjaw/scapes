@@ -13,4 +13,5 @@ enum ScapesPluginType: Int {
     case fetchSongs
     case addToDatabase
     case downloadSongs
+    case export
 }
