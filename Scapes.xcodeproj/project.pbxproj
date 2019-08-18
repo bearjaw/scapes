@@ -16,6 +16,7 @@
 		4809B9422309761700750CA0 /* PluginTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4809B9412309761700750CA0 /* PluginTypes.swift */; };
 		4809B9442309764900750CA0 /* SongsDatabasePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4809B9432309764900750CA0 /* SongsDatabasePlugin.swift */; };
 		4809B94623097D2300750CA0 /* DownloadSongPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4809B94523097D2300750CA0 /* DownloadSongPlugin.swift */; };
+		4809B948230999CE00750CA0 /* ExportPlaylistPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4809B947230999CE00750CA0 /* ExportPlaylistPlugin.swift */; };
 		48FC0E692301D002009E901C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0E682301D002009E901C /* AppDelegate.swift */; };
 		48FC0E6B2301D002009E901C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0E6A2301D002009E901C /* SceneDelegate.swift */; };
 		48FC0E732301D002009E901C /* Scapes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0E712301D002009E901C /* Scapes.xcdatamodeld */; };
@@ -75,6 +76,7 @@
 		4809B9412309761700750CA0 /* PluginTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginTypes.swift; sourceTree = "<group>"; };
 		4809B9432309764900750CA0 /* SongsDatabasePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsDatabasePlugin.swift; sourceTree = "<group>"; };
 		4809B94523097D2300750CA0 /* DownloadSongPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadSongPlugin.swift; sourceTree = "<group>"; };
+		4809B947230999CE00750CA0 /* ExportPlaylistPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPlaylistPlugin.swift; sourceTree = "<group>"; };
 		48FC0E652301D002009E901C /* Scapes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scapes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48FC0E682301D002009E901C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48FC0E6A2301D002009E901C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				4809B9412309761700750CA0 /* PluginTypes.swift */,
 				4809B9432309764900750CA0 /* SongsDatabasePlugin.swift */,
 				4809B94523097D2300750CA0 /* DownloadSongPlugin.swift */,
+				4809B947230999CE00750CA0 /* ExportPlaylistPlugin.swift */,
 			);
 			path = plugins;
 			sourceTree = "<group>";
@@ -508,6 +511,7 @@
 				48FC0EDB2301D1E7009E901C /* PlaylistDetailViewModel.swift in Sources */,
 				48FC0ED82301D1E7009E901C /* PlaylistContainerViewController.swift in Sources */,
 				4809B93E230970ED00750CA0 /* ViewModel.swift in Sources */,
+				4809B948230999CE00750CA0 /* ExportPlaylistPlugin.swift in Sources */,
 				48FC0EDA2301D1E7009E901C /* PlaylistDetailView.swift in Sources */,
 				48FC0EDD2301D1E7009E901C /* PlaylistContainerView.swift in Sources */,
 				48FC0E732301D002009E901C /* Scapes.xcdatamodeld in Sources */,
