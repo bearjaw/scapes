@@ -41,7 +41,11 @@ struct SongLinkIntermediate: Hashable {
     }
     
     static func == (lhs: SongLinkIntermediate, rhs: SongLinkIntermediate) -> Bool {
-        return lhs.title == rhs.title && lhs.artist == rhs.artist && lhs.album == rhs.album
+        return lhs.title == rhs.title
+            && lhs.artist == rhs.artist
+            && lhs.album == rhs.album
+            && lhs.url == rhs.url
+            && lhs.originalUrl == rhs.originalUrl
     }
     
     func hash(into hasher: inout Hasher) {
