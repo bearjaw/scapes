@@ -33,7 +33,6 @@
 		48FC0ED02301D1E7009E901C /* NSObjectProtocol+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EAE2301D1E6009E901C /* NSObjectProtocol+Extensions.swift */; };
 		48FC0ED12301D1E7009E901C /* SongLinkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EB02301D1E6009E901C /* SongLinkProvider.swift */; };
 		48FC0ED22301D1E7009E901C /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EB32301D1E6009E901C /* View+Extensions.swift */; };
-		48FC0ED32301D1E7009E901C /* DarkAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EB42301D1E6009E901C /* DarkAlertController.swift */; };
 		48FC0ED42301D1E7009E901C /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EB72301D1E7009E901C /* TitleDetailTableViewCell.swift */; };
 		48FC0ED52301D1E7009E901C /* PlaylistsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EB92301D1E7009E901C /* PlaylistsViewModel.swift */; };
 		48FC0ED62301D1E7009E901C /* PlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0EBA2301D1E7009E901C /* PlaylistsTableViewController.swift */; };
@@ -102,7 +101,6 @@
 		48FC0EAE2301D1E6009E901C /* NSObjectProtocol+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Extensions.swift"; sourceTree = "<group>"; };
 		48FC0EB02301D1E6009E901C /* SongLinkProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongLinkProvider.swift; sourceTree = "<group>"; };
 		48FC0EB32301D1E6009E901C /* View+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
-		48FC0EB42301D1E6009E901C /* DarkAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarkAlertController.swift; sourceTree = "<group>"; };
 		48FC0EB72301D1E7009E901C /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
 		48FC0EB92301D1E7009E901C /* PlaylistsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsViewModel.swift; sourceTree = "<group>"; };
 		48FC0EBA2301D1E7009E901C /* PlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsTableViewController.swift; sourceTree = "<group>"; };
@@ -296,7 +294,6 @@
 			isa = PBXGroup;
 			children = (
 				48FC0EB32301D1E6009E901C /* View+Extensions.swift */,
-				48FC0EB42301D1E6009E901C /* DarkAlertController.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -521,7 +518,6 @@
 				48FC0ECF2301D1E7009E901C /* RepoToken.swift in Sources */,
 				4809B9402309746D00750CA0 /* FetchSongsPlugin.swift in Sources */,
 				48FC0ED52301D1E7009E901C /* PlaylistsViewModel.swift in Sources */,
-				48FC0ED32301D1E7009E901C /* DarkAlertController.swift in Sources */,
 				48FC0ED92301D1E7009E901C /* PlaylistDetailViewController.swift in Sources */,
 				48FC0ED22301D1E7009E901C /* View+Extensions.swift in Sources */,
 				48FC0ED42301D1E7009E901C /* TitleDetailTableViewCell.swift in Sources */,
