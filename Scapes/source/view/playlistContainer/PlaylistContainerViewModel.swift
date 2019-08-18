@@ -56,13 +56,13 @@ final class PlaylistContainerViewModel {
                 // Always add or update songs to keept track of properties like playcount
                 plugin.addSongsToDatabase(songs, filter: filter) {
                     // Observe & apply any changes
-                    self.observerPlaylist()
+                    self.observePlaylist()
                 }
             }
         }
     }
     
-    private func observerPlaylist() {
+    private func observePlaylist() {
         guard let plugin = database, let filter = filter else { return }
         plugin.observeSongs(filter: filter, onInitial: { [weak self] songs in
             guard let self = self else { return }
@@ -73,10 +73,16 @@ final class PlaylistContainerViewModel {
                 snapshot.appendItems(songs)
                 self.updateOnChange(snapshot)
             }
+            DispatchQueue.main.async {
+                self.updateOnCompleted()
+            }
         }, onUpdate: { [weak self] update in
             guard let self = self else { return }
             self.data = update.itemIdentifiers
             self.updateOnChange(update)
+            DispatchQueue.main.async {
+                self.updateOnCompleted()
+            }
         })
     }
     
@@ -88,6 +94,14 @@ final class PlaylistContainerViewModel {
     private func updateOnChange(_ snapshot: NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>) {
         guard let onChange = onChange else { return }
         onChange(snapshot)
+    }
+    
+    private func updateOnCompleted() {
+        guard let onCompleted = onCompleted,
+            let plugin = download,
+            let filter = self.downloadFilter else { return }
+        let songs = plugin.songsToDownload(filter)
+        onCompleted(songs.isEmpty)
     }
 }
 
@@ -113,7 +127,7 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         let plugin = download else { return }
         let songs = plugin.songsToDownload(filter)
         guard songs.isNonEmpty else {
-            onCompleted?(true)
+            self.updateOnCompleted()
             return
         }
         queue.async {

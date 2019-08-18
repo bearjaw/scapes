@@ -36,19 +36,6 @@ final class DownloadSongPlugin {
              })
     }
     
-//    private func allSongsDownloaded(songs: [SongLinkIntermediate]) {
-//        let completed = songs.filter { $0.downloaded == false }.isEmpty
-//        if completed && playlist.count == songs.count, let onCompleted = self.onCompleted {
-//            self.data.sort { $0.index < $1.index }
-//            onCompleted()
-//        }
-//    }
-//    
-//    
-//    private func downloadLinksIfNeeded(songs: [SongLinkIntermediate]) {
-//        guard songs.isNonEmpty else { return }
-//        service.search(in: songs)
-//    }
 }
 
 extension DownloadSongPlugin: Plugin {
