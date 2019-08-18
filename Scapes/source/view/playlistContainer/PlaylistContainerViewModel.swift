@@ -70,10 +70,12 @@ final class PlaylistContainerViewModel {
         plugin.observeSongs(filter: filter, onInitial: { [weak self] songs in
             guard let self = self else { return }
             self.data = songs
-            let snapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
-            snapshot.appendSections([.items])
-            snapshot.appendItems(songs)
-            self.updateOnChange(snapshot)
+            self.queue.async {
+                let snapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
+                snapshot.appendSections([.items])
+                snapshot.appendItems(songs)
+                self.updateOnChange(snapshot)
+            }
         }, onUpdate: { [weak self] update in
             guard let self = self else { return }
             self.updateOnChange(update)
@@ -117,7 +119,9 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
             data.isNonEmpty,
         let plugin = download else { return }
         let songs = plugin.songsToDownload(filter)
-        plugin.downloadSongs(songs: songs)
+        queue.async {
+            plugin.downloadSongs(songs: songs)
+        }
     }
     
     func subscribe(onCompleted: @escaping () -> Void) {
