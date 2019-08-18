@@ -51,7 +51,7 @@ final class PlaylistsViewModel {
     private func fetchPlaylists() {
         queue.async { [weak self] in
             guard let self = self else { return }
-            guard let plugin = self._plugins.first(where: { $0.type == ScapesPuginType.fetchPlaylist.rawValue }) as? FetchPlaylistsPlugin else {
+            guard let plugin = self._plugins.first(where: { $0.type == ScapesPluginType.fetchPlaylist.rawValue }) as? FetchPlaylistsPlugin else {
                 return
             }
             
