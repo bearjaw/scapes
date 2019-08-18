@@ -22,31 +22,43 @@ protocol PlaylistsViewModelProtocol {
     func item(at indexPath: IndexPath) -> Playlist
 }
 
+extension PlaylistsViewModel: ViewModel {
+    
+    var plugins: [Plugin] {
+        get {
+            return _plugins
+        }
+        set {
+            _plugins = newValue
+        }
+    }
+    
+}
+
 final class PlaylistsViewModel {
     
     private var playlists: [Playlist] = []
+    private var _plugins: [Plugin] = []
     private var onInitial: InitialData?
     private var onChange: Changes?
     private var queue = DispatchQueue(label: "com.scapes.playlists.viewmodel", qos: .background)
     private lazy var songRepo: SongRepository = { SongRepository() }()
     
+    init(plugins: [Plugin]) {
+        _plugins = plugins
+    }
+    
     private func fetchPlaylists() {
-        queue.async {
-            PlaylistKit.fetchPlaylist(source: .local) { [weak self] result in
-                switch result {
-                case .success(let items):
-                    guard let self = self, let onInitial = self.onInitial else { return }
-                    self.playlists = items.map { item in
-                        let artwork = PlaylistKit.fetchArtwork(forType: .playlist(identifier: item.localPlaylistIdentifier))
-                        let playlist = Playlist(name: item.name, count: item.itemCount, identifier: item.localPlaylistIdentifier, artwork: artwork)
-                        return playlist
-                    }
-                    DispatchQueue.main.async {
-                        onInitial()
-                    }
-                case .failure(let error):
-                    os_log("%@", error.localizedDescription)
-                }
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            guard let plugin = self._plugins.first(where: { $0.type == ScapesPluginType.fetchPlaylist.rawValue }) as? FetchPlaylistsPlugin else {
+                return
+            }
+            
+            plugin.fetchPlaylists { playlists in
+                self.playlists = playlists
+                guard let onInitial = self.onInitial else { return }
+                onInitial()
             }
         }
     }
