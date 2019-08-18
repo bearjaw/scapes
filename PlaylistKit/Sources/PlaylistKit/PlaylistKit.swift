@@ -34,7 +34,7 @@ final public class PlaylistKit {
         switch type {
         case let .playlist(identifier):
             return PlaylistAccess.playlistArtwork(forIdentifier: identifier)
-        case let .song(_):
+        case .song:
             return nil
         }
     }
