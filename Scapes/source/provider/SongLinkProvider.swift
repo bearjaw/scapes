@@ -64,7 +64,7 @@ final class SongLinkProvider: NSObject {
     }
     
     private func checkForAvailableSongs(songs: [SongLinkIntermediate]) -> (cache: [SongLinkIntermediate], downloads: [SongLinkIntermediate] ) {
-        let predicates = songs.map { NSPredicate(format: "localPlaylistIdentifier = %@ AND downloaded = true",
+        let predicates = songs.map { NSPredicate(format: "localPlaylistItemIdentifier = %@ AND downloaded = true",
                                                  "\($0.localPlaylistItemId)") }
         let compundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         let results: [SongLinkIntermediate] = repository.all(matching: compundPredicate)
