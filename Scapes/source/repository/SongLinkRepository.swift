@@ -27,7 +27,7 @@ final class DataController: NSObject {
             }
             self.managedObjectContext = self.persistentContainer.newBackgroundContext()
             #if targetEnvironment(simulator)
-            self.deleteDebugData()
+//            self.deleteDebugData()
             #endif
             completionClosure()
         }
@@ -69,10 +69,11 @@ final class SongRepository: NSObject {
     }()
     
     private func all(_ matching: NSPredicate) -> [SongLink] {
-        resultsController.fetchRequest.predicate = matching
+        let fetchRequest = NSFetchRequest<SongLink>(entityName: "SongLink")
+        fetchRequest.predicate = matching
+        fetchRequest.sortDescriptors = resultsController.fetchRequest.sortDescriptors
         do {
-            try resultsController.performFetch()
-            guard let objects = resultsController.fetchedObjects else { return [] }
+            guard let objects = try dataController.managedObjectContext?.fetch(fetchRequest) else { return [] }
             return objects
         } catch {
             fatalError("Failed to initialize FetchedResultsController: \(error)")
@@ -163,7 +164,6 @@ extension SongRepository: Repository {
         } catch {
             os_log("Could perform fetch request. Predicate was: %@", predicate.predicateFormat)
         }
-        
     }
 }
 
