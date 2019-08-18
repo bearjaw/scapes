@@ -93,7 +93,10 @@ final class PlaylistContainerViewController: UIViewController {
     private func configureNavigationBar() {
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.view.backgroundColor = .primary
-        navigationController?.navigationBar.shadowImage = UIImage()
+        let img = UIImage()
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.shadowImage = img
+        navigationController?.navigationBar.setBackgroundImage(img, for: .default)
     }
     
     private func configureHeader() {
@@ -128,7 +131,7 @@ extension PlaylistContainerViewController: UITableViewDelegate {
 
 extension PlaylistContainerViewController {
     func showAlert(alert: Alert) {
-        let alertController = DarkAlertController(title: alert.title, message: alert.message, preferredStyle: .alert)
+        let alertController = UIAlertController(title: alert.title, message: alert.message, preferredStyle: .alert)
         guard let coder = UIAlertController.classForCoder() as? UIAppearanceContainer.Type else { return }
         UIVisualEffectView.appearance(
             whenContainedInInstancesOf: [coder]
@@ -141,22 +144,9 @@ extension PlaylistContainerViewController {
     }
     
     @objc func exportPlaylist() {
-        var exportString = viewModel.playlist.name
-        DispatchQueue.global(qos: .userInitiated).async {
-            for item in self.viewModel.data {
-                if item.url.lowercased().isEmpty {
-                    exportString.append(contentsOf: "\(item.title) \(item.artist) \n Couldn't find that song.")
-                } else {
-                    exportString.append(contentsOf: "\(item.title) - \(item.artist) \n URL: \(item.url) \n\n")
-                }
-            }
-            DispatchQueue.main.async {
-                let pasteBoard = UIPasteboard.general
-                pasteBoard.string = exportString
-                let generator = UINotificationFeedbackGenerator()
-                generator.notificationOccurred(.success)
-                self.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
-            }
+        viewModel.export { [weak self] _ in
+            guard let self = self else { return }
+            self.showAlert(alert: Alert(title: "Done", message: "Copied your playlist to the clipboard"))
         }
     }
 }

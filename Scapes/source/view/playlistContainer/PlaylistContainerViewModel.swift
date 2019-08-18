@@ -22,6 +22,8 @@ protocol PlaylistContainerViewModelProtocol {
     func fetchRemainingSongsIfNeeded()
     
     func subscribe(onInitial: @escaping () -> Void, onChange: @escaping (IntermediateSnapshot) -> Void, onCompleted: @escaping (Bool) -> Void)
+    
+    func export(onCompletion: @escaping (Bool) -> Void)
 }
 
 final class PlaylistContainerViewModel {
@@ -119,6 +121,7 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         self.onChange = onChange
         self.onInitial = onInitial
         self.onCompleted = onCompleted
+        updateOnCompleted()
     }
     
     func fetchRemainingSongsIfNeeded() {
@@ -133,6 +136,11 @@ extension PlaylistContainerViewModel: PlaylistContainerViewModelProtocol {
         queue.async {
             plugin.downloadSongs(songs: songs)
         }
+    }
+    
+    func export(onCompletion: @escaping (Bool) -> Void) {
+        guard let plugin = export else { return }
+        plugin.exportPlaylist(_playlist, songs: self.data, onCompletion: onCompletion)
     }
 }
 
@@ -180,6 +188,11 @@ extension PlaylistContainerViewModel: ViewModel {
     
     private var download: DownloadSongPlugin? {
         guard let plugin = self._plugins.first(where: { $0.type == ScapesPluginType.downloadSongs.rawValue }) as? DownloadSongPlugin else { return nil }
+        return plugin
+    }
+    
+    private var export: ExportPlaylistPlugin? {
+        guard let plugin = self._plugins.first(where: { $0.type == ScapesPluginType.export.rawValue }) as? ExportPlaylistPlugin else { return nil }
         return plugin
     }
 }
