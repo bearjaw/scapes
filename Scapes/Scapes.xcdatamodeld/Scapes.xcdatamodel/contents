@@ -7,7 +7,7 @@
         <attribute name="downloaded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="identifier" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="localPlaylistIdentifier" optional="YES" attributeType="String"/>
+        <attribute name="localPlaylistItemIdentifier" optional="YES" attributeType="String"/>
         <attribute name="notFound" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="originalURL" optional="YES" attributeType="String"/>
         <attribute name="playCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

@@ -9,13 +9,13 @@ import Foundation
 
 public struct CorePlaylistItem: Codable, Hashable {
     
-    public init(title: String?, album: String?, artist: String?, localPlaylistIdentifier: UInt64, index: Int, playCount: Int) {
+    public init(title: String?, album: String?, artist: String?, localPlaylistItemIdentifier: UInt64, index: Int, playCount: Int) {
         self.title = title ?? "Unknown"
         self.album = album ?? "Unknown"
         self.artist = artist ?? "Unknown"
         self.index = index
         self.playCount = playCount
-        self.localPlaylistIdentifier = localPlaylistIdentifier
+        self.localPlaylistItemIdentifier = localPlaylistItemIdentifier
     }
     
     public let index: Int
@@ -25,5 +25,5 @@ public struct CorePlaylistItem: Codable, Hashable {
     public var artwork: Data?
     public var playCount: Int = 0
     public let identifier: UUID = UUID()
-    public let localPlaylistIdentifier: UInt64
+    public let localPlaylistItemIdentifier: UInt64
 }
