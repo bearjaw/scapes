@@ -47,7 +47,7 @@ final class PlaylistParser {
             let item = CorePlaylistItem(title: title,
                                         album: album,
                                         artist: artist,
-                                        localPlaylistIdentifier: identifier,
+                                        localPlaylistItemIdentifier: identifier,
                                         index: index,
                                         playCount: playCount)
             result.append(item)
@@ -62,19 +62,19 @@ extension PlaylistParser {
         let item0 = CorePlaylistItem(title: "Flip your wig",
                                      album:"Flip your wig",
                                      artist: "Hüsker Dü",
-                                     localPlaylistIdentifier: 7719662635198339807,
+                                     localPlaylistItemIdentifier: 7719662635198339807,
                                      index: 0,
                                      playCount: 0)
         let item1 = CorePlaylistItem(title: "Makes no Sense at all",
                                      album:"Flip your wig",
                                      artist: "Hüsker Dü",
-                                     localPlaylistIdentifier: 7719662635398339807,
+                                     localPlaylistItemIdentifier: 7719662635398339807,
                                      index: 0,
                                      playCount: 0)
         let item2 = CorePlaylistItem(title: "Every everything",
                                      album:"Flip your wig",
                                      artist: "Hüsker Dü",
-                                     localPlaylistIdentifier: 7719622625398339807,
+                                     localPlaylistItemIdentifier: 7719622625398339807,
                                      index: 0,
                                      playCount: 0)
         return [item0, item1, item2]

@@ -57,7 +57,7 @@ extension SongLinkIntermediate {
         CorePlaylistItem(title: self.title,
                          album: self.album,
                          artist: self.artist,
-                         localPlaylistIdentifier: self.localPlaylistItemId,
+                         localPlaylistItemIdentifier: self.localPlaylistItemId,
                          index: self.index,
                          playCount: self.playcount)
     }
@@ -71,13 +71,13 @@ extension SongLinkIntermediate {
     }
     
     var query: NSPredicate {
-        NSPredicate(format: "localPlaylistIdentifier == %@", "\(self.localPlaylistItemId)")
+        NSPredicate(format: "localPlaylistItemIdentifier == %@", "\(self.localPlaylistItemId)")
     }
 }
 
 extension CorePlaylistItem {
     var intermediate: SongLinkIntermediate {
-        SongLinkIntermediate(localPlaylistItemId: self.localPlaylistIdentifier,
+        SongLinkIntermediate(localPlaylistItemId: self.localPlaylistItemIdentifier,
                              identifier: self.identifier,
                              artist: self.artist,
                              title: self.title,
@@ -94,7 +94,7 @@ extension CorePlaylistItem {
 
 extension SongLink {
     var intermediate: SongLinkIntermediate {
-        SongLinkIntermediate(localPlaylistItemId: UInt64(self.localPlaylistIdentifier ?? "")!,
+        SongLinkIntermediate(localPlaylistItemId: UInt64(self.localPlaylistItemIdentifier ?? "")!,
                              identifier: self.identifier ?? UUID(),
                              artist: self.artist ?? "",
                              title: self.title ?? "",
