@@ -98,7 +98,7 @@ final class SongRepository: NSObject {
             os_log("No sub")
             return
         }
-        let diffableDataSourceSnapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
+        var diffableDataSourceSnapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
         diffableDataSourceSnapshot.appendSections([.items])
         try? self.resultsController.performFetch()
         diffableDataSourceSnapshot.appendItems(self.resultsController.fetchedObjects?.compactMap({ $0.intermediate }) ?? [])
