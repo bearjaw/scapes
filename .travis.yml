@@ -7,4 +7,4 @@ osx_image: xcode11.2
 cache: cocoapods
 
 script:
-- set -o pipefail && xcodebuild -workspace Scapes.xcworkspace -scheme Scapes-Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+- set -o pipefail && xcodebuild -workspace Scapes.xcodeproj -scheme Scapes-Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
