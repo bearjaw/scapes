@@ -17,14 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: windowScene)
-        let plugin = FetchPlaylistsPlugin()
-        let viewModel = PlaylistsViewModel(plugins: [plugin])
-        let viewController = PlaylistsTableViewController(viewModel: viewModel)
-        let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.navigationItem.largeTitleDisplayMode = .automatic
-        navigationController.navigationBar.prefersLargeTitles = true
-        configureNavbar(for: navigationController)
-        window?.rootViewController = navigationController
+        window?.rootViewController = TabBarViewController()
         window?.makeKeyAndVisible()
     }
     
@@ -54,22 +47,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
-    }
-    
-    private func configureNavbar(for navigationController: UINavigationController) {
-        let bar = UIBarAppearance(idiom: .phone)
-        bar.backgroundColor = .barTint
-        let navBar = UINavigationBarAppearance(barAppearance: bar)
-        navBar.titleTextAttributes = [.foregroundColor: UIColor.action]
-        navBar.largeTitleTextAttributes = [.foregroundColor: UIColor.action]
-        navBar.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.action]
-        navBar.buttonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.action]
-        navigationController.navigationBar.standardAppearance = navBar
-        navigationController.navigationBar.tintColor = .action
-        navigationController.navigationBar.compactAppearance = navBar
-        navigationController.navigationBar.scrollEdgeAppearance = navBar
-        navigationController.navigationBar.isTranslucent = false
-        navigationController.view.backgroundColor = .secondary
     }
     
 }

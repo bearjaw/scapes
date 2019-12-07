@@ -28,6 +28,7 @@ final class PlaylistsTableViewController: UITableViewController {
         super.viewDidLoad()
         configureTableView()
         observePlaylists()
+        configureNavbar()
     }
     // MARK: Lifecycle end
     // MARK: - View setup
