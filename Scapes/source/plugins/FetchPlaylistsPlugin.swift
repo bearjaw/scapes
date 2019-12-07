@@ -14,6 +14,17 @@ protocol Plugin {
     var type: Int { get }
 }
 
+extension Collection where Element == Plugin {
+    
+    func plugin<T: Plugin>(type: ScapesPluginType) -> T {
+        guard let plugin = self.first(where: { $0.type == type.rawValue }) as? T else {
+            fatalError("Error: Unsupported type passed or plugin missing.")
+        }
+        return plugin
+    }
+    
+}
+
 final class FetchPlaylistsPlugin {
     
     func fetchPlaylists(onCompletion: @escaping ([Playlist]) -> Void) {
