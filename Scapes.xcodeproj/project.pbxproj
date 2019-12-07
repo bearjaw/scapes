@@ -46,6 +46,8 @@
 		48FC0EE22301D2B7009E901C /* ObserverKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0EE12301D2B7009E901C /* ObserverKit */; };
 		48FC0EE42301D2B7009E901C /* PlaylistKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48FC0EE32301D2B7009E901C /* PlaylistKit */; };
 		48FC0F0D23033B4C009E901C /* SongLinkIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */; };
+		AFCB68CE239C23CF00330F9F /* MusicAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68CD239C23CF00330F9F /* MusicAnalysisViewController.swift */; };
+		AFCB68D0239C248E00330F9F /* MusicAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68CF239C248E00330F9F /* MusicAnalysisViewModel.swift */; };
 		AFCB68D2239C28B600330F9F /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68D1239C28B600330F9F /* UITableView+Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -113,6 +115,8 @@
 		48FC0EC52301D1E7009E901C /* PlaylistContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistContainerView.swift; sourceTree = "<group>"; };
 		48FC0F0C23033B4C009E901C /* SongLinkIntermediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLinkIntermediate.swift; sourceTree = "<group>"; };
 		AFCB68CB239ADD1100330F9F /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = "<group>"; };
+		AFCB68CD239C23CF00330F9F /* MusicAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAnalysisViewController.swift; sourceTree = "<group>"; };
+		AFCB68CF239C248E00330F9F /* MusicAnalysisViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAnalysisViewModel.swift; sourceTree = "<group>"; };
 		AFCB68D1239C28B600330F9F /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -306,6 +310,7 @@
 		48FC0EB52301D1E6009E901C /* view */ = {
 			isa = PBXGroup;
 			children = (
+				AFCB68CC239C230E00330F9F /* musicAnalysis */,
 				48FC0EB62301D1E7009E901C /* cells */,
 				48FC0EB82301D1E7009E901C /* playlists */,
 				48FC0EBB2301D1E7009E901C /* playlistContainer */,
@@ -365,6 +370,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AFCB68CC239C230E00330F9F /* musicAnalysis */ = {
+			isa = PBXGroup;
+			children = (
+				AFCB68CD239C23CF00330F9F /* MusicAnalysisViewController.swift */,
+				AFCB68CF239C248E00330F9F /* MusicAnalysisViewModel.swift */,
+			);
+			path = musicAnalysis;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -512,6 +526,7 @@
 				4809B9422309761700750CA0 /* PluginTypes.swift in Sources */,
 				48FC0EDB2301D1E7009E901C /* PlaylistDetailViewModel.swift in Sources */,
 				48FC0ED82301D1E7009E901C /* PlaylistContainerViewController.swift in Sources */,
+				AFCB68D0239C248E00330F9F /* MusicAnalysisViewModel.swift in Sources */,
 				4809B93E230970ED00750CA0 /* ViewModel.swift in Sources */,
 				4809B948230999CE00750CA0 /* ExportPlaylistPlugin.swift in Sources */,
 				48FC0EDA2301D1E7009E901C /* PlaylistDetailView.swift in Sources */,
@@ -527,6 +542,7 @@
 				48FC0ED92301D1E7009E901C /* PlaylistDetailViewController.swift in Sources */,
 				48FC0ED22301D1E7009E901C /* View+Extensions.swift in Sources */,
 				48FC0ED42301D1E7009E901C /* TitleDetailTableViewCell.swift in Sources */,
+				AFCB68CE239C23CF00330F9F /* MusicAnalysisViewController.swift in Sources */,
 				48FC0ED12301D1E7009E901C /* SongLinkProvider.swift in Sources */,
 				4809B94623097D2300750CA0 /* DownloadSongPlugin.swift in Sources */,
 				4809B93B23096DDC00750CA0 /* FetchPlaylistsPlugin.swift in Sources */,
