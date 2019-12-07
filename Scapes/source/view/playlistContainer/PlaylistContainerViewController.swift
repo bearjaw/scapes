@@ -17,7 +17,7 @@ final class PlaylistContainerViewController: UIViewController {
     private var viewModel: PlaylistContainerViewModelProtocol
     private var detailViewController: UIViewController?
     
-    private lazy var containerView: PlaylistContainerView = { PlaylistContainerView() }()
+    private lazy var containerView: PlaylistContainerView = PlaylistContainerView()
     private var dataSource: UITableViewDiffableDataSource<PlaylistSection, SongLinkIntermediate>?
     
     init(viewModel: PlaylistContainerViewModelProtocol) {
@@ -80,9 +80,8 @@ final class PlaylistContainerViewController: UIViewController {
         containerView.tableView.estimatedRowHeight = 60.0
         containerView.tableView.register(TitleDetailTableViewCell.self, forCellReuseIdentifier: TitleDetailTableViewCell.reuseIdentifier)
         dataSource = UITableViewDiffableDataSource<PlaylistSection, SongLinkIntermediate>(tableView: containerView.tableView, cellProvider: { (tableView, indexPath, item) -> TitleDetailTableViewCell? in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleDetailTableViewCell.reuseIdentifier, for: indexPath) as? TitleDetailTableViewCell else {
-                fatalError("Error: Wrong cell dequeued. Expected: \(TitleDetailTableViewCell.self) but got")
-            }
+            let cell: TitleDetailTableViewCell
+            cell = tableView.dequeuedCell(forIdentifier: TitleDetailTableViewCell.reuseIdentifier, atIndexPath: indexPath)
             cell.update(songViewData: item)
             return cell
         })
