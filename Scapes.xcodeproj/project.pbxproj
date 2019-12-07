@@ -49,6 +49,8 @@
 		AFCB68CE239C23CF00330F9F /* MusicAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68CD239C23CF00330F9F /* MusicAnalysisViewController.swift */; };
 		AFCB68D0239C248E00330F9F /* MusicAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68CF239C248E00330F9F /* MusicAnalysisViewModel.swift */; };
 		AFCB68D2239C28B600330F9F /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68D1239C28B600330F9F /* UITableView+Extensions.swift */; };
+		AFCB68D5239C2AA400330F9F /* TabBarControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68D4239C2AA400330F9F /* TabBarControllerViewController.swift */; };
+		AFCB68D7239C2DBD00330F9F /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB68D6239C2DBD00330F9F /* UIViewController+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +120,8 @@
 		AFCB68CD239C23CF00330F9F /* MusicAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAnalysisViewController.swift; sourceTree = "<group>"; };
 		AFCB68CF239C248E00330F9F /* MusicAnalysisViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAnalysisViewModel.swift; sourceTree = "<group>"; };
 		AFCB68D1239C28B600330F9F /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		AFCB68D4239C2AA400330F9F /* TabBarControllerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarControllerViewController.swift; sourceTree = "<group>"; };
+		AFCB68D6239C2DBD00330F9F /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -278,6 +282,7 @@
 				48FC0EAD2301D1E6009E901C /* RepoToken.swift */,
 				48FC0EAE2301D1E6009E901C /* NSObjectProtocol+Extensions.swift */,
 				AFCB68D1239C28B600330F9F /* UITableView+Extensions.swift */,
+				AFCB68D6239C2DBD00330F9F /* UIViewController+Extensions.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -310,6 +315,7 @@
 		48FC0EB52301D1E6009E901C /* view */ = {
 			isa = PBXGroup;
 			children = (
+				AFCB68D3239C2A8600330F9F /* tabBar */,
 				AFCB68CC239C230E00330F9F /* musicAnalysis */,
 				48FC0EB62301D1E7009E901C /* cells */,
 				48FC0EB82301D1E7009E901C /* playlists */,
@@ -379,6 +385,14 @@
 				AFCB68CF239C248E00330F9F /* MusicAnalysisViewModel.swift */,
 			);
 			path = musicAnalysis;
+			sourceTree = "<group>";
+		};
+		AFCB68D3239C2A8600330F9F /* tabBar */ = {
+			isa = PBXGroup;
+			children = (
+				AFCB68D4239C2AA400330F9F /* TabBarControllerViewController.swift */,
+			);
+			path = tabBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -535,9 +549,11 @@
 				48FC0ECD2301D1E7009E901C /* UIColor+Extension.swift in Sources */,
 				48FC0ED62301D1E7009E901C /* PlaylistsTableViewController.swift in Sources */,
 				4809B9382308328500750CA0 /* PlaylistTableViewCell.swift in Sources */,
+				AFCB68D7239C2DBD00330F9F /* UIViewController+Extensions.swift in Sources */,
 				48FC0ECF2301D1E7009E901C /* RepoToken.swift in Sources */,
 				AFCB68D2239C28B600330F9F /* UITableView+Extensions.swift in Sources */,
 				4809B9402309746D00750CA0 /* FetchSongsPlugin.swift in Sources */,
+				AFCB68D5239C2AA400330F9F /* TabBarControllerViewController.swift in Sources */,
 				48FC0ED52301D1E7009E901C /* PlaylistsViewModel.swift in Sources */,
 				48FC0ED92301D1E7009E901C /* PlaylistDetailViewController.swift in Sources */,
 				48FC0ED22301D1E7009E901C /* View+Extensions.swift in Sources */,
