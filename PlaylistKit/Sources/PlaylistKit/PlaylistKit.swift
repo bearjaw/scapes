@@ -10,11 +10,11 @@ final public class PlaylistKit {
     public static func fetchPlaylist(source: MusicSource, playlists: @escaping (Result<[CorePlaylist], Error>) -> Void) {
         PlaylistAccess.fetchPlaylists(source: source) { result in
             switch result {
-            case .success(let items):
+            case let .success(items):
                 let parser = PlaylistParser()
                 let parsed = parser.parse(collections: items)
                 playlists(.success(parsed))
-            case .failure(let error):
+            case let .failure(error):
                 playlists(.failure(error))
             }
         }
@@ -36,6 +36,14 @@ final public class PlaylistKit {
             return PlaylistAccess.playlistArtwork(forIdentifier: identifier)
         case .song:
             return nil
+        }
+    }
+    
+    public static func fetchSongsHeardInCurrentYear(songs: @escaping (Result<[CorePlaylistItem], MusicKitError>) -> Void) {
+        PlaylistAccess.fetchCurrentYear { items in
+            let parser = PlaylistParser()
+            let result = parser.parse(songs: items)
+            songs(.success(result))
         }
     }
     
