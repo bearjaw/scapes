@@ -70,7 +70,7 @@ final class PlaylistContainerViewModel {
             guard let self = self else { return }
             self.data = songs
             self.queue.async {
-                let snapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
+                var snapshot = NSDiffableDataSourceSnapshot<PlaylistSection, SongLinkIntermediate>()
                 snapshot.appendSections([.items])
                 snapshot.appendItems(songs)
                 self.updateOnChange(snapshot)

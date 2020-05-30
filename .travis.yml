@@ -3,12 +3,8 @@
 # * https://github.com/supermarin/xcpretty#usage
 
 language: objective-c
-osx_image: xcode10.2
+osx_image: xcode11.2
 cache: cocoapods
 
-before_install:
-- gem install cocoapods # Since Travis is not always on latest version
-- pod install --repo-update
-
 script:
-- set -o pipefail && xcodebuild -workspace Scapes.xcworkspace -scheme Scapes-Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+- set -o pipefail && xcodebuild -project Scapes.xcodeproj -scheme Scapes-Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO

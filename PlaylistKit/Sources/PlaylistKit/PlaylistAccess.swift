@@ -14,6 +14,8 @@ public enum MusicSource {
 
 final class PlaylistAccess {
     
+    static let queue = DispatchQueue(label: "com.scapes.playlist.fetch.queue", qos: .background, attributes: .concurrent, target: .global(qos: .background))
+    
     static func fetchPlaylists(source: MusicSource, onResult: @escaping (Result<[MPMediaItemCollection], Error>) -> Void) {
         guard MPMediaLibrary.authorizationStatus() != .authorized else {
             loadPlaylists(from: source, onResult: onResult)
@@ -36,7 +38,6 @@ final class PlaylistAccess {
     }
     
     static func loadPlaylists(from source: MusicSource, onResult: @escaping (Result<[MPMediaItemCollection], Error>) -> Void) {
-        let queue = DispatchQueue(label: "com.scapes.playlist.fetch.queue", qos: .background, attributes: .concurrent, target: .global(qos: .background))
         queue.async {
             let query = MPMediaQuery.playlists()
             guard let collections = query.collections else { onResult(.success([])); return }
@@ -49,6 +50,14 @@ final class PlaylistAccess {
         let playlist = MPMediaQuery.playlists()
         playlist.addFilterPredicate(predicate)
         return playlist.collections?.first
+    }
+    
+    static func fetchCurrentYear(completion: @escaping ([MPMediaItem]) -> Void) {
+        queue.async {
+            let date = Date()
+            let query = MPMediaQuery.songs().items?.filter { $0.lastPlayedDate?.isInSameYear(date) ?? false }
+            completion(query ?? [])
+        }
     }
     
     static func playlistArtwork(forIdentifier identifier: UInt64, size: CGSize = CGSize(width: 15, height: 15)) -> Data? {

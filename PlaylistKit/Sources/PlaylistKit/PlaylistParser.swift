@@ -31,7 +31,7 @@ final class PlaylistParser {
     
     // MARK: - MediaItem to CorePlaylistIem mapping
     
-    private func parse(songs: [MPMediaItem]) -> [CorePlaylistItem] {
+    func parse(songs: [MPMediaItem]) -> [CorePlaylistItem] {
         var result: [CorePlaylistItem] = []
         var index = 0
         #if targetEnvironment(simulator)

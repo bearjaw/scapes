@@ -12,21 +12,21 @@ final class TitleDetailTableViewCell: UITableViewCell {
     
     static var reuseIdentifier: String { return "kTitleDetailTableViewCell"}
     
-    private var labelSongTitle: UILabel = {
+    private lazy var labelSongTitle: UILabel = {
         let label = UILabel()
         label.textColor = .title
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         return label
     }()
     
-    private var labelArtist: UILabel = {
+    private lazy var labelArtist: UILabel = {
         let label = UILabel()
         label.textColor = .subtitle
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return label
     }()
     
-    private var labelAlbum: UILabel = {
+    private lazy var labelAlbum: UILabel = {
         let label = UILabel()
         label.textColor = .subtitle
         label.numberOfLines = 0
@@ -34,7 +34,7 @@ final class TitleDetailTableViewCell: UITableViewCell {
         return label
     }()
     
-    private var labelLink: UILabel = {
+    private lazy var labelLink: UILabel = {
         let label = UILabel()
         label.textColor = .link
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
